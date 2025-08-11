@@ -2,7 +2,7 @@
 <html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Jelajah Nusantara - oleh @benggg111</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,7 +13,7 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #0a0a0a; color: #f1f1f1; overflow-x: hidden; }
+        body { font-family: 'Poppins', sans-serif; background-color: #0a0a0a; color: #f1f1f1; overflow-x: hidden; -webkit-user-select: none; -ms-user-select: none; user-select: none; }
         body.modal-open { overflow: hidden; }
 
         #intro-screen { position: fixed; inset: 0; background: #0a0a0a; z-index: 100; display: flex; justify-content: center; align-items: center; text-align: center; transition: opacity 1s ease-in-out, transform 1s ease-in-out, filter 1s ease-in-out; }
@@ -29,10 +29,14 @@
         @keyframes kenBurns { 0% { transform: scale(1.1) translate(0, 0); } 100% { transform: scale(1.2) translate(-2%, 2%); } }
         .hero-bg-animation { animation: kenBurns 30s ease-in-out infinite alternate; }
 
-        #detail-modal { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.7); opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
-        #detail-modal.visible { opacity: 1; visibility: visible; }
-        .modal-content { background-color: #181818; border-radius: 1rem; padding: 2rem; width: 90%; max-width: 650px; max-height: 90vh; overflow-y: auto; position: relative; transform: translateY(40px) scale(0.95); opacity: 0; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
-        #detail-modal.visible .modal-content { transform: translateY(0) scale(1); opacity: 1; }
+        .modal-container { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.7); opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
+        .modal-container.visible { opacity: 1; visibility: visible; }
+        .modal-content { background-color: #181818; border-radius: 1rem; padding: 2rem; width: 90%; position: relative; transform: translateY(40px) scale(0.95); opacity: 0; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .modal-container.visible .modal-content { transform: translateY(0) scale(1); opacity: 1; }
+        
+        #detail-modal .modal-content { max-width: 650px; max-height: 90vh; overflow-y: auto; }
+        #confirmation-modal .modal-content { max-width: 400px; }
+
         .modal-item { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
         #detail-modal.visible .modal-item { opacity: 1; transform: translateY(0); }
         #close-modal-btn { position: absolute; top: 1rem; right: 1rem; width: 2.5rem; height: 2.5rem; background-color: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; z-index: 20; }
@@ -45,23 +49,63 @@
 
         .tiktok-gradient-text { background: linear-gradient(to right, #69C9D0, #EE1D52); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .tiktok-gradient-bg { background-image: linear-gradient(to right, #69C9D0, #EE1D52); }
-        .destination-card { cursor: pointer; position: relative; overflow: hidden; border-radius: 1rem; transition: transform 0.4s ease, box-shadow 0.4s ease; }
-        .destination-card:hover { transform: translateY(-10px) scale(1.03); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-        .card-image-wrapper { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.5s ease; }
-        .destination-card:hover .card-image-wrapper { transform: scale(1.1); }
-        .card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 20%, rgba(0,0,0,0.1) 70%); }
-        .card-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem; color: white; }
-        .destination-logo { position: absolute; top: 1rem; left: 1rem; width: 48px; height: 48px; object-fit: contain; opacity: 0.8; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.7)); }
         
-        #maluku-music-player { display: none; }
+        /* New Card Styling with Frame */
+        .destination-card {
+            cursor: pointer;
+            position: relative;
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            border-radius: 1rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            aspect-ratio: 4 / 5;
+            box-shadow: 5px 5px 15px #0e0e0e, -5px -5px 15px #2c2c2c;
+        }
+        .destination-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 10px 10px 25px #0e0e0e, -10px -10px 25px #2c2c2c;
+        }
+        .card-logo-wrapper {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 1rem;
+        }
+        .card-logo {
+            width: 90%;
+            max-width: 160px;
+            height: auto;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
+        }
+        .destination-card:hover .card-logo {
+            transform: scale(1.05);
+        }
+        .card-title {
+            width: 100%;
+            padding-top: 1rem;
+            border-top: 1px solid #333;
+            margin-top: auto; /* Pushes title to the bottom */
+            font-size: 1.25rem;
+            font-weight: 600;
+            flex-shrink: 0; /* Prevents the title from shrinking */
+        }
+        
+        .music-player { display: none; }
         .music-player-button { background-color: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px); }
-        #maluku-progress-bar { transition: width 0.1s linear; }
+        .music-progress-bar { transition: width 0.1s linear; }
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased" oncontextmenu="return false;">
 
     <audio id="background-music" loop><source src="https://g.top4top.io/m_3510b5zbc1.mp3" type="audio/mpeg"></source></audio>
-    <audio id="maluku-music"><source src="https://f.top4top.io/m_35106b3xv1.mp3" type="audio/mpeg"></source></audio>
+    <audio id="province-music"></audio>
 
     <div id="intro-screen">
         <canvas id="particle-canvas"></canvas>
@@ -90,13 +134,12 @@
         <div id="content-section" class="relative bg-[#0a0a0a] z-10">
             <div id="destinations" class="py-20 px-4 sm:px-6 lg:px-8">
                 <div class="container mx-auto max-w-7xl">
-                    <h2 class="text-3xl font-bold text-center mb-12 text-white" data-aos="fade-up">Pilih Destinasi Untuk Dijelajahi</h2>
-                    <div id="destination-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+                    <h2 class="text-3xl font-bold text-center mb-12 text-white" data-aos="fade-up">Pilih Destinasi</h2>
+                    <div id="destination-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-8"></div>
                 </div>
             </div>
             <footer class="text-center py-10 border-t border-gray-900">
                 <p>&copy; <span id="year"></span> benggg. All rights reserved.</p>
-                <p class="text-sm mt-1">Website Ini Sedang Dikembangan</p>
                 <div class="mt-4">
                     <a href="https://www.tiktok.com/@benggg111" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:tiktok-gradient-text transition-colors duration-300 text-3xl inline-block"><i class="fab fa-tiktok"></i></a>
                     <a href="https://youtube.com/@bobenggid" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-red-600 transition-colors duration-300 text-3xl inline-block ml-6"><i class="fab fa-youtube"></i></a>
@@ -105,26 +148,33 @@
         </div>
     </div>
 
-    <div id="detail-modal">
+    <div id="detail-modal" class="modal-container">
         <div class="modal-content">
             <button id="close-modal-btn" aria-label="Tutup"><i class="fas fa-times text-white"></i></button>
             <div class="text-center mb-6 modal-item">
-                <img id="modal-logo" src="" alt="Logo Provinsi" class="w-[140px] h-[140px] mx-auto mb-4 object-contain">
-                <h2 id="modal-title" class="text-4xl font-bold text-white"></h2>
+                <h2 id="modal-title" class="text-4xl font-bold text-white mb-4"></h2>
+                <img id="modal-logo" src="" alt="Logo Provinsi" class="w-48 h-48 mx-auto object-contain">
             </div>
             <div id="modal-description" class="space-y-4 prose prose-invert max-w-none modal-item text-justify bg-white/5 p-4 rounded-lg"></div>
+            <div id="modal-details" class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left my-6 modal-item bg-white/5 p-4 rounded-lg">
+                <div><p class="text-sm text-gray-400">Ibu Kota</p><h3 id="modal-capital" class="font-semibold text-lg"></h3></div>
+                <div><p class="text-sm text-gray-400">Hari Jadi</p><h3 id="modal-anniversary" class="font-semibold text-lg"></h3></div>
+                <div><p class="text-sm text-gray-400">Populasi</p><h3 id="modal-population" class="font-semibold text-lg"></h3></div>
+                <div id="website-container"><p class="text-sm text-gray-400">Website Resmi</p><a id="modal-website" href="#" class="font-semibold text-cyan-400 hover:underline"></a></div>
+                <div class="col-span-1 sm:col-span-2"><p class="text-sm text-gray-400">Suku Bangsa</p><p id="modal-ethnic-groups" class="font-semibold"></p></div>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center my-6 modal-item">
                 <div class="bg-white/5 p-3 rounded-lg"><p class="text-sm text-gray-400">Gubernur</p><h3 id="modal-governor" class="font-bold text-md"></h3></div>
                 <div class="bg-white/5 p-3 rounded-lg"><p class="text-sm text-gray-400">Wakil Gubernur</p><h3 id="modal-vice-governor" class="font-bold text-md"></h3></div>
             </div>
-            <div id="maluku-music-player" class="my-6 modal-item space-y-3">
-                <p class="font-semibold text-center text-gray-300">Ayo Mama - Lagu Daerah Maluku</p>
+            <div id="province-music-player" class="music-player my-6 modal-item space-y-3">
+                <p id="province-song-title" class="font-semibold text-center text-gray-300"></p>
                 <div class="flex items-center justify-center gap-4">
-                    <button id="play-maluku-music-btn" class="music-player-button w-12 h-12 rounded-full flex items-center justify-center text-lg flex-shrink-0">
-                        <i id="play-maluku-icon" class="fas fa-play"></i>
+                    <button id="play-province-music-btn" class="music-player-button w-12 h-12 rounded-full flex items-center justify-center text-lg flex-shrink-0">
+                        <i id="play-province-icon" class="fas fa-play"></i>
                     </button>
                     <div class="w-full bg-white/10 rounded-full h-1.5">
-                        <div id="maluku-progress-bar" class="bg-cyan-400 h-1.5 rounded-full" style="width: 0%"></div>
+                        <div id="province-progress-bar" class="music-progress-bar bg-cyan-400 h-1.5 rounded-full" style="width: 0%"></div>
                     </div>
                 </div>
             </div>
@@ -140,46 +190,60 @@
         </div>
     </div>
 
+    <div id="confirmation-modal" class="modal-container">
+        <div class="modal-content text-center">
+            <h3 class="text-xl font-bold mb-2 text-white">Konfirmasi Navigasi</h3>
+            <p class="text-gray-300 mb-6">Anda akan diarahkan ke situs eksternal. Lanjutkan?</p>
+            <div class="flex justify-center gap-4">
+                <button id="confirm-no" class="px-6 py-2 rounded-lg bg-gray-600 hover:bg-gray-500 transition-colors">Batal</button>
+                <button id="confirm-yes" class="px-6 py-2 rounded-lg tiktok-gradient-bg hover:opacity-90 transition-opacity">Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const provincesData = {
-                maluku: { name: "Maluku", logo: "https://upload.wikimedia.org/wikipedia/commons/3/39/Coat_of_arms_of_Maluku.svg", bgImage: "https://images.unsplash.com/photo-1592394637243-14e1a53b5b64?q=80&w=1887&auto=format&fit=crop", tiktokLink: "https://vt.tiktok.com/ZSStthU7e/", governor: "Hendrik Lewerissa", viceGovernor: "Abdullah Vanath", description: `<p>Maluku adalah sebuah provinsi yang meliputi bagian selatan Kepulauan Maluku, Indonesia. Provinsi ini berbatasan dengan Laut Seram di utara, Samudra Hindia dan Laut Arafura di selatan, Papua di timur, dan Sulawesi di barat. Ibu kota dan kota terbesarnya adalah Ambon. Sejarah Maluku yang kaya sebagai "Kepulauan Rempah-Rempah" menjadikannya pusat perdagangan penting yang menarik berbagai bangsa.</p>`, districts: ["Buru", "Buru Selatan", "Kepulauan Aru", "Kepulauan Tanimbar", "Maluku Barat Daya", "Maluku Tengah", "Maluku Tenggara", "Seram Bagian Barat", "Seram Bagian Timur", "Kota Ambon", "Kota Tual"] },
-                maluku_utara: { name: "Maluku Utara", logo: "https://upload.wikimedia.org/wikipedia/commons/7/73/Coat_of_arms_of_North_Maluku.svg", bgImage: "https://images.unsplash.com/photo-1621815199684-817a792c300a?q=80&w=1964&auto=format&fit=crop", tiktokLink: "https://vt.tiktok.com/ZSStthBan/", governor: "Sherly Tjoanda", viceGovernor: "Sarbin Sehe", description: `<p>Maluku Utara adalah provinsi di Indonesia bagian timur yang beribukota di Sofifi. Wilayah ini resmi menjadi provinsi sendiri pada 4 Oktober 1999. Dikenal dengan sejarah kesultanan Ternate dan Tidore yang legendaris, Maluku Utara merupakan episentrum sejarah rempah-rempah yang menawarkan pemandangan gunung berapi dramatis dan pulau-pulau eksotis.</p>`, districts: ["Halmahera Barat", "Halmahera Tengah", "Halmahera Utara", "Halmahera Selatan", "Kepulauan Sula", "Halmahera Timur", "Pulau Morotai", "Pulau Taliabu", "Kota Ternate", "Kota Tidore Kepulauan"] },
-                sulawesi_tenggara: { name: "Sulawesi Tenggara", logo: "https://upload.wikimedia.org/wikipedia/commons/3/31/Coat_of_arms_of_Southeast_Sulawesi.svg", bgImage: "https://images.unsplash.com/photo-1600989995349-436340187444?q=80&w=1887&auto=format&fit=crop", tiktokLink: "https://vt.tiktok.com/ZSStt649m/", governor: "Andi Sumangerukka", viceGovernor: "Hugua", description: `<p>Sulawesi Tenggara adalah sebuah provinsi di Indonesia yang terletak di bagian tenggara pulau Sulawesi, dengan ibu kota di Kendari. Provinsi ini merupakan rumah bagi Taman Nasional Wakatobi, salah satu surga bawah laut terbaik dunia yang diakui UNESCO, serta dikenal dengan masyarakat Suku Bajo yang hidup harmonis dengan laut.</p>`, districts: ["Bombana", "Buton", "Buton Selatan", "Buton Tengah", "Buton Utara", "Kolaka", "Kolaka Timur", "Kolaka Utara", "Konawe", "Konawe Kepulauan", "Konawe Selatan", "Konawe Utara", "Muna", "Muna Barat", "Wakatobi", "Kota Baubau", "Kota Kendari"] },
-                sulawesi_selatan: { name: "Sulawesi Selatan", logo: "https://upload.wikimedia.org/wikipedia/commons/6/67/Coat_of_arms_of_South_Sulawesi.svg", bgImage: "https://images.unsplash.com/photo-1571927321284-75170d3f233a?q=80&w=1887&auto=format&fit=crop", tiktokLink: "https://vt.tiktok.com/ZSStt8Ym9/", governor: "Andi Sudirman Sulaiman", viceGovernor: "Fatmawati Rusdi", description: `<p>Sulawesi Selatan adalah provinsi di pesisir barat daya Sulawesi, dengan ibu kota di Makassar. Provinsi ini memiliki warisan budaya Bugis-Makassar yang kuat dan merupakan tanah kelahiran Kapal Pinisi, sebuah mahakarya yang diakui sebagai Warisan Budaya Takbenda UNESCO. Keunikan Tana Toraja dengan ritual megah dan arsitektur ikoniknya juga menjadi daya tarik utama.</p>`, districts: ["Bantaeng", "Barru", "Bone", "Bulukumba", "Enrekang", "Gowa", "Jeneponto", "Kepulauan Selayar", "Luwu", "Luwu Timur", "Luwu Utara", "Maros", "Pangkajene dan Kepulauan", "Pinrang", "Sidenreng Rappang", "Sinjai", "Soppeng", "Takalar", "Tana Toraja", "Toraja Utara", "Wajo", "Kota Makassar", "Kota Palopo", "Kota Parepare"] },
-                sulawesi_tengah: { name: "Sulawesi Tengah", logo: "https://upload.wikimedia.org/wikipedia/commons/4/46/Coat_of_arms_of_Central_Sulawesi.svg", bgImage: "https://images.unsplash.com/photo-1617623913289-441798547244?q=80&w=1974&auto=format&fit=crop", tiktokLink: "https://vt.tiktok.com/ZSSttU1BB/", governor: "Anwar Hafid", viceGovernor: "Reny Lamadjido", description: `<p>Sulawesi Tengah adalah sebuah provinsi Indonesia yang terletak di bagian tengah pulau Sulawesi. Ibu kotanya adalah Palu. Provinsi ini menyimpan pesona alam seperti Teluk Palu dan Danau Poso, serta misteri purbakala di Taman Nasional Lore Lindu, yang menjadi rumah bagi flora fauna endemik dan situs-situs megalitikum kuno.</p>`, districts: ["Banggai", "Banggai Kepulauan", "Banggai Laut", "Buol", "Donggala", "Morowali", "Morowali Utara", "Parigi Moutong", "Poso", "Sigi", "Tojo Una-Una", "Tolitoli", "Kota Palu"] },
-                sulawesi_barat: { name: "Sulawesi Barat", logo: "https://upload.wikimedia.org/wikipedia/commons/8/89/Coat_of_arms_of_West_Sulawesi.svg", bgImage: "https://images.unsplash.com/photo-1618089423985-021de4487013?q=80&w=1887&auto=format&fit=crop", tiktokLink: "https://vt.tiktok.com/ZSSttY2dj/", governor: "Suhardi Duka", viceGovernor: "Salim S. Mengga", description: `<p>Sulawesi Barat adalah provinsi hasil pemekaran dari Sulawesi Selatan yang dibentuk pada 5 Oktober 2004. Ibu kotanya adalah Mamuju. Provinsi ini memiliki identitas budaya yang kuat dari Suku Mandar, dikenal dengan para pelaut andal dan Sarung Sutra Mandar yang indah, serta memiliki garis pantai menawan dan perkebunan kopi yang subur.</p>`, districts: ["Majene", "Mamasa", "Mamuju", "Mamuju Tengah", "Pasangkayu", "Polewali Mandar"] },
-                sulawesi_utara: { name: "Sulawesi Utara", logo: "https://upload.wikimedia.org/wikipedia/commons/6/68/Coat_of_arms_of_North_Sulawesi.svg", bgImage: "https://images.unsplash.com/photo-1588675646184-f5b0b3b64bde?q=80&w=2070&auto=format&fit=crop", tiktokLink: "https://vt.tiktok.com/ZSSttLvCw/", governor: "Yulius Selvanus", viceGovernor: "Victor Mailangkay", description: `<p>Sulawesi Utara adalah provinsi yang terletak di ujung utara Pulau Sulawesi, Indonesia, dengan ibu kota di Manado. Provinsi ini merupakan surga bagi pecinta kehidupan bawah laut, dengan Taman Nasional Bunaken sebagai ikon utamanya. Masyarakat Minahasa yang ramah dan terbuka mendominasi wilayah yang dijuluki "Kota Seribu Gereja" ini.</p>`, districts: ["Bolaang Mongondow", "Bolaang Mongondow Selatan", "Bolaang Mongondow Timur", "Bolaang Mongondow Utara", "Kepulauan Sangihe", "Kepulauan Siau Tagulandang Biaro", "Kepulauan Talaud", "Minahasa", "Minahasa Selatan", "Minahasa Tenggara", "Minahasa Utara", "Kota Bitung", "Kota Kotamobagu", "Kota Manado", "Kota Tomohon"] },
-                gorontalo: { name: "Gorontalo", logo: "https://upload.wikimedia.org/wikipedia/commons/0/01/Coat_of_arms_of_Gorontalo.svg", bgImage: "https://images.unsplash.com/photo-1603203498399-37f354a5a8a7?q=80&w=1932&auto=format&fit=crop", tiktokLink: "https://vt.tiktok.com/ZSSttBCHy/", governor: "Gusnar Ismail", viceGovernor: "Idah Syahidah Rusli Habibie", description: `<p>Gorontalo adalah sebuah provinsi di Indonesia yang terletak di Semenanjung Gorontalo, di bagian utara Pulau Sulawesi. Dikenal dengan julukan "Serambi Madinah", Gorontalo memiliki tradisi Islam yang kental. Provinsi ini mengelilingi Teluk Tomini yang tenang, lokasi ideal untuk mengamati hiu paus, dan memiliki peninggalan sejarah seperti Benteng Otanaha.</p>`, districts: ["Boalemo", "Bone Bolango", "Gorontalo", "Gorontalo Utara", "Pohuwato", "Kota Gorontalo"] }
+                maluku: { name: "Maluku", logo: "https://upload.wikimedia.org/wikipedia/commons/3/39/Coat_of_arms_of_Maluku.svg", tiktokLink: "https://vt.tiktok.com/ZSStthU7e/", governor: "Hendrik Lewerissa", viceGovernor: "Abdullah Vanath", songTitle: "Ayo Mama - Lagu Daerah Maluku", songSrc: "https://f.top4top.io/m_35106b3xv1.mp3", description: `<p>Maluku adalah sebuah provinsi yang meliputi bagian selatan Kepulauan Maluku, Indonesia. Provinsi ini berbatasan dengan Laut Seram di utara, Samudra Hindia dan Laut Arafura di selatan, Papua di timur, dan Sulawesi di barat. Ibu kota dan kota terbesarnya adalah Ambon. Sejarah Maluku yang kaya sebagai "Kepulauan Rempah-Rempah" menjadikannya pusat perdagangan penting yang menarik berbagai bangsa.</p>`, districts: ["Buru", "Buru Selatan", "Kepulauan Aru", "Kepulauan Tanimbar", "Maluku Barat Daya", "Maluku Tengah", "Maluku Tenggara", "Seram Bagian Barat", "Seram Bagian Timur", "Kota Ambon", "Kota Tual"], jumlah_penduduk: 1945648, ibu_kota: "Ambon", hari_jadi: null, suku_bangsa: ["Alfur", "Ambon", "Tionghoa", "Bugis", "Buton", "Jawa"], website_resmi: "malukuprov.go.id" },
+                maluku_utara: { name: "Maluku Utara", logo: "https://upload.wikimedia.org/wikipedia/commons/7/73/Coat_of_arms_of_North_Maluku.svg", tiktokLink: "https://vt.tiktok.com/ZSStthBan/", governor: "Sherly Tjoanda", viceGovernor: "Sarbin Sehe", songTitle: "Borero - Lagu Daerah Maluku Utara", songSrc: "https://d.top4top.io/m_3510likks1.mp3", description: `<p>Maluku Utara adalah provinsi di Indonesia bagian timur yang beribukota di Sofifi. Wilayah ini resmi menjadi provinsi sendiri pada 4 Oktober 1999. Dikenal dengan sejarah kesultanan Ternate dan Tidore yang legendaris, Maluku Utara merupakan episentrum sejarah rempah-rempah yang menawarkan pemandangan gunung berapi dramatis dan pulau-pulau eksotis.</p>`, districts: ["Halmahera Barat", "Halmahera Tengah", "Halmahera Utara", "Halmahera Selatan", "Kepulauan Sula", "Halmahera Timur", "Pulau Morotai", "Pulau Taliabu", "Kota Ternate", "Kota Tidore Kepulauan"], jumlah_penduduk: 1394231, ibu_kota: "Sofifi", hari_jadi: "4 Oktober 1999", suku_bangsa: null, website_resmi: "malutprov.go.id" },
+                sulawesi_tenggara: { name: "Sulawesi Tenggara", logo: "https://upload.wikimedia.org/wikipedia/commons/3/31/Coat_of_arms_of_Southeast_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSStt649m/", governor: "Andi Sumangerukka", viceGovernor: "Hugua", songTitle: "Tana Wolio - Lagu Daerah Sulawesi Tenggara", songSrc: "https://b.top4top.io/m_3510m8pks1.mp3", description: `<p>Sulawesi Tenggara adalah sebuah provinsi di Indonesia yang terletak di bagian tenggara pulau Sulawesi, dengan ibu kota di Kendari. Provinsi ini merupakan rumah bagi Taman Nasional Wakatobi, salah satu surga bawah laut terbaik dunia yang diakui UNESCO, serta dikenal dengan masyarakat Suku Bajo yang hidup harmonis dengan laut.</p>`, districts: ["Bombana", "Buton", "Buton Selatan", "Buton Tengah", "Buton Utara", "Kolaka", "Kolaka Timur", "Kolaka Utara", "Konawe", "Konawe Kepulauan", "Konawe Selatan", "Konawe Utara", "Muna", "Muna Barat", "Wakatobi", "Kota Baubau", "Kota Kendari"], jumlah_penduduk: 2755589, ibu_kota: "Kendari", hari_jadi: "27 April 1964", suku_bangsa: ["Tolaki", "Buton", "Muna", "Moronene", "Wawonii"], website_resmi: null },
+                sulawesi_selatan: { name: "Sulawesi Selatan", logo: "https://upload.wikimedia.org/wikipedia/commons/6/67/Coat_of_arms_of_South_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSStt8Ym9/", governor: "Andi Sudirman Sulaiman", viceGovernor: "Fatmawati Rusdi", description: `<p>Sulawesi Selatan adalah provinsi di pesisir barat daya Sulawesi, dengan ibu kota di Makassar. Provinsi ini memiliki warisan budaya Bugis-Makassar yang kuat dan merupakan tanah kelahiran Kapal Pinisi, sebuah mahakarya yang diakui sebagai Warisan Budaya Takbenda UNESCO. Keunikan Tana Toraja dengan ritual megah dan arsitektur ikoniknya juga menjadi daya tarik utama.</p>`, districts: ["Bantaeng", "Barru", "Bone", "Bulukumba", "Enrekang", "Gowa", "Jeneponto", "Kepulauan Selayar", "Luwu", "Luwu Timur", "Luwu Utara", "Maros", "Pangkajene dan Kepulauan", "Pinrang", "Sidenreng Rappang", "Sinjai", "Soppeng", "Takalar", "Tana Toraja", "Toraja Utara", "Wajo", "Kota Makassar", "Kota Palopo", "Kota Parepare"], jumlah_penduduk: 9460344, ibu_kota: "Makassar", hari_jadi: "13 Desember 1960", suku_bangsa: ["Bugis", "Makassar", "Toraja", "Mandar"], website_resmi: null },
+                sulawesi_tengah: { name: "Sulawesi Tengah", logo: "https://upload.wikimedia.org/wikipedia/commons/4/46/Coat_of_arms_of_Central_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttU1BB/", governor: "Anwar Hafid", viceGovernor: "Reny Lamadjido", description: `<p>Sulawesi Tengah adalah sebuah provinsi Indonesia yang terletak di bagian tengah pulau Sulawesi. Ibu kotanya adalah Palu. Provinsi ini menyimpan pesona alam seperti Teluk Palu dan Danau Poso, serta misteri purbakala di Taman Nasional Lore Lindu, yang menjadi rumah bagi flora fauna endemik dan situs-situs megalitikum kuno.</p>`, districts: ["Banggai", "Banggai Kepulauan", "Banggai Laut", "Buol", "Donggala", "Morowali", "Morowali Utara", "Parigi Moutong", "Poso", "Sigi", "Tojo Una-Una", "Tolitoli", "Kota Palu"], jumlah_penduduk: 3154499, ibu_kota: "Palu", hari_jadi: "13 April 1964", suku_bangsa: ["Kaili", "Pamona", "Banggai", "Saluan", "Buol", "Mori", "Bungku", "Balantak", "Lore", "Mamasa", "Tolitoli", "Pendau", "Dondo", "Dampal", "Tomini"], website_resmi: "sultengprov.go.id" },
+                sulawesi_barat: { name: "Sulawesi Barat", logo: "https://upload.wikimedia.org/wikipedia/commons/8/89/Coat_of_arms_of_West_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttY2dj/", governor: "Suhardi Duka", viceGovernor: "Salim S. Mengga", songTitle: "Tenggang Tenggang Lopi - Lagu Daerah Sulawesi Barat", songSrc: "https://h.top4top.io/m_3510lsqsl1.mp3", description: `<p>Sulawesi Barat adalah provinsi hasil pemekaran dari Sulawesi Selatan yang dibentuk pada 5 Oktober 2004. Ibu kotanya adalah Mamuju. Provinsi ini memiliki identitas budaya yang kuat dari Suku Mandar, dikenal dengan para pelaut andal dan Sarung Sutra Mandar yang indah, serta memiliki garis pantai menawan dan perkebunan kopi yang subur.</p>`, districts: ["Majene", "Mamasa", "Mamuju", "Mamuju Tengah", "Pasangkayu", "Polewali Mandar"], jumlah_penduduk: 1466741, ibu_kota: "Mamuju", hari_jadi: "22 September 2004", suku_bangsa: ["Mandar", "Toraja", "Bugis", "Mamasa", "Kalumpang", "Jawa", "Makassar"], website_resmi: null },
+                sulawesi_utara: { name: "Sulawesi Utara", logo: "https://upload.wikimedia.org/wikipedia/commons/6/68/Coat_of_arms_of_North_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttLvCw/", governor: "Yulius Selvanus", viceGovernor: "Victor Mailangkay", description: `<p>Sulawesi Utara adalah provinsi yang terletak di ujung utara Pulau Sulawesi, Indonesia, dengan ibu kota di Manado. Provinsi ini merupakan surga bagi pecinta kehidupan bawah laut, dengan Taman Nasional Bunaken sebagai ikon utamanya. Masyarakat Minahasa yang ramah dan terbuka mendominasi wilayah yang dijuluki "Kota Seribu Gereja" ini.</p>`, districts: ["Bolaang Mongondow", "Bolaang Mongondow Selatan", "Bolaang Mongondow Timur", "Bolaang Mongondow Utara", "Kepulauan Sangihe", "Kepulauan Siau Tagulandang Biaro", "Kepulauan Talaud", "Minahasa", "Minahasa Selatan", "Minahasa Tenggara", "Minahasa Utara", "Kota Bitung", "Kota Kotamobagu", "Kota Manado", "Kota Tomohon"], jumlah_penduduk: 2645291, ibu_kota: "Manado", hari_jadi: "14 Agustus 1959", suku_bangsa: ["Minahasa", "Sangir-Talaud", "Bolaang Mongondow", "Gorontalo", "Tionghoa"], website_resmi: "sulutprov.go.id" },
+                gorontalo: { name: "Gorontalo", logo: "https://upload.wikimedia.org/wikipedia/commons/0/01/Coat_of_arms_of_Gorontalo.svg", tiktokLink: "https://vt.tiktok.com/ZSSttBCHy/", governor: "Gusnar Ismail", viceGovernor: "Idah Syahidah Rusli Habibie", description: `<p>Gorontalo adalah sebuah provinsi di Indonesia yang terletak di Semenanjung Gorontalo, di bagian utara Pulau Sulawesi. Dikenal dengan julukan "Serambi Madinah", Gorontalo memiliki tradisi Islam yang kental. Provinsi ini mengelilingi Teluk Tomini yang tenang, lokasi ideal untuk mengamati hiu paus, dan memiliki peninggalan sejarah seperti Benteng Otanaha.</p>`, districts: ["Boalemo", "Bone Bolango", "Gorontalo", "Gorontalo Utara", "Pohuwato", "Kota Gorontalo"], jumlah_penduduk: 1213180, ibu_kota: "Gorontalo", hari_jadi: "5 Desember 2000", suku_bangsa: ["Gorontalo"], website_resmi: "gorontaloprov.go.id" }
             };
 
             const destinationGrid = document.getElementById('destination-grid');
             Object.keys(provincesData).forEach((key, index) => {
                 const province = provincesData[key];
                 const card = document.createElement('div');
-                card.className = 'destination-card h-96';
+                card.className = 'destination-card';
                 card.setAttribute('data-aos', 'fade-up');
-                card.setAttribute('data-aos-delay', (index % 4 + 1) * 100);
+                card.setAttribute('data-aos-delay', (index % 3 + 1) * 100);
                 card.setAttribute('data-province', key);
                 card.innerHTML = `
-                    <div class="card-image-wrapper" style="background-image: url('${province.bgImage}')"></div>
-                    <div class="card-overlay"></div>
-                    <img src="${province.logo}" alt="Logo ${province.name}" class="destination-logo">
-                    <div class="card-content"><h3 class="text-2xl font-bold">${province.name}</h3></div>
+                    <div class="card-logo-wrapper">
+                        <img src="${province.logo}" alt="Logo ${province.name}" class="card-logo">
+                    </div>
+                    <h3 class="card-title">${province.name}</h3>
                 `;
                 destinationGrid.appendChild(card);
             });
             
             const modal = document.getElementById('detail-modal');
+            const confirmationModal = document.getElementById('confirmation-modal');
             const pageWrapper = document.getElementById('page-wrapper');
-            const malukuMusicPlayer = document.getElementById('maluku-music-player');
-            const playMalukuBtn = document.getElementById('play-maluku-music-btn');
-            const playMalukuIcon = document.getElementById('play-maluku-icon');
-            const malukuProgressBar = document.getElementById('maluku-progress-bar');
+            const provinceMusicPlayer = document.getElementById('province-music-player');
+            const playProvinceBtn = document.getElementById('play-province-music-btn');
+            const playProvinceIcon = document.getElementById('play-province-icon');
+            const provinceProgressBar = document.getElementById('province-progress-bar');
+            const provinceSongTitle = document.getElementById('province-song-title');
             const backgroundMusic = document.getElementById('background-music');
-            const malukuMusic = document.getElementById('maluku-music');
+            const provinceMusic = document.getElementById('province-music');
             let wasBgMusicPlaying = false;
+            let targetUrl = '';
 
             destinationGrid.addEventListener('click', (e) => {
                 const card = e.target.closest('.destination-card');
@@ -193,10 +257,27 @@
                     document.getElementById('modal-vice-governor').textContent = data.viceGovernor;
                     document.getElementById('modal-tiktok-link').href = data.tiktokLink;
                     
-                    if (provinceId === 'maluku') {
-                        malukuMusicPlayer.style.display = 'block';
+                    document.getElementById('modal-capital').textContent = data.ibu_kota || '-';
+                    document.getElementById('modal-anniversary').textContent = data.hari_jadi || '-';
+                    document.getElementById('modal-population').textContent = data.jumlah_penduduk ? data.jumlah_penduduk.toLocaleString('id-ID') : '-';
+                    document.getElementById('modal-ethnic-groups').textContent = data.suku_bangsa ? data.suku_bangsa.join(', ') : '-';
+                    
+                    const websiteContainer = document.getElementById('website-container');
+                    const websiteLink = document.getElementById('modal-website');
+                    if (data.website_resmi) {
+                        websiteLink.href = `http://${data.website_resmi}`;
+                        websiteLink.textContent = data.website_resmi;
+                        websiteContainer.style.display = 'block';
                     } else {
-                        malukuMusicPlayer.style.display = 'none';
+                        websiteContainer.style.display = 'none';
+                    }
+
+                    if (data.songSrc) {
+                        provinceMusicPlayer.style.display = 'block';
+                        provinceSongTitle.textContent = data.songTitle;
+                        provinceMusic.src = data.songSrc;
+                    } else {
+                        provinceMusicPlayer.style.display = 'none';
                     }
 
                     const districtList = document.getElementById('district-list');
@@ -218,27 +299,27 @@
                 }
             });
             
-            playMalukuBtn.addEventListener('click', () => {
-                if (malukuMusic.paused) {
+            playProvinceBtn.addEventListener('click', () => {
+                if (provinceMusic.paused) {
                     wasBgMusicPlaying = !backgroundMusic.paused;
                     backgroundMusic.pause();
-                    malukuMusic.play();
-                    playMalukuIcon.classList.replace('fa-play', 'fa-pause');
+                    provinceMusic.play();
+                    playProvinceIcon.classList.replace('fa-play', 'fa-pause');
                 } else {
-                    malukuMusic.pause();
-                    playMalukuIcon.classList.replace('fa-pause', 'fa-play');
+                    provinceMusic.pause();
+                    playProvinceIcon.classList.replace('fa-pause', 'fa-play');
                 }
             });
 
-            malukuMusic.addEventListener('timeupdate', () => {
-                if (malukuMusic.duration) {
-                    const progressPercent = (malukuMusic.currentTime / malukuMusic.duration) * 100;
-                    malukuProgressBar.style.width = `${progressPercent}%`;
+            provinceMusic.addEventListener('timeupdate', () => {
+                if (provinceMusic.duration) {
+                    const progressPercent = (provinceMusic.currentTime / provinceMusic.duration) * 100;
+                    provinceProgressBar.style.width = `${progressPercent}%`;
                 }
             });
-            malukuMusic.addEventListener('ended', () => {
-                playMalukuIcon.classList.replace('fa-pause', 'fa-play');
-                malukuProgressBar.style.width = '0%';
+            provinceMusic.addEventListener('ended', () => {
+                playProvinceIcon.classList.replace('fa-pause', 'fa-play');
+                provinceProgressBar.style.width = '0%';
             });
 
             document.getElementById('toggle-districts-btn').addEventListener('click', (e) => {
@@ -253,10 +334,10 @@
             });
 
             const closeModal = () => {
-                malukuMusic.pause();
-                malukuMusic.currentTime = 0;
-                playMalukuIcon.classList.replace('fa-pause', 'fa-play');
-                malukuProgressBar.style.width = '0%';
+                provinceMusic.pause();
+                provinceMusic.currentTime = 0;
+                playProvinceIcon.classList.replace('fa-pause', 'fa-play');
+                provinceProgressBar.style.width = '0%';
                 
                 if (wasBgMusicPlaying) {
                     backgroundMusic.play().catch(e=>console.log("Resume failed"));
@@ -267,7 +348,22 @@
                 modal.classList.remove('visible');
             };
             document.getElementById('close-modal-btn').addEventListener('click', closeModal);
-            modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+            modal.addEventListener('click', (e) => { if (e.target.id === 'detail-modal') closeModal(); });
+
+            document.getElementById('modal-website').addEventListener('click', (e) => {
+                e.preventDefault();
+                targetUrl = e.currentTarget.href;
+                confirmationModal.classList.add('visible');
+            });
+
+            document.getElementById('confirm-yes').addEventListener('click', () => {
+                window.open(targetUrl, '_blank');
+                confirmationModal.classList.remove('visible');
+            });
+
+            document.getElementById('confirm-no').addEventListener('click', () => {
+                confirmationModal.classList.remove('visible');
+            });
 
             const kenalanButton = document.getElementById('kenalan-button');
             const continueButton = document.getElementById('continue-button');
