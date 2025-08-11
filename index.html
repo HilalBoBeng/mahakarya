@@ -35,37 +35,40 @@
         .modal-container.visible .modal-content { transform: translateY(0) scale(1); opacity: 1; }
         
         #detail-modal .modal-content { max-width: 650px; max-height: 90vh; overflow-y: auto; }
+        #district-detail-modal .modal-content { max-width: 550px; max-height: 80vh; overflow-y: auto; z-index: 60; }
         #confirmation-modal .modal-content { max-width: 400px; }
 
         .modal-item { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
         #detail-modal.visible .modal-item { opacity: 1; transform: translateY(0); }
-        #close-modal-btn { position: absolute; top: 1rem; right: 1rem; width: 2.5rem; height: 2.5rem; background-color: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; z-index: 20; }
-        #close-modal-btn:hover { background-color: rgba(255,255,255,0.2); transform: rotate(90deg); }
+        .close-modal-btn { position: absolute; top: 1rem; right: 1rem; width: 2.5rem; height: 2.5rem; background-color: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; z-index: 20; }
+        .close-modal-btn:hover { background-color: rgba(255,255,255,0.2); transform: rotate(90deg); }
 
         #district-container { max-height: 0; overflow: hidden; transition: max-height 0.7s ease-in-out; }
         #district-list { list-style-type: none; padding: 0; columns: 2; gap: 0.5rem; }
-        #district-list li { background: rgba(255,255,255,0.05); padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 0.5rem; transform: translateX(20px); opacity: 0; transition: transform 0.5s ease, opacity 0.5s ease; }
-        #district-container.expanded #district-list li { transform: translateX(0); opacity: 1; }
+        #district-list button { width: 100%; text-align: left; background: rgba(255,255,255,0.05); padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 0.5rem; transform: translateX(20px); opacity: 0; transition: all 0.5s ease; }
+        #district-list button:hover { background: rgba(255,255,255,0.1); }
+        #district-container.expanded #district-list button { transform: translateX(0); opacity: 1; }
 
         .tiktok-gradient-text { background: linear-gradient(to right, #69C9D0, #EE1D52); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .tiktok-gradient-bg { background-image: linear-gradient(to right, #69C9D0, #EE1D52); }
         
+        /* New Card Styling - Solid & Clean */
         .destination-card {
             cursor: pointer;
             position: relative;
-            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            background-color: #1c1c1c;
             border-radius: 1rem;
             padding: 1rem;
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, background-color 0.3s ease;
             aspect-ratio: 4 / 5;
-            box-shadow: 5px 5px 15px #0e0e0e, -5px -5px 15px #2c2c2c;
+            border: 1px solid #333;
         }
         .destination-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 10px 10px 25px #0e0e0e, -10px -10px 25px #2c2c2c;
+            transform: translateY(-8px);
+            background-color: #252525;
         }
         .card-logo-wrapper {
             flex-grow: 1;
@@ -81,7 +84,6 @@
             height: auto;
             object-fit: contain;
             transition: transform 0.3s ease;
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
         }
         .destination-card:hover .card-logo {
             transform: scale(1.05);
@@ -91,8 +93,8 @@
             padding-top: 1rem;
             border-top: 1px solid #333;
             margin-top: auto;
-            font-size: 1.25rem;
-            font-weight: 600;
+            font-size: 1.125rem;
+            font-weight: 500;
             flex-shrink: 0;
         }
         
@@ -123,18 +125,18 @@
 
     <div id="page-wrapper">
         <div id="hero-section" class="min-h-screen flex flex-col justify-center items-center text-center p-4 bg-black overflow-hidden">
-            <div class="hero-bg-animation absolute inset-0 bg-cover bg-center opacity-40" style="background-image: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop');"></div>
+            <div class="absolute inset-0 bg-cover bg-center opacity-40" style="background-image: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop');"></div>
             <div class="relative z-10 pt-16">
                 <h1 class="text-5xl md:text-7xl font-bold text-white drop-shadow-lg" data-aos="fade-down" data-aos-delay="200">Jelajah Nusantara</h1>
                 <p class="text-lg md:text-xl text-gray-200 mt-2 drop-shadow-md" data-aos="fade-down" data-aos-delay="300">Sebuah Persembahan Edukasi oleh <span class="font-semibold text-white">@benggg111</span></p>
                 <p class="mt-6 max-w-lg mx-auto text-gray-300 italic drop-shadow-md" data-aos="fade-up" data-aos-delay="400">"don't stop when you're tired, stop when you're done"</p>
             </div>
         </div>
-        <div id="content-section" class="relative bg-[#0a0a0a] z-10">
+        <div id="content-section" class="relative bg-[#0a0a0a] z-10 rounded-t-3xl -mt-10">
             <div id="destinations" class="py-20 px-4 sm:px-6 lg:px-8">
-                <div class="container mx-auto max-w-7xl">
+                <div class="container mx-auto max-w-6xl">
                     <h2 class="text-3xl font-bold text-center mb-12 text-white" data-aos="fade-up">Pilih Destinasi</h2>
-                    <div id="destination-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-8 justify-center"></div>
+                    <div id="destination-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-6 justify-center"></div>
                 </div>
             </div>
             <footer class="text-center py-10 border-t border-gray-900">
@@ -149,7 +151,7 @@
 
     <div id="detail-modal" class="modal-container">
         <div class="modal-content">
-            <button id="close-modal-btn" aria-label="Tutup"><i class="fas fa-times text-white"></i></button>
+            <button id="close-modal-btn" class="close-modal-btn"><i class="fas fa-times text-white"></i></button>
             <div class="text-center mb-6 modal-item">
                 <h2 id="modal-title" class="text-4xl font-bold text-white mb-4"></h2>
                 <img id="modal-logo" src="" alt="Logo Provinsi" class="w-48 h-48 mx-auto object-contain">
@@ -189,6 +191,14 @@
         </div>
     </div>
 
+    <div id="district-detail-modal" class="modal-container">
+        <div class="modal-content">
+             <button id="close-district-modal-btn" class="close-modal-btn"><i class="fas fa-times text-white"></i></button>
+             <h3 id="district-modal-title" class="text-3xl font-bold text-white mb-4 text-center"></h3>
+             <div id="district-modal-content" class="text-gray-300 space-y-3 text-justify"></div>
+        </div>
+    </div>
+
     <div id="confirmation-modal" class="modal-container">
         <div class="modal-content text-center">
             <h3 class="text-xl font-bold mb-2 text-white">Konfirmasi Navigasi</h3>
@@ -204,14 +214,37 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const provincesData = {
-                maluku: { name: "Maluku", logo: "https://upload.wikimedia.org/wikipedia/commons/3/39/Coat_of_arms_of_Maluku.svg", tiktokLink: "https://vt.tiktok.com/ZSStthU7e/", governor: "Hendrik Lewerissa", viceGovernor: "Abdullah Vanath", songTitle: "Ayo Mama - Lagu Daerah Maluku", songSrc: "https://f.top4top.io/m_35106b3xv1.mp3", description: `<p>Maluku adalah sebuah provinsi yang meliputi bagian selatan Kepulauan Maluku, Indonesia. Provinsi ini berbatasan dengan Laut Seram di utara, Samudra Hindia dan Laut Arafura di selatan, Papua di timur, dan Sulawesi di barat. Ibu kota dan kota terbesarnya adalah Ambon. Sejarah Maluku yang kaya sebagai "Kepulauan Rempah-Rempah" menjadikannya pusat perdagangan penting yang menarik berbagai bangsa.</p>`, districts: ["Buru", "Buru Selatan", "Kepulauan Aru", "Kepulauan Tanimbar", "Maluku Barat Daya", "Maluku Tengah", "Maluku Tenggara", "Seram Bagian Barat", "Seram Bagian Timur", "Kota Ambon", "Kota Tual"], jumlah_penduduk: 1945648, ibu_kota: "Ambon", hari_jadi: null, suku_bangsa: ["Alfur", "Ambon", "Tionghoa", "Bugis", "Buton", "Jawa"], website_resmi: "malukuprov.go.id" },
-                maluku_utara: { name: "Maluku Utara", logo: "https://upload.wikimedia.org/wikipedia/commons/7/73/Coat_of_arms_of_North_Maluku.svg", tiktokLink: "https://vt.tiktok.com/ZSStthBan/", governor: "Sherly Tjoanda", viceGovernor: "Sarbin Sehe", songTitle: "Borero - Lagu Daerah Maluku Utara", songSrc: "https://d.top4top.io/m_3510likks1.mp3", description: `<p>Maluku Utara adalah provinsi di Indonesia bagian timur yang beribukota di Sofifi. Wilayah ini resmi menjadi provinsi sendiri pada 4 Oktober 1999. Dikenal dengan sejarah kesultanan Ternate dan Tidore yang legendaris, Maluku Utara merupakan episentrum sejarah rempah-rempah yang menawarkan pemandangan gunung berapi dramatis dan pulau-pulau eksotis.</p>`, districts: ["Halmahera Barat", "Halmahera Tengah", "Halmahera Utara", "Halmahera Selatan", "Kepulauan Sula", "Halmahera Timur", "Pulau Morotai", "Pulau Taliabu", "Kota Ternate", "Kota Tidore Kepulauan"], jumlah_penduduk: 1394231, ibu_kota: "Sofifi", hari_jadi: "4 Oktober 1999", suku_bangsa: null, website_resmi: "malutprov.go.id" },
-                sulawesi_tenggara: { name: "Sulawesi Tenggara", logo: "https://upload.wikimedia.org/wikipedia/commons/3/31/Coat_of_arms_of_Southeast_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSStt649m/", governor: "Andi Sumangerukka", viceGovernor: "Hugua", songTitle: "Tana Wolio - Lagu Daerah Sulawesi Tenggara", songSrc: "https://b.top4top.io/m_3510m8pks1.mp3", description: `<p>Sulawesi Tenggara adalah sebuah provinsi di Indonesia yang terletak di bagian tenggara pulau Sulawesi, dengan ibu kota di Kendari. Provinsi ini merupakan rumah bagi Taman Nasional Wakatobi, salah satu surga bawah laut terbaik dunia yang diakui UNESCO, serta dikenal dengan masyarakat Suku Bajo yang hidup harmonis dengan laut.</p>`, districts: ["Bombana", "Buton", "Buton Selatan", "Buton Tengah", "Buton Utara", "Kolaka", "Kolaka Timur", "Kolaka Utara", "Konawe", "Konawe Kepulauan", "Konawe Selatan", "Konawe Utara", "Muna", "Muna Barat", "Wakatobi", "Kota Baubau", "Kota Kendari"], jumlah_penduduk: 2755589, ibu_kota: "Kendari", hari_jadi: "27 April 1964", suku_bangsa: ["Tolaki", "Buton", "Muna", "Moronene", "Wawonii"], website_resmi: null },
-                sulawesi_selatan: { name: "Sulawesi Selatan", logo: "https://upload.wikimedia.org/wikipedia/commons/6/67/Coat_of_arms_of_South_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSStt8Ym9/", governor: "Andi Sudirman Sulaiman", viceGovernor: "Fatmawati Rusdi", description: `<p>Sulawesi Selatan adalah provinsi di pesisir barat daya Sulawesi, dengan ibu kota di Makassar. Provinsi ini memiliki warisan budaya Bugis-Makassar yang kuat dan merupakan tanah kelahiran Kapal Pinisi, sebuah mahakarya yang diakui sebagai Warisan Budaya Takbenda UNESCO. Keunikan Tana Toraja dengan ritual megah dan arsitektur ikoniknya juga menjadi daya tarik utama.</p>`, districts: ["Bantaeng", "Barru", "Bone", "Bulukumba", "Enrekang", "Gowa", "Jeneponto", "Kepulauan Selayar", "Luwu", "Luwu Timur", "Luwu Utara", "Maros", "Pangkajene dan Kepulauan", "Pinrang", "Sidenreng Rappang", "Sinjai", "Soppeng", "Takalar", "Tana Toraja", "Toraja Utara", "Wajo", "Kota Makassar", "Kota Palopo", "Kota Parepare"], jumlah_penduduk: 9460344, ibu_kota: "Makassar", hari_jadi: "13 Desember 1960", suku_bangsa: ["Bugis", "Makassar", "Toraja", "Mandar"], website_resmi: null },
-                sulawesi_tengah: { name: "Sulawesi Tengah", logo: "https://upload.wikimedia.org/wikipedia/commons/4/46/Coat_of_arms_of_Central_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttU1BB/", governor: "Anwar Hafid", viceGovernor: "Reny Lamadjido", description: `<p>Sulawesi Tengah adalah sebuah provinsi Indonesia yang terletak di bagian tengah pulau Sulawesi. Ibu kotanya adalah Palu. Provinsi ini menyimpan pesona alam seperti Teluk Palu dan Danau Poso, serta misteri purbakala di Taman Nasional Lore Lindu, yang menjadi rumah bagi flora fauna endemik dan situs-situs megalitikum kuno.</p>`, districts: ["Banggai", "Banggai Kepulauan", "Banggai Laut", "Buol", "Donggala", "Morowali", "Morowali Utara", "Parigi Moutong", "Poso", "Sigi", "Tojo Una-Una", "Tolitoli", "Kota Palu"], jumlah_penduduk: 3154499, ibu_kota: "Palu", hari_jadi: "13 April 1964", suku_bangsa: ["Kaili", "Pamona", "Banggai", "Saluan", "Buol", "Mori", "Bungku", "Balantak", "Lore", "Mamasa", "Tolitoli", "Pendau", "Dondo", "Dampal", "Tomini"], website_resmi: "sultengprov.go.id" },
-                sulawesi_barat: { name: "Sulawesi Barat", logo: "https://upload.wikimedia.org/wikipedia/commons/8/89/Coat_of_arms_of_West_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttY2dj/", governor: "Suhardi Duka", viceGovernor: "Salim S. Mengga", songTitle: "Tenggang Tenggang Lopi - Lagu Daerah Sulawesi Barat", songSrc: "https://h.top4top.io/m_3510lsqsl1.mp3", description: `<p>Sulawesi Barat adalah provinsi hasil pemekaran dari Sulawesi Selatan yang dibentuk pada 5 Oktober 2004. Ibu kotanya adalah Mamuju. Provinsi ini memiliki identitas budaya yang kuat dari Suku Mandar, dikenal dengan para pelaut andal dan Sarung Sutra Mandar yang indah, serta memiliki garis pantai menawan dan perkebunan kopi yang subur.</p>`, districts: ["Majene", "Mamasa", "Mamuju", "Mamuju Tengah", "Pasangkayu", "Polewali Mandar"], jumlah_penduduk: 1466741, ibu_kota: "Mamuju", hari_jadi: "22 September 2004", suku_bangsa: ["Mandar", "Toraja", "Bugis", "Mamasa", "Kalumpang", "Jawa", "Makassar"], website_resmi: null },
-                sulawesi_utara: { name: "Sulawesi Utara", logo: "https://upload.wikimedia.org/wikipedia/commons/6/68/Coat_of_arms_of_North_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttLvCw/", governor: "Yulius Selvanus", viceGovernor: "Victor Mailangkay", description: `<p>Sulawesi Utara adalah provinsi yang terletak di ujung utara Pulau Sulawesi, Indonesia, dengan ibu kota di Manado. Provinsi ini merupakan surga bagi pecinta kehidupan bawah laut, dengan Taman Nasional Bunaken sebagai ikon utamanya. Masyarakat Minahasa yang ramah dan terbuka mendominasi wilayah yang dijuluki "Kota Seribu Gereja" ini.</p>`, districts: ["Bolaang Mongondow", "Bolaang Mongondow Selatan", "Bolaang Mongondow Timur", "Bolaang Mongondow Utara", "Kepulauan Sangihe", "Kepulauan Siau Tagulandang Biaro", "Kepulauan Talaud", "Minahasa", "Minahasa Selatan", "Minahasa Tenggara", "Minahasa Utara", "Kota Bitung", "Kota Kotamobagu", "Kota Manado", "Kota Tomohon"], jumlah_penduduk: 2645291, ibu_kota: "Manado", hari_jadi: "14 Agustus 1959", suku_bangsa: ["Minahasa", "Sangir-Talaud", "Bolaang Mongondow", "Gorontalo", "Tionghoa"], website_resmi: "sulutprov.go.id" },
-                gorontalo: { name: "Gorontalo", logo: "https://upload.wikimedia.org/wikipedia/commons/0/01/Coat_of_arms_of_Gorontalo.svg", tiktokLink: "https://vt.tiktok.com/ZSSttBCHy/", governor: "Gusnar Ismail", viceGovernor: "Idah Syahidah Rusli Habibie", description: `<p>Gorontalo adalah sebuah provinsi di Indonesia yang terletak di Semenanjung Gorontalo, di bagian utara Pulau Sulawesi. Dikenal dengan julukan "Serambi Madinah", Gorontalo memiliki tradisi Islam yang kental. Provinsi ini mengelilingi Teluk Tomini yang tenang, lokasi ideal untuk mengamati hiu paus, dan memiliki peninggalan sejarah seperti Benteng Otanaha.</p>`, districts: ["Boalemo", "Bone Bolango", "Gorontalo", "Gorontalo Utara", "Pohuwato", "Kota Gorontalo"], jumlah_penduduk: 1213180, ibu_kota: "Gorontalo", hari_jadi: "5 Desember 2000", suku_bangsa: ["Gorontalo"], website_resmi: "gorontaloprov.go.id" }
+                maluku: { name: "Maluku", logo: "https://upload.wikimedia.org/wikipedia/commons/3/39/Coat_of_arms_of_Maluku.svg", tiktokLink: "https://vt.tiktok.com/ZSStthU7e/", governor: "Hendrik Lewerissa", viceGovernor: "Abdullah Vanath", songTitle: "Ayo Mama - Lagu Daerah Maluku", songSrc: "https://f.top4top.io/m_35106b3xv1.mp3", description: `<p>Maluku adalah sebuah provinsi yang meliputi bagian selatan Kepulauan Maluku, Indonesia. Provinsi ini berbatasan dengan Laut Seram di utara, Samudra Hindia dan Laut Arafura di selatan, Papua di timur, dan Sulawesi di barat. Ibu kota dan kota terbesarnya adalah Ambon. Sejarah Maluku yang kaya sebagai "Kepulauan Rempah-Rempah" menjadikannya pusat perdagangan penting yang menarik berbagai bangsa.</p>`, districts: [ { name: "Buru", info: "Ibu kota: Namlea. Dikenal sebagai penghasil minyak kayu putih utama di Indonesia." }, { name: "Buru Selatan", info: "Ibu kota: Namrole. Merupakan daerah pemekaran dengan potensi perikanan dan pertanian." }, { name: "Kepulauan Aru", info: "Ibu kota: Dobo. Gugusan kepulauan yang kaya akan hasil laut, terutama mutiara dan teripang." }, { name: "Kepulauan Tanimbar", info: "Ibu kota: Saumlaki. Dikenal dengan tradisi patung Tavu dan kain tenun Tanimbar yang khas." }, { name: "Maluku Barat Daya", info: "Ibu kota: Tiakur. Wilayah kepulauan terluar yang berbatasan dengan Timor Leste dan Australia." }, { name: "Maluku Tengah", info: "Ibu kota: Masohi. Kabupaten tertua dan terluas di Maluku dengan beragam potensi alam." }, { name: "Maluku Tenggara", info: "Ibu kota: Langgur. Terkenal dengan Pantai Ngurbloat yang memiliki pasir terhalus di dunia." }, { name: "Seram Bagian Barat", info: "Ibu kota: Piru. Memiliki Taman Nasional Manusela yang kaya akan keanekaragaman hayati." }, { name: "Seram Bagian Timur", info: "Ibu kota: Bula. Merupakan daerah penghasil minyak bumi dan gas alam." }, { name: "Kota Ambon", info: "Ibu kota provinsi. Dikenal sebagai 'Ambon Manise' dan pusat musik di Indonesia Timur." }, { name: "Kota Tual", info: "Pusat administrasi dan perdagangan di Kepulauan Kei dengan budaya maritim yang kuat." } ], jumlah_penduduk: 1945648, ibu_kota: "Ambon", hari_jadi: null, suku_bangsa: ["Alfur", "Ambon", "Tionghoa", "Bugis", "Buton", "Jawa"], website_resmi: "malukuprov.go.id" },
+                maluku_utara: { name: "Maluku Utara", logo: "https://upload.wikimedia.org/wikipedia/commons/7/73/Coat_of_arms_of_North_Maluku.svg", tiktokLink: "https://vt.tiktok.com/ZSStthBan/", governor: "Sherly Tjoanda", viceGovernor: "Sarbin Sehe", songTitle: "Borero - Lagu Daerah Maluku Utara", songSrc: "https://d.top4top.io/m_3510likks1.mp3", description: `<p>Maluku Utara adalah provinsi di Indonesia bagian timur yang beribukota di Sofifi. Wilayah ini resmi menjadi provinsi sendiri pada 4 Oktober 1999. Dikenal dengan sejarah kesultanan Ternate dan Tidore yang legendaris, Maluku Utara merupakan episentrum sejarah rempah-rempah yang menawarkan pemandangan gunung berapi dramatis dan pulau-pulau eksotis.</p>`, districts: [ { name: "Halmahera Barat", info: "Ibu kota: Jailolo. Dikenal dengan Festival Teluk Jailolo yang menampilkan kekayaan budaya dan bahari." }, { name: "Halmahera Tengah", info: "Ibu kota: Weda. Menjadi pusat industri pertambangan nikel yang berkembang pesat." }, { name: "Halmahera Utara", info: "Ibu kota: Tobelo. Memiliki Danau Galela dan tradisi Hibua Lamo (rumah besar untuk musyawarah)." }, { name: "Halmahera Selatan", info: "Ibu kota: Labuha. Kepulauan yang luas dengan Pulau Bacan sebagai pusatnya, terkenal dengan batu bacan." }, { name: "Kepulauan Sula", info: "Ibu kota: Sanana. Penghasil hasil bumi seperti cengkih, pala, dan kelapa." }, { name: "Halmahera Timur", info: "Ibu kota: Maba. Wilayah dengan potensi tambang yang besar dan keindahan alam pesisir." }, { name: "Pulau Morotai", info: "Ibu kota: Daruba. Pulau bersejarah peninggalan Perang Dunia II dengan banyak situs penyelaman." }, { name: "Pulau Taliabu", info: "Ibu kota: Bobong. Pulau terpisah yang kaya akan hasil hutan dan tambang emas." }, { name: "Kota Ternate", info: "Pusat sejarah Kesultanan Ternate dengan benteng-benteng peninggalan Portugis dan Belanda." }, { name: "Kota Tidore Kepulauan", info: "Pusat sejarah Kesultanan Tidore, dikenal dengan tradisi napak tilas perjalanan Sultan Nuku." } ], jumlah_penduduk: 1394231, ibu_kota: "Sofifi", hari_jadi: "4 Oktober 1999", suku_bangsa: null, website_resmi: "malutprov.go.id" },
+                sulawesi_tenggara: { name: "Sulawesi Tenggara", logo: "https://upload.wikimedia.org/wikipedia/commons/3/31/Coat_of_arms_of_Southeast_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSStt649m/", governor: "Andi Sumangerukka", viceGovernor: "Hugua", songTitle: "Tana Wolio - Lagu Daerah Sulawesi Tenggara", songSrc: "https://b.top4top.io/m_3510m8pks1.mp3", description: `<p>Sulawesi Tenggara adalah sebuah provinsi di Indonesia yang terletak di bagian tenggara pulau Sulawesi, dengan ibu kota di Kendari. Provinsi ini merupakan rumah bagi Taman Nasional Wakatobi, salah satu surga bawah laut terbaik dunia yang diakui UNESCO, serta dikenal dengan masyarakat Suku Bajo yang hidup harmonis dengan laut.</p>`, districts: [ { name: "Bombana", info: "Ibu kota: Rumbia. Dikenal sebagai penghasil emas dan memiliki Pulau Kabaena." }, { name: "Buton", info: "Ibu kota: Pasarwajo. Terkenal sebagai salah satu penghasil aspal terbesar di dunia." }, { name: "Buton Selatan", info: "Ibu kota: Batauga. Wilayah dengan budaya maritim yang kental dan pantai yang indah." }, { name: "Buton Tengah", info: "Ibu kota: Labungkari. Dikenal dengan Gua Bidadari dan potensi wisata alamnya." }, { name: "Buton Utara", info: "Ibu kota: Buranga. Memiliki kawasan konservasi laut dan tradisi tenun yang khas." }, { name: "Kolaka", info: "Ibu kota: Kolaka. Pusat industri pengolahan nikel dan kakao di Sulawesi Tenggara." }, { name: "Kolaka Timur", info: "Ibu kota: Tirawuta. Daerah agraris yang dikenal sebagai lumbung beras provinsi." }, { name: "Kolaka Utara", info: "Ibu kota: Lasusua. Terkenal dengan perkebunan kakao dan cengkih serta Danau Biru." }, { name: "Konawe", info: "Ibu kota: Unaaha. Salah satu kabupaten tertua yang menjadi pusat pemerintahan Kerajaan Konawe." }, { name: "Konawe Kepulauan", info: "Ibu kota: Langara. Gugusan pulau dengan Pulau Wawonii sebagai pulau utamanya." }, { name: "Konawe Selatan", info: "Ibu kota: Andoolo. Memiliki Taman Nasional Rawa Aopa Watumohai yang luas." }, { name: "Konawe Utara", info: "Ibu kota: Wanggudu. Daerah kaya akan sumber daya nikel dan mineral lainnya." }, { name: "Muna", info: "Ibu kota: Raha. Terkenal dengan tradisi pacuan kuda dan layang-layang tertua di dunia." }, { name: "Muna Barat", info: "Ibu kota: Laworo. Daerah pemekaran dengan potensi pertanian jagung dan jati." }, { name: "Wakatobi", info: "Ibu kota: Wangi-Wangi. Singkatan dari Wangi-wangi, Kaledupa, Tomia, dan Binongko; surga bawah laut dunia." }, { name: "Kota Baubau", info: "Pusat Kesultanan Buton dengan benteng terluas di dunia, Benteng Keraton Buton." }, { name: "Kota Kendari", info: "Ibu kota provinsi yang terkenal dengan Teluk Kendari dan Jembatan Bahteramas." } ], jumlah_penduduk: 2755589, ibu_kota: "Kendari", hari_jadi: "27 April 1964", suku_bangsa: ["Tolaki", "Buton", "Muna", "Moronene", "Wawonii"], website_resmi: null },
+                sulawesi_selatan: { name: "Sulawesi Selatan", logo: "https://upload.wikimedia.org/wikipedia/commons/6/67/Coat_of_arms_of_South_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSStt8Ym9/", governor: "Andi Sudirman Sulaiman", viceGovernor: "Fatmawati Rusdi", description: `<p>Sulawesi Selatan adalah provinsi di pesisir barat daya Sulawesi, dengan ibu kota di Makassar. Provinsi ini memiliki warisan budaya Bugis-Makassar yang kuat dan merupakan tanah kelahiran Kapal Pinisi, sebuah mahakarya yang diakui sebagai Warisan Budaya Takbenda UNESCO. Keunikan Tana Toraja dengan ritual megah dan arsitektur ikoniknya juga menjadi daya tarik utama.</p>`, districts: [ { name: "Bantaeng", info: "Dikenal sebagai kabupaten agribisnis dengan inovasi di bidang pertanian dan kesehatan." }, { name: "Barru", info: "Memiliki pelabuhan Garongkong dan terkenal dengan wisata alam pegunungan dan pantai." }, { name: "Bone", info: "Bekas pusat Kerajaan Bone, salah satu kerajaan terbesar dalam sejarah Sulawesi Selatan." }, { name: "Bulukumba", info: "Pusat pembuatan Kapal Pinisi yang legendaris, terutama di Tana Beru." }, { name: "Enrekang", info: "Dikenal sebagai 'Bumi Massenrempulu' dengan kontur pegunungan yang indah, termasuk Gunung Latimojong." }, { name: "Gowa", info: "Bekas pusat Kerajaan Gowa yang bersejarah, dengan peninggalan seperti Benteng Somba Opu." }, { name: "Jeneponto", info: "Dikenal sebagai 'Bumi Turatea' dan terkenal dengan kuda Jeneponto serta garamnya." }, { name: "Kepulauan Selayar", info: "Gugusan pulau dengan Taman Nasional Taka Bonerate, atol terbesar ketiga di dunia." }, { name: "Luwu", info: "Bekas pusat Kedatuan Luwu, kerajaan tertua di Sulawesi Selatan." }, { name: "Luwu Timur", info: "Pusat pertambangan nikel di Sorowako dan memiliki Danau Matano, danau terdalam di Asia Tenggara." }, { name: "Luwu Utara", info: "Ibu kota: Masamba. Daerah subur yang menjadi salah satu lumbung pangan provinsi." }, { name: "Maros", info: "Memiliki Taman Nasional Bantimurung-Bulusaraung dengan gua-gua prasejarah dan kupu-kupunya." }, { name: "Pangkajene dan Kepulauan", info: "Terdiri dari daratan dan gugusan pulau Spermonde, penghasil ikan bandeng." }, { name: "Pinrang", info: "Dikenal sebagai daerah lumbung padi dan memiliki Pantai Lowita." }, { name: "Sidenreng Rappang", info: "Dikenal sebagai 'Bumi Nene Mallomo' dan pusat pembangkit listrik tenaga bayu (PLTB) pertama di Indonesia." }, { name: "Sinjai", info: "Terkenal dengan tradisi karapan sapi dan memiliki Hutan Mangrove Tongke-Tongke." }, { name: "Soppeng", info: "Dijuluki 'Kota Kalong' karena ribuan kelelawar yang bergelantungan di pusat kota." }, { name: "Takalar", info: "Daerah pesisir yang menjadi salah satu sentra budidaya rumput laut." }, { name: "Tana Toraja", info: "Terkenal di seluruh dunia dengan ritual pemakaman Rambu Solo' dan rumah adat Tongkonan." }, { name: "Toraja Utara", info: "Daerah pemekaran dengan pusat pariwisata di Rantepao dan keindahan alam pegunungan." }, { name: "Wajo", info: "Dikenal dengan Danau Tempe dan tradisi tenun sutra Sengkang yang mendunia." }, { name: "Kota Makassar", info: "Ibu kota provinsi dan kota metropolitan terbesar di Indonesia Timur." }, { name: "Kota Palopo", info: "Pusat dari Tanah Luwu dan menjadi kota otonom yang berkembang pesat." }, { name: "Kota Parepare", info: "Kota kelahiran Presiden B.J. Habibie dan kota pelabuhan yang strategis." } ], jumlah_penduduk: 9460344, ibu_kota: "Makassar", hari_jadi: "13 Desember 1960", suku_bangsa: ["Bugis", "Makassar", "Toraja", "Mandar"], website_resmi: null },
+                sulawesi_tengah: { 
+                    name: "Sulawesi Tengah", 
+                    logo: "https://upload.wikimedia.org/wikipedia/commons/4/46/Coat_of_arms_of_Central_Sulawesi.svg", 
+                    tiktokLink: "https://vt.tiktok.com/ZSSttU1BB/", 
+                    governor: "Anwar Hafid", 
+                    viceGovernor: "Reny Lamadjido", 
+                    description: `<p>Sulawesi Tengah adalah sebuah provinsi Indonesia yang terletak di bagian tengah pulau Sulawesi. Ibu kotanya adalah Palu. Provinsi ini menyimpan pesona alam seperti Teluk Palu dan Danau Poso, serta misteri purbakala di Taman Nasional Lore Lindu, yang menjadi rumah bagi flora fauna endemik dan situs-situs megalitikum kuno.</p>`, 
+                    districts: [
+                        { name: "Banggai", info: "Ibu kota: Luwuk. Terkenal dengan Pulau Dua Balantak dan tradisi Molabot Tumpe." },
+                        { name: "Banggai Kepulauan", info: "Ibu kota: Salakan. Merupakan kepulauan dengan potensi bahari yang besar, termasuk terumbu karang yang indah." },
+                        { name: "Banggai Laut", info: "Ibu kota: Banggai. Daerah pemekaran yang kaya akan hasil laut seperti ikan dan rumput laut." },
+                        { name: "Buol", info: "Ibu kota: Buol. Terletak di bagian utara, berbatasan langsung dengan Laut Sulawesi dan dikenal dengan hasil pertaniannya." },
+                        { name: "Donggala", info: "Ibu kota: Banawa. Salah satu kabupaten tertua dengan pelabuhan bersejarah dan Pantai Tanjung Karang yang terkenal." },
+                        { name: "Morowali", info: "Ibu kota: Bungku. Pusat industri nikel terbesar di Indonesia, menarik banyak investasi dan tenaga kerja." },
+                        { name: "Morowali Utara", info: "Ibu kota: Kolonodale. Dikenal dengan Taman Nasional Morowali dan keindahan alamnya yang masih alami." },
+                        { name: "Parigi Moutong", info: "Ibu kota: Parigi. Memiliki garis pantai terpanjang dan menjadi tuan rumah festival internasional Sail Tomini." },
+                        { name: "Poso", info: "Ibu kota: Poso. Memiliki Danau Poso yang merupakan danau terbesar ketiga di Indonesia dengan festival budayanya." },
+                        { name: "Sigi", info: "Ibu kota: Sigi Biromaru. Daerah agraris yang subur di lembah Palu dan menjadi penyangga ibu kota provinsi." },
+                        { name: "Tojo Una-Una", info: "Ibu kota: Ampana. Gerbang utama menuju Kepulauan Togean, surga bagi para penyelam dan pecinta alam." },
+                        { name: "Tolitoli", info: "Ibu kota: Tolitoli. Dikenal sebagai 'Kota Cengkih' dengan garis pantai yang indah dan hasil perkebunan melimpah." },
+                        { name: "Kota Palu", info: "Ibu kota provinsi. Terletak di teluk yang indah dan dikenal dengan Jembatan Palu IV yang ikonik sebelum rusak akibat gempa 2018." }
+                    ],
+                    jumlah_penduduk: 3154499, ibu_kota: "Palu", hari_jadi: "13 April 1964", suku_bangsa: ["Kaili", "Pamona", "Banggai", "Saluan", "Buol", "Mori", "Bungku", "Balantak", "Lore", "Mamasa", "Tolitoli", "Pendau", "Dondo", "Dampal", "Tomini"], website_resmi: "sultengprov.go.id" 
+                },
+                sulawesi_barat: { name: "Sulawesi Barat", logo: "https://upload.wikimedia.org/wikipedia/commons/8/89/Coat_of_arms_of_West_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttY2dj/", governor: "Suhardi Duka", viceGovernor: "Salim S. Mengga", songTitle: "Tenggang Tenggang Lopi - Lagu Daerah Sulawesi Barat", songSrc: "https://h.top4top.io/m_3510lsqsl1.mp3", description: `<p>Sulawesi Barat adalah provinsi hasil pemekaran dari Sulawesi Selatan yang dibentuk pada 5 Oktober 2004. Ibu kotanya adalah Mamuju. Provinsi ini memiliki identitas budaya yang kuat dari Suku Mandar, dikenal dengan para pelaut andal dan Sarung Sutra Mandar yang indah, serta memiliki garis pantai menawan dan perkebunan kopi yang subur.</p>`, districts: [ { name: "Majene", info: "Dikenal sebagai kota pendidikan di Sulawesi Barat dengan universitas negeri pertamanya." }, { name: "Mamasa", info: "Daerah dataran tinggi yang sejuk, mirip dengan Tana Toraja, dengan budaya dan rumah adat yang unik." }, { name: "Mamuju", info: "Ibu kota provinsi. Terkenal dengan Pulau Karampuang dan Pantai Manakarra." }, { name: "Mamuju Tengah", info: "Ibu kota: Tobadak. Merupakan daerah agraris dengan perkebunan kelapa sawit yang luas." }, { name: "Pasangkayu", info: "Sebelumnya dikenal sebagai Mamuju Utara, berbatasan langsung dengan Sulawesi Tengah." }, { name: "Polewali Mandar", info: "Dikenal sebagai 'Bumi Tipalayo', pusat budaya Mandar dan penghasil kakao." } ], jumlah_penduduk: 1466741, ibu_kota: "Mamuju", hari_jadi: "22 September 2004", suku_bangsa: ["Mandar", "Toraja", "Bugis", "Mamasa", "Kalumpang", "Jawa", "Makassar"], website_resmi: null },
+                sulawesi_utara: { name: "Sulawesi Utara", logo: "https://upload.wikimedia.org/wikipedia/commons/6/68/Coat_of_arms_of_North_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttLvCw/", governor: "Yulius Selvanus", viceGovernor: "Victor Mailangkay", description: `<p>Sulawesi Utara adalah provinsi yang terletak di ujung utara Pulau Sulawesi, Indonesia, dengan ibu kota di Manado. Provinsi ini merupakan surga bagi pecinta kehidupan bawah laut, dengan Taman Nasional Bunaken sebagai ikon utamanya. Masyarakat Minahasa yang ramah dan terbuka mendominasi wilayah yang dijuluki "Kota Seribu Gereja" ini.</p>`, districts: [ { name: "Bolaang Mongondow", info: "Ibu kota: Lolak. Wilayah dengan sejarah kerajaan dan potensi pertanian yang besar." }, { name: "Bolaang Mongondow Selatan", info: "Ibu kota: Bolaang Uki. Memiliki garis pantai yang panjang dengan potensi wisata bahari." }, { name: "Bolaang Mongondow Timur", info: "Ibu kota: Tutuyan. Dikenal dengan potensi pertambangan emasnya." }, { name: "Bolaang Mongondow Utara", info: "Ibu kota: Boroko. Berbatasan langsung dengan Gorontalo dan memiliki potensi perikanan." }, { name: "Kepulauan Sangihe", info: "Ibu kota: Tahuna. Gugusan pulau yang indah dengan gunung api bawah laut Mahangetang." }, { name: "Kepulauan Siau Tagulandang Biaro", info: "Ibu kota: Ondong Siau. Dikenal dengan Gunung Karangetang, salah satu gunung api teraktif di Indonesia." }, { name: "Kepulauan Talaud", info: "Ibu kota: Melonguane. Kabupaten terluar di utara Indonesia, berbatasan dengan Filipina." }, { name: "Minahasa", info: "Ibu kota: Tondano. 'Tanah Leluhur' Suku Minahasa dengan Danau Tondano yang ikonik." }, { name: "Minahasa Selatan", info: "Ibu kota: Amurang. Terkenal dengan Bukit Kasih Kanonang sebagai simbol toleransi beragama." }, { name: "Minahasa Tenggara", info: "Ibu kota: Ratahan. Daerah yang kaya akan hasil pertanian dan perkebunan." }, { name: "Minahasa Utara", info: "Ibu kota: Airmadidi. Lokasi Bandar Udara Sam Ratulangi dan KEK Pariwisata Likupang." }, { name: "Kota Bitung", info: "Kota pelabuhan dan industri perikanan terbesar di provinsi ini." }, { name: "Kota Kotamobagu", info: "Pusat perdagangan dan jasa di wilayah Bolaang Mongondow Raya." }, { name: "Kota Manado", info: "Ibu kota provinsi yang terkenal dengan Taman Laut Bunaken dan kuliner khasnya." }, { name: "Kota Tomohon", info: "Dikenal sebagai 'Kota Bunga' karena festival bunga internasionalnya dan Pasar Ekstrem." } ], jumlah_penduduk: 2645291, ibu_kota: "Manado", hari_jadi: "14 Agustus 1959", suku_bangsa: ["Minahasa", "Sangir-Talaud", "Bolaang Mongondow", "Gorontalo", "Tionghoa"], website_resmi: "sulutprov.go.id" },
+                gorontalo: { name: "Gorontalo", logo: "https://upload.wikimedia.org/wikipedia/commons/0/01/Coat_of_arms_of_Gorontalo.svg", tiktokLink: "https://vt.tiktok.com/ZSSttBCHy/", governor: "Gusnar Ismail", viceGovernor: "Idah Syahidah Rusli Habibie", description: `<p>Gorontalo adalah sebuah provinsi di Indonesia yang terletak di Semenanjung Gorontalo. Dikenal dengan julukan "Serambi Madinah", Gorontalo memiliki tradisi Islam yang kental. Provinsi ini mengelilingi Teluk Tomini yang tenang, lokasi ideal untuk mengamati hiu paus, dan memiliki peninggalan sejarah seperti Benteng Otanaha.</p>`, districts: [ { name: "Boalemo", info: "Ibu kota: Tilamuta. Dikenal dengan Pantai Bolihutuo dan tradisi budaya yang masih kental." }, { name: "Bone Bolango", info: "Ibu kota: Suwawa. Memiliki Taman Nasional Bogani Nani Wartabone dan pusat konservasi Maleo." }, { name: "Gorontalo", info: "Ibu kota: Limboto. Terdapat Danau Limboto yang bersejarah dan Menara Keagungan Limboto." }, { name: "Gorontalo Utara", info: "Ibu kota: Kwandang. Memiliki Pulau Saronde yang menjadi destinasi wisata bahari unggulan." }, { name: "Pohuwato", info: "Ibu kota: Marisa. Dikenal sebagai lumbung padi dan memiliki potensi pertambangan emas." }, { name: "Kota Gorontalo", info: "Pusat pemerintahan dan perekonomian provinsi dengan Menara Limboto sebagai ikonnya." } ], jumlah_penduduk: 1213180, ibu_kota: "Gorontalo", hari_jadi: "5 Desember 2000", suku_bangsa: ["Gorontalo"], website_resmi: "gorontaloprov.go.id" }
             };
 
             const destinationGrid = document.getElementById('destination-grid');
@@ -232,6 +265,7 @@
             });
             
             const modal = document.getElementById('detail-modal');
+            const districtModal = document.getElementById('district-detail-modal');
             const confirmationModal = document.getElementById('confirmation-modal');
             const pageWrapper = document.getElementById('page-wrapper');
             const provinceMusicPlayer = document.getElementById('province-music-player');
@@ -282,9 +316,19 @@
                     const districtList = document.getElementById('district-list');
                     districtList.innerHTML = '';
                     data.districts.forEach((district, i) => {
+                        const isObject = typeof district === 'object';
+                        const districtName = isObject ? district.name : district;
                         const li = document.createElement('li');
-                        li.textContent = district;
-                        li.style.transitionDelay = `${i * 0.03}s`;
+                        const button = document.createElement('button');
+                        button.textContent = districtName;
+                        if (isObject) {
+                            button.dataset.districtInfo = district.info;
+                            button.addEventListener('click', showDistrictInfo);
+                        } else {
+                            button.disabled = true;
+                            button.style.cursor = 'default';
+                        }
+                        li.appendChild(button);
                         districtList.appendChild(li);
                     });
 
@@ -297,6 +341,13 @@
                     modal.classList.add('visible');
                 }
             });
+
+            function showDistrictInfo(e) {
+                const button = e.currentTarget;
+                document.getElementById('district-modal-title').textContent = button.textContent;
+                document.getElementById('district-modal-content').innerHTML = `<p>${button.dataset.districtInfo}</p>`;
+                districtModal.classList.add('visible');
+            }
             
             playProvinceBtn.addEventListener('click', () => {
                 if (provinceMusic.paused) {
@@ -347,7 +398,10 @@
                 modal.classList.remove('visible');
             };
             document.getElementById('close-modal-btn').addEventListener('click', closeModal);
-            modal.addEventListener('click', (e) => { if (e.target.id === 'detail-modal') closeModal(); });
+            
+            document.getElementById('close-district-modal-btn').addEventListener('click', () => {
+                districtModal.classList.remove('visible');
+            });
 
             document.getElementById('modal-website').addEventListener('click', (e) => {
                 e.preventDefault();
