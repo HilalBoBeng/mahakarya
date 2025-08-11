@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jelajah Nusantara - oleh @benggg111</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #0a0a0a; color: #f1f1f1; overflow-x: hidden; }
+        body.modal-open { overflow: hidden; }
+
+        #intro-screen { position: fixed; inset: 0; background: #0a0a0a; z-index: 100; display: flex; justify-content: center; align-items: center; text-align: center; transition: opacity 1s ease-in-out, transform 1s ease-in-out, filter 1s ease-in-out; }
+        #intro-screen.hidden { opacity: 0; transform: scale(1.5); filter: blur(20px); pointer-events: none; }
+        #particle-canvas { position: absolute; inset: 0; z-index: -1; }
+        .intro-container { transition: opacity 0.7s ease-out; }
+        .fade-in-text { opacity: 0; animation: fadeIn 2s forwards; }
+        @keyframes fadeIn { to { opacity: 1; } }
+        
+        #page-wrapper { transition: filter 0.4s ease, transform 0.4s ease; }
+        #page-wrapper.blurred { filter: blur(8px) brightness(0.7); transform: scale(0.98); pointer-events: none; }
+
+        @keyframes kenBurns { 0% { transform: scale(1.1) translate(0, 0); } 100% { transform: scale(1.2) translate(-2%, 2%); } }
+        .hero-bg-animation { animation: kenBurns 30s ease-in-out infinite alternate; }
+
+        #detail-modal { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.7); opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
+        #detail-modal.visible { opacity: 1; visibility: visible; }
+        .modal-content { background-color: #181818; border-radius: 1rem; padding: 2rem; width: 90%; max-width: 650px; max-height: 90vh; overflow-y: auto; position: relative; transform: translateY(40px) scale(0.95); opacity: 0; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        #detail-modal.visible .modal-content { transform: translateY(0) scale(1); opacity: 1; }
+        .modal-item { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        #detail-modal.visible .modal-item { opacity: 1; transform: translateY(0); }
+        #close-modal-btn { position: absolute; top: 1rem; right: 1rem; width: 2.5rem; height: 2.5rem; background-color: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; z-index: 20; }
+        #close-modal-btn:hover { background-color: rgba(255,255,255,0.2); transform: rotate(90deg); }
+
+        #district-container { max-height: 0; overflow: hidden; transition: max-height 0.7s ease-in-out; }
+        #district-list { list-style-type: none; padding: 0; columns: 2; gap: 0.5rem; }
+        #district-list li { background: rgba(255,255,255,0.05); padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 0.5rem; transform: translateX(20px); opacity: 0; transition: transform 0.5s ease, opacity 0.5s ease; }
+        #district-container.expanded #district-list li { transform: translateX(0); opacity: 1; }
+
+        .tiktok-gradient-text { background: linear-gradient(to right, #69C9D0, #EE1D52); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .tiktok-gradient-bg { background-image: linear-gradient(to right, #69C9D0, #EE1D52); }
+        .destination-card { cursor: pointer; position: relative; overflow: hidden; border-radius: 1rem; transition: transform 0.4s ease, box-shadow 0.4s ease; }
+        .destination-card:hover { transform: translateY(-10px) scale(1.03); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        .card-image-wrapper { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.5s ease; }
+        .destination-card:hover .card-image-wrapper { transform: scale(1.1); }
+        .card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 20%, rgba(0,0,0,0.1) 70%); }
+        .card-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem; color: white; }
+        .destination-logo { position: absolute; top: 1rem; left: 1rem; width: 48px; height: 48px; object-fit: contain; opacity: 0.8; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.7)); }
+        
+        #maluku-music-player { display: none; }
+        .music-player-button { background-color: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px); }
+        #maluku-progress-bar { transition: width 0.1s linear; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <audio id="background-music" loop><source src="https://g.top4top.io/m_3510b5zbc1.mp3" type="audio/mpeg"></source></audio>
+    <audio id="maluku-music"><source src="https://f.top4top.io/m_35106b3xv1.mp3" type="audio/mpeg"></source></audio>
+
+    <div id="intro-screen">
+        <canvas id="particle-canvas"></canvas>
+        <div id="welcome-container" class="intro-container z-10">
+            <h1 class="text-4xl md:text-6xl font-bold fade-in-text">Selamat Datang</h1>
+            <button id="kenalan-button" class="mt-8 text-lg font-semibold opacity-0 border-2 border-transparent hover:border-white/50 p-3 rounded-full transition-all duration-300">Kenalan yuk <i class="fas fa-hand-sparkles ml-2"></i></button>
+        </div>
+        <div id="introduction-container" class="intro-container z-10 absolute opacity-0 p-4 pointer-events-none">
+            <p id="introduction-text" class="text-xl md:text-3xl font-light max-w-2xl"></p>
+        </div>
+        <div id="mission-container" class="intro-container z-10 absolute opacity-0 p-4 pointer-events-none">
+            <p id="mission-text-wrapper" class="text-lg md:text-xl font-light max-w-3xl text-center"></p>
+            <button id="continue-button" class="mt-8 text-lg font-semibold opacity-0 border-2 border-white/50 hover:border-white p-3 rounded-full transition-all duration-300">Lanjutkan Petualangan <i class="fas fa-arrow-right ml-2"></i></button>
+        </div>
+    </div>
+
+    <div id="page-wrapper">
+        <div id="hero-section" class="min-h-screen flex flex-col justify-center items-center text-center p-4 bg-black overflow-hidden">
+            <div class="hero-bg-animation absolute inset-0 bg-cover bg-center opacity-40" style="background-image: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop');"></div>
+            <div class="relative z-10 pt-16"> <!-- Added padding top to make space for removed image -->
+                <h1 class="text-5xl md:text-7xl font-bold text-white drop-shadow-lg" data-aos="fade-down" data-aos-delay="200">Jelajah Nusantara</h1>
+                <p class="text-lg md:text-xl text-gray-200 mt-2 drop-shadow-md" data-aos="fade-down" data-aos-delay="300">Sebuah Persembahan Edukasi oleh <span class="font-semibold text-white">@benggg111</span></p>
+                <p class="mt-6 max-w-lg mx-auto text-gray-300 italic drop-shadow-md" data-aos="fade-up" data-aos-delay="400">"don't stop when you're tired, stop when you're done"</p>
+            </div>
+        </div>
+        <div id="content-section" class="relative bg-[#0a0a0a] z-10">
+            <div id="destinations" class="py-20 px-4 sm:px-6 lg:px-8">
+                <div class="container mx-auto max-w-6xl">
+                    <h2 class="text-3xl font-bold text-center mb-12 text-white" data-aos="fade-up">Pilih Destinasi Untuk Dijelajahi</h2>
+                    <div id="destination-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"></div>
+                </div>
+            </div>
+            <footer class="text-center py-10 border-t border-gray-900">
+                <p>&copy; <span id="year"></span> benggg. All rights reserved.</p>
+                <p class="text-sm mt-1">Website ini sedang dalam tahap perkembangan</p>
+                <div class="mt-4">
+                    <a href="https://www.tiktok.com/@benggg111" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:tiktok-gradient-text transition-colors duration-300 text-3xl inline-block"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://youtube.com/@bobenggid" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-red-600 transition-colors duration-300 text-3xl inline-block ml-6"><i class="fab fa-youtube"></i></a>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <div id="detail-modal">
+        <div class="modal-content">
+            <button id="close-modal-btn" aria-label="Tutup"><i class="fas fa-times text-white"></i></button>
+            <div class="text-center mb-6 modal-item">
+                <img id="modal-logo" src="" alt="Logo Provinsi" class="w-[120px] h-[120px] mx-auto mb-4 object-contain">
+                <h2 id="modal-title" class="text-4xl font-bold text-white"></h2>
+            </div>
+            <div id="modal-description" class="space-y-4 prose prose-invert max-w-none modal-item text-justify bg-white/5 p-4 rounded-lg"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center my-6 modal-item">
+                <div class="bg-white/5 p-3 rounded-lg"><p class="text-sm text-gray-400">Gubernur</p><h3 id="modal-governor" class="font-bold text-md"></h3></div>
+                <div class="bg-white/5 p-3 rounded-lg"><p class="text-sm text-gray-400">Wakil Gubernur</p><h3 id="modal-vice-governor" class="font-bold text-md"></h3></div>
+            </div>
+            <div id="maluku-music-player" class="my-6 modal-item space-y-3">
+                <p class="font-semibold text-center text-gray-300">Ayo Mama - Lagu Daerah Maluku</p>
+                <div class="flex items-center justify-center gap-4">
+                    <button id="play-maluku-music-btn" class="music-player-button w-12 h-12 rounded-full flex items-center justify-center text-lg flex-shrink-0">
+                        <i id="play-maluku-icon" class="fas fa-play"></i>
+                    </button>
+                    <div class="w-full bg-white/10 rounded-full h-1.5">
+                        <div id="maluku-progress-bar" class="bg-cyan-400 h-1.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-6 modal-item">
+                <button id="toggle-districts-btn" class="w-full text-left p-4 bg-white/5 rounded-lg font-semibold flex justify-between items-center transition-colors hover:bg-white/10">
+                    <span>Kabupaten & Kota</span><i id="district-arrow" class="fas fa-chevron-down transition-transform"></i>
+                </button>
+                <div id="district-container" class="mt-2"><ul id="district-list"></ul></div>
+            </div>
+            <div class="text-center modal-item">
+                <a id="modal-tiktok-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-block px-8 py-3 rounded-full text-white font-semibold tiktok-gradient-bg shadow-lg transition-transform transform hover:scale-105"><i class="fab fa-tiktok mr-2"></i> Kunjungi Playlist</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const provincesData = {
+                maluku: { name: "Maluku", logo: "https://upload.wikimedia.org/wikipedia/commons/3/39/Coat_of_arms_of_Maluku.svg", bgImage: "https://images.unsplash.com/photo-1592394637243-14e1a53b5b64?q=80&w=1887&auto=format&fit=crop", tiktokLink: "https://vt.tiktok.com/ZSStthU7e/", governor: "Hendrik Lewerissa", viceGovernor: "Abdullah Vanath", description: `<p>Maluku adalah sebuah provinsi yang meliputi bagian selatan Kepulauan Maluku, Indonesia. Provinsi ini berbatasan dengan Laut Seram di utara, Samudra Hindia dan Laut Arafura di selatan, Papua di timur, dan Sulawesi di barat. Ibu kota dan kota terbesarnya adalah Ambon. Sejarah Maluku yang kaya sebagai "Kepulauan Rempah-Rempah" menjadikannya pusat perdagangan penting yang menarik berbagai bangsa.</p>`, districts: ["Buru", "Buru Selatan", "Kepulauan Aru", "Kepulauan Tanimbar", "Maluku Barat Daya", "Maluku Tengah", "Maluku Tenggara", "Seram Bagian Barat", "Seram Bagian Timur", "Kota Ambon", "Kota Tual"] },
+                maluku_utara: { name: "Maluku Utara", logo: "https://upload.wikimedia.org/wikipedia/commons/7/73/Coat_of_arms_of_North_Maluku.svg", bgImage: "https://images.unsplash.com/photo-1621815199684-817a792c300a?q=80&w=1964&auto=format&fit=crop", tiktokLink: "https://vt.tiktok.com/ZSStthBan/", governor: "Sherly Tjoanda", viceGovernor: "Sarbin Sehe", description: `<p>Maluku Utara adalah provinsi di Indonesia bagian timur yang beribukota di Sofifi. Wilayah ini resmi menjadi provinsi sendiri pada 4 Oktober 1999. Dikenal dengan sejarah kesultanan Ternate dan Tidore yang legendaris, Maluku Utara merupakan episentrum sejarah rempah-rempah yang menawarkan pemandangan gunung berapi dramatis dan pulau-pulau eksotis.</p>`, districts: ["Halmahera Barat", "Halmahera Tengah", "Halmahera Utara", "Halmahera Selatan", "Kepulauan Sula", "Halmahera Timur", "Pulau Morotai", "Pulau Taliabu", "Kota Ternate", "Kota Tidore Kepulauan"] },
+                sulawesi_tenggara: { name: "Sulawesi Tenggara", logo: "https://upload.wikimedia.org/wikipedia/commons/3/31/Coat_of_arms_of_Southeast_Sulawesi.svg", bgImage: "https://images.unsplash.com/photo-1600989995349-436340187444?q=80&w=1887&auto=format&fit=crop", tiktokLink: "https://vt.tiktok.com/ZSStt649m/", governor: "Andi Sumangerukka", viceGovernor: "Hugua", description: `<p>Sulawesi Tenggara adalah sebuah provinsi di Indonesia yang terletak di bagian tenggara pulau Sulawesi, dengan ibu kota di Kendari. Provinsi ini merupakan rumah bagi Taman Nasional Wakatobi, salah satu surga bawah laut terbaik dunia yang diakui UNESCO, serta dikenal dengan masyarakat Suku Bajo yang hidup harmonis dengan laut.</p>`, districts: ["Bombana", "Buton", "Buton Selatan", "Buton Tengah", "Buton Utara", "Kolaka", "Kolaka Timur", "Kolaka Utara", "Konawe", "Konawe Kepulauan", "Konawe Selatan", "Konawe Utara", "Muna", "Muna Barat", "Wakatobi", "Kota Baubau", "Kota Kendari"] },
+                sulawesi_selatan: { name: "Sulawesi Selatan", logo: "https://upload.wikimedia.org/wikipedia/commons/6/67/Coat_of_arms_of_South_Sulawesi.svg", bgImage: "https://images.unsplash.com/photo-1571927321284-75170d3f233a?q=80&w=1887&auto=format&fit=crop", tiktokLink: "https://vt.tiktok.com/ZSStt8Ym9/", governor: "Andi Sudirman Sulaiman", viceGovernor: "Fatmawati Rusdi", description: `<p>Sulawesi Selatan adalah provinsi di pesisir barat daya Sulawesi, dengan ibu kota di Makassar. Provinsi ini memiliki warisan budaya Bugis-Makassar yang kuat dan merupakan tanah kelahiran Kapal Pinisi, sebuah mahakarya yang diakui sebagai Warisan Budaya Takbenda UNESCO. Keunikan Tana Toraja dengan ritual megah dan arsitektur ikoniknya juga menjadi daya tarik utama.</p>`, districts: ["Bantaeng", "Barru", "Bone", "Bulukumba", "Enrekang", "Gowa", "Jeneponto", "Kepulauan Selayar", "Luwu", "Luwu Timur", "Luwu Utara", "Maros", "Pangkajene dan Kepulauan", "Pinrang", "Sidenreng Rappang", "Sinjai", "Soppeng", "Takalar", "Tana Toraja", "Toraja Utara", "Wajo", "Kota Makassar", "Kota Palopo", "Kota Parepare"] },
+                sulawesi_tengah: { name: "Sulawesi Tengah", logo: "https://upload.wikimedia.org/wikipedia/commons/4/46/Coat_of_arms_of_Central_Sulawesi.svg", bgImage: "https://images.unsplash.com/photo-1617623913289-441798547244?q=80&w=1974&auto=format&fit=crop", tiktokLink: "https://vt.tiktok.com/ZSSttU1BB/", governor: "Anwar Hafid", viceGovernor: "Reny Lamadjido", description: `<p>Sulawesi Tengah adalah sebuah provinsi Indonesia yang terletak di bagian tengah pulau Sulawesi. Ibu kotanya adalah Palu. Provinsi ini menyimpan pesona alam seperti Teluk Palu dan Danau Poso, serta misteri purbakala di Taman Nasional Lore Lindu, yang menjadi rumah bagi flora fauna endemik dan situs-situs megalitikum kuno.</p>`, districts: ["Banggai", "Banggai Kepulauan", "Banggai Laut", "Buol", "Donggala", "Morowali", "Morowali Utara", "Parigi Moutong", "Poso", "Sigi", "Tojo Una-Una", "Tolitoli", "Kota Palu"] },
+                sulawesi_barat: { name: "Sulawesi Barat", logo: "https://upload.wikimedia.org/wikipedia/commons/8/89/Coat_of_arms_of_West_Sulawesi.svg", bgImage: "https://images.unsplash.com/photo-1618089423985-021de4487013?q=80&w=1887&auto=format&fit=crop", tiktokLink: "https://vt.tiktok.com/ZSSttY2dj/", governor: "Suhardi Duka", viceGovernor: "Salim S. Mengga", description: `<p>Sulawesi Barat adalah provinsi hasil pemekaran dari Sulawesi Selatan yang dibentuk pada 5 Oktober 2004. Ibu kotanya adalah Mamuju. Provinsi ini memiliki identitas budaya yang kuat dari Suku Mandar, dikenal dengan para pelaut andal dan Sarung Sutra Mandar yang indah, serta memiliki garis pantai menawan dan perkebunan kopi yang subur.</p>`, districts: ["Majene", "Mamasa", "Mamuju", "Mamuju Tengah", "Pasangkayu", "Polewali Mandar"] },
+                sulawesi_utara: { name: "Sulawesi Utara", logo: "https://upload.wikimedia.org/wikipedia/commons/6/68/Coat_of_arms_of_North_Sulawesi.svg", bgImage: "https://images.unsplash.com/photo-1588675646184-f5b0b3b64bde?q=80&w=2070&auto=format&fit=crop", tiktokLink: "https://vt.tiktok.com/ZSSttLvCw/", governor: "Yulius Selvanus", viceGovernor: "Victor Mailangkay", description: `<p>Sulawesi Utara adalah provinsi yang terletak di ujung utara Pulau Sulawesi, Indonesia, dengan ibu kota di Manado. Provinsi ini merupakan surga bagi pecinta kehidupan bawah laut, dengan Taman Nasional Bunaken sebagai ikon utamanya. Masyarakat Minahasa yang ramah dan terbuka mendominasi wilayah yang dijuluki "Kota Seribu Gereja" ini.</p>`, districts: ["Bolaang Mongondow", "Bolaang Mongondow Selatan", "Bolaang Mongondow Timur", "Bolaang Mongondow Utara", "Kepulauan Sangihe", "Kepulauan Siau Tagulandang Biaro", "Kepulauan Talaud", "Minahasa", "Minahasa Selatan", "Minahasa Tenggara", "Minahasa Utara", "Kota Bitung", "Kota Kotamobagu", "Kota Manado", "Kota Tomohon"] },
+                gorontalo: { name: "Gorontalo", logo: "https://upload.wikimedia.org/wikipedia/commons/0/01/Coat_of_arms_of_Gorontalo.svg", bgImage: "https://images.unsplash.com/photo-1603203498399-37f354a5a8a7?q=80&w=1932&auto=format&fit=crop", tiktokLink: "https://vt.tiktok.com/ZSSttBCHy/", governor: "Gusnar Ismail", viceGovernor: "Idah Syahidah Rusli Habibie", description: `<p>Gorontalo adalah sebuah provinsi di Indonesia yang terletak di Semenanjung Gorontalo, di bagian utara Pulau Sulawesi. Dikenal dengan julukan "Serambi Madinah", Gorontalo memiliki tradisi Islam yang kental. Provinsi ini mengelilingi Teluk Tomini yang tenang, lokasi ideal untuk mengamati hiu paus, dan memiliki peninggalan sejarah seperti Benteng Otanaha.</p>`, districts: ["Boalemo", "Bone Bolango", "Gorontalo", "Gorontalo Utara", "Pohuwato", "Kota Gorontalo"] }
+            };
+
+            const destinationGrid = document.getElementById('destination-grid');
+            Object.keys(provincesData).forEach((key, index) => {
+                const province = provincesData[key];
+                const card = document.createElement('div');
+                card.className = 'destination-card h-96';
+                card.setAttribute('data-aos', 'fade-up');
+                card.setAttribute('data-aos-delay', (index % 4 + 1) * 100);
+                card.setAttribute('data-province', key);
+                card.innerHTML = `
+                    <div class="card-image-wrapper" style="background-image: url('${province.bgImage}')"></div>
+                    <div class="card-overlay"></div>
+                    <img src="${province.logo}" alt="Logo ${province.name}" class="destination-logo">
+                    <div class="card-content"><h3 class="text-2xl font-bold">${province.name}</h3></div>
+                `;
+                destinationGrid.appendChild(card);
+            });
+            
+            const modal = document.getElementById('detail-modal');
+            const pageWrapper = document.getElementById('page-wrapper');
+            const malukuMusicPlayer = document.getElementById('maluku-music-player');
+            const playMalukuBtn = document.getElementById('play-maluku-music-btn');
+            const playMalukuIcon = document.getElementById('play-maluku-icon');
+            const malukuProgressBar = document.getElementById('maluku-progress-bar');
+            const backgroundMusic = document.getElementById('background-music');
+            const malukuMusic = document.getElementById('maluku-music');
+            let wasBgMusicPlaying = false;
+
+            destinationGrid.addEventListener('click', (e) => {
+                const card = e.target.closest('.destination-card');
+                if (card) {
+                    const provinceId = card.dataset.province;
+                    const data = provincesData[provinceId];
+                    document.getElementById('modal-title').textContent = data.name;
+                    document.getElementById('modal-logo').src = data.logo;
+                    document.getElementById('modal-description').innerHTML = data.description;
+                    document.getElementById('modal-governor').textContent = data.governor;
+                    document.getElementById('modal-vice-governor').textContent = data.viceGovernor;
+                    document.getElementById('modal-tiktok-link').href = data.tiktokLink;
+                    
+                    if (provinceId === 'maluku') {
+                        malukuMusicPlayer.style.display = 'block';
+                    } else {
+                        malukuMusicPlayer.style.display = 'none';
+                    }
+
+                    const districtList = document.getElementById('district-list');
+                    districtList.innerHTML = '';
+                    data.districts.forEach((district, i) => {
+                        const li = document.createElement('li');
+                        li.textContent = district;
+                        li.style.transitionDelay = `${i * 0.03}s`;
+                        districtList.appendChild(li);
+                    });
+
+                    document.getElementById('district-container').classList.remove('expanded');
+                    document.getElementById('district-container').style.maxHeight = null;
+                    document.getElementById('district-arrow').classList.remove('rotate-180');
+                    
+                    pageWrapper.classList.add('blurred');
+                    document.body.classList.add('modal-open');
+                    modal.classList.add('visible');
+                }
+            });
+            
+            playMalukuBtn.addEventListener('click', () => {
+                if (malukuMusic.paused) {
+                    wasBgMusicPlaying = !backgroundMusic.paused;
+                    backgroundMusic.pause();
+                    malukuMusic.play();
+                    playMalukuIcon.classList.replace('fa-play', 'fa-pause');
+                } else {
+                    malukuMusic.pause();
+                    playMalukuIcon.classList.replace('fa-pause', 'fa-play');
+                }
+            });
+
+            malukuMusic.addEventListener('timeupdate', () => {
+                if (malukuMusic.duration) {
+                    const progressPercent = (malukuMusic.currentTime / malukuMusic.duration) * 100;
+                    malukuProgressBar.style.width = `${progressPercent}%`;
+                }
+            });
+            malukuMusic.addEventListener('ended', () => {
+                playMalukuIcon.classList.replace('fa-pause', 'fa-play');
+                malukuProgressBar.style.width = '0%';
+            });
+
+            document.getElementById('toggle-districts-btn').addEventListener('click', (e) => {
+                const container = document.getElementById('district-container');
+                e.currentTarget.querySelector('i').classList.toggle('rotate-180');
+                container.classList.toggle('expanded');
+                if (container.classList.contains('expanded')) {
+                    container.style.maxHeight = container.querySelector('ul').scrollHeight + "px";
+                } else {
+                    container.style.maxHeight = null;
+                }
+            });
+
+            const closeModal = () => {
+                malukuMusic.pause();
+                malukuMusic.currentTime = 0;
+                playMalukuIcon.classList.replace('fa-pause', 'fa-play');
+                malukuProgressBar.style.width = '0%';
+                
+                if (wasBgMusicPlaying) {
+                    backgroundMusic.play().catch(e=>console.log("Resume failed"));
+                }
+                
+                pageWrapper.classList.remove('blurred');
+                document.body.classList.remove('modal-open');
+                modal.classList.remove('visible');
+            };
+            document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+            const kenalanButton = document.getElementById('kenalan-button');
+            const continueButton = document.getElementById('continue-button');
+            const introScreen = document.getElementById('intro-screen');
+            const welcomeContainer = document.getElementById('welcome-container');
+            const introductionContainer = document.getElementById('introduction-container');
+            const missionContainer = document.getElementById('mission-container');
+            const missionTextWrapper = document.getElementById('mission-text-wrapper');
+            const missionText = "Melalui lensa kamera dan penceritaan visual, proyek ini lahir dari sebuah visi: untuk menyalakan kembali rasa ingin tahu dan kebanggaan terhadap kekayaan Nusantara. Misi kami adalah menyajikan serpihan surga Indonesia dalam format yang relevan dan mudah diakses oleh generasi muda, mengubah setiap video TikTok menjadi jendela pengetahuan yang menginspirasi.";
+            const introductions = ["Perkenalkan, petualang di balik layar ini adalah BoBeng.", "Salam kenal! Saya BoBeng, siap memandu Anda menjelajahi Nusantara.", "Halo! Nama saya BoBeng, selamat menikmati perjalanan ini."];
+            
+            setTimeout(() => { kenalanButton.style.opacity = '1'; kenalanButton.classList.remove('border-transparent'); }, 1500);
+
+            kenalanButton.addEventListener('click', () => {
+                backgroundMusic.play().catch(error => console.log("Autoplay musik diblokir."));
+                welcomeContainer.style.opacity = '0';
+                welcomeContainer.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    const randomIndex = Math.floor(Math.random() * introductions.length);
+                    document.getElementById('introduction-text').textContent = introductions[randomIndex];
+                    introductionContainer.style.opacity = '1';
+                }, 700);
+
+                setTimeout(() => {
+                    introductionContainer.style.opacity = '0';
+                    setTimeout(() => {
+                        missionContainer.classList.remove('pointer-events-none');
+                        missionContainer.style.opacity = '1';
+                        missionTextWrapper.textContent = missionText;
+                        setTimeout(() => { continueButton.style.opacity = '1'; }, 1000);
+                    }, 700);
+                }, 3000);
+            });
+
+            continueButton.addEventListener('click', () => {
+                introScreen.classList.add('hidden');
+            });
+
+            AOS.init({ once: true, duration: 800 });
+            document.getElementById('year').textContent = new Date().getFullYear();
+            const canvas = document.getElementById('particle-canvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+                let particlesArray = []; const numberOfParticles = 50;
+                class Particle { constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 5 + 2; this.speedX = Math.random() * 2 - 1; this.speedY = Math.random() * 2 + 1; this.color = 'rgba(255, 255, 255, 0.5)'; this.angle = Math.random() * 360; this.spin = Math.random() < 0.5 ? -1 : 1; } update() { this.x += this.speedX; this.y += this.speedY; this.angle += this.spin * 0.5; if (this.y > canvas.height) { this.y = -this.size; this.x = Math.random() * canvas.width; } } draw() { ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.angle * Math.PI / 180); ctx.fillStyle = this.color; ctx.beginPath(); ctx.ellipse(0, 0, this.size, this.size / 2, Math.PI / 4, 0, 2 * Math.PI); ctx.fill(); ctx.restore(); } }
+                function initParticles() { for (let i = 0; i < numberOfParticles; i++) { particlesArray.push(new Particle()); } }
+                function animateParticles() { ctx.clearRect(0, 0, canvas.width, canvas.height); for (let i = 0; i < particlesArray.length; i++) { particlesArray[i].update(); particlesArray[i].draw(); } requestAnimationFrame(animateParticles); }
+                initParticles(); animateParticles();
+                window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+            }
+        });
+    </script>
+</body>
+</html>
