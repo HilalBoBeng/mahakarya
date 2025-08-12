@@ -6,7 +6,7 @@
     <!-- SEO Meta Tags -->
     <title>BoBeng - Jelajah Edukatif Indonesia Timur</title>
     <meta name="description" content="Selamat datang di BoBeng, sebuah platform edukatif yang didedikasikan untuk menjelajahi keindahan dan kekayaan Kawasan Timur Indonesia. Temukan informasi lengkap tentang provinsi, budaya, dan destinasi unik persembahan @benggg111.">
-    <meta name="keywords" content="BoBeng, Indonesia Timur, Jelajah Indonesia, Edukasi, Pariwisata, Budaya, @benggg111, Bali, Papua, Sulawesi, Maluku, Nusa Tenggara">
+    <meta name="keywords" content="BoBeng, Indonesia Timur, Jelajah Indonesia, Edukasi, Pariwisata, Budaya, @benggg111, Bali, Papua, Sulawesi, Maluku, Nusa Tenggara, Negara Indonesia Timur, NIT, Republik Indonesia Serikat, RIS">
     <meta name="author" content="@benggg111">
     
     <!-- Favicon -->
@@ -48,10 +48,19 @@
     #district-detail-modal .modal-content { max-width: 550px; max-height: 80vh; overflow-y: auto; z-index: 60; }
     #confirmation-modal .modal-content, #playlist-warning-modal .modal-content { max-width: 400px; z-index: 70; }
     #map-modal .modal-content { max-width: 90vw; max-height: 90vh; background: transparent; padding: 0; }
+    
+    /* Image Zoom Modal Styles */
+    #image-zoom-modal .modal-content { background: transparent; padding: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+    #image-zoom-container { width: 90%; height: 90%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    #zoomed-image { max-width: 100%; max-height: 100%; transition: transform 0.2s ease-out; cursor: grab; }
+    #zoom-controls { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); padding: 0.5rem 1rem; border-radius: 99px; display: flex; gap: 1rem; align-items: center; z-index: 60; }
+    .zoom-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s; }
+    .zoom-btn:hover { transform: scale(1.2); }
+
 
     .modal-item { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
     #detail-modal.visible .modal-item { opacity: 1; transform: translateY(0); }
-    .close-modal-btn { position: absolute; top: 1rem; right: 1rem; width: 2.5rem; height: 2.5rem; background-color: rgba(0,0,0,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; z-index: 20; }
+    .close-modal-btn { position: absolute; top: 1rem; right: 1rem; width: 2.5rem; height: 2.5rem; background-color: rgba(0,0,0,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; z-index: 70; }
     .close-modal-btn:hover { background-color: rgba(0,0,0,0.7); transform: rotate(90deg); }
     #map-modal .close-modal-btn { top: -1rem; right: -1rem; }
     
@@ -72,7 +81,7 @@
     .destination-card { width: 180px; height: 180px; background-color: #1c1c1c; border: 2px solid #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.5s ease, background-color 0.5s ease, border-color 0.5s ease, filter 0.5s ease; filter: grayscale(100%) brightness(0.7); transform: scale(0.8); }
     .card-logo { width: 120px; height: 120px; object-fit: contain; }
     .card-title { color: #888; margin-top: 1rem; font-weight: 500; transition: color 0.5s ease, opacity 0.5s ease; text-align: center; opacity: 0; }
-    .swiper-slide-active .destination-card { transform: scale(1.2); filter: grayscale(0%) brightness(1); background-color: #252525; border-color: #a78bfa; /* Removed green glow, changed border color */ }
+    .swiper-slide-active .destination-card { transform: scale(1.2); filter: grayscale(0%) brightness(1); background-color: #252525; border-color: #a78bfa; }
     .swiper-slide-active .card-title { color: #f1f1f1; opacity: 1; }
     .swiper-button-next, .swiper-button-prev { color: #fff; background-color: rgba(50, 50, 50, 0.5); width: 50px; height: 50px; border-radius: 50%; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s ease; top: 40%; }
     .swiper-button-next:hover, .swiper-button-prev:hover { background-color: rgba(70, 70, 70, 0.7); }
@@ -90,6 +99,27 @@
     .city-list-item { background: rgba(255,255,255,0.03); border-left: 3px solid #4a5568; }
     .province-list-item { background: rgba(255,255,255,0.03); padding: 0.5rem 1rem; border-radius: 0.5rem; transition: background-color 0.2s; }
     .province-list-item:hover { background: rgba(255,255,255,0.07); }
+    
+    /* NIT Section Styling */
+    .zoomable-image { cursor: zoom-in; }
+    .nit-info-card { background: rgba(255,255,255,0.05); border-radius: 0.75rem; padding: 1rem; text-align: center; border: 1px solid #37373a; }
+    .nit-info-card img { max-height: 120px; margin: 0 auto 1rem; }
+    .nit-info-box { background: rgba(255,255,255,0.03); border-left: 3px solid #a855f7; padding: 0.75rem 1rem; }
+    .nit-info-box p { color: #a1a1aa; }
+    .nit-info-box h4 { color: #e4e4e7; font-weight: 600; }
+    .nit-image-caption { font-size: 0.875rem; color: #a1a1aa; text-align: center; margin-top: 1rem; font-style: italic; }
+    
+    .tab-button { padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; color: #a1a1aa; background-color: transparent; border: 2px solid transparent; transition: all 0.3s ease; }
+    .tab-button.active { color: #f1f1f1; border-color: #a855f7; background: linear-gradient(to right, rgba(168, 85, 247, 0.1), rgba(236, 72, 153, 0.1)); }
+    .tab-panel { display: none; animation: fadeInPanel 0.5s ease-in-out; }
+    .tab-panel.active { display: block; }
+    @keyframes fadeInPanel { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .pm-card { background: rgba(255,255,255,0.04); border-radius: 0.5rem; padding: 1rem; border-left: 3px solid #4a5568;}
+    .event-item { position: relative; padding-left: 2rem; border-left: 2px solid #4a5568; }
+    .event-item::before { content: ''; position: absolute; left: -0.5rem; top: 0.5rem; width: 0.875rem; height: 0.875rem; background-color: #a855f7; border-radius: 50%; border: 3px solid #121212; }
+    .famous-person-card { background: rgba(255,255,255,0.04); padding: 1rem; border-radius: 0.5rem; }
+    .famous-person-card dt { font-weight: 600; color: #e4e4e7; }
+    .famous-person-card dd { color: #a1a1aa; font-size: 0.875rem; }
 
 </style>
 
@@ -143,7 +173,7 @@
             <div class="container mx-auto max-w-4xl text-center">
                  <h2 class="text-3xl font-bold text-center mb-8 text-white">Peta Wilayah Indonesia Timur</h2>
                  <div id="map-container" class="relative p-2 bg-gray-800/50 border-2 border-gray-700 rounded-lg shadow-lg inline-block cursor-pointer group transition-all duration-300 hover:border-cyan-400 hover:shadow-cyan-400/20">
-                     <img src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Map_of_Eastern_Indonesia.png" alt="Peta Indonesia Timur" class="rounded-md max-w-full h-auto">
+                     <img src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Map_of_Eastern_Indonesia.png" alt="Peta Indonesia Timur" class="rounded-md max-w-full h-auto zoomable-image">
                      <div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                          <i class="fas fa-search-plus text-white text-5xl"></i>
                      </div>
@@ -179,6 +209,144 @@
                 </div>
             </div>
         </div>
+
+        <!-- UPDATED SECTION: Negara Indonesia Timur (NIT) -->
+        <div id="nit-section" class="py-20 px-4 sm:px-6 lg:px-8">
+            <div class="container mx-auto max-w-6xl">
+                <div class="info-section p-6 md:p-8 rounded-2xl">
+                    <h2 class="text-4xl font-bold text-center mb-4 info-title" data-aos="fade-up">Sejarah Negara Indonesia Timur (NIT)</h2>
+                    <p class="text-center text-gray-300 mb-10 max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+                        NIT adalah bagian dari <a href="ris.html" target="_blank" class="font-bold text-cyan-400 hover:underline">Republik Indonesia Serikat (RIS)</a>, sebuah negara federal yang berumur pendek. Klik untuk mempelajari lebih lanjut.
+                    </p>
+                    
+                    <!-- Infobox Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12" data-aos="fade-up" data-aos-delay="100">
+                        <div class="flex flex-col items-center gap-6">
+                            <div class="nit-info-card w-full">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/Flag_of_the_State_of_East_Indonesia.svg" alt="Bendera Negara Indonesia Timur" class="zoomable-image">
+                                <p class="font-semibold">Panji / Bendera</p>
+                            </div>
+                            <div class="nit-info-card w-full">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/Coat_of_arms_of_East_Indonesia.svg" alt="Lambang Negara Indonesia Timur" class="zoomable-image">
+                                <p class="font-semibold">Lambang Negara</p>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2 space-y-4">
+                            <div class="nit-info-box"> <p>Ibu Kota</p> <h4>Makassar</h4> </div>
+                            <div class="nit-info-box"> <p>Era Sejarah</p> <h4>Perang Dingin (1946–1950)</h4> </div>
+                            <div class="nit-info-box"> <p>Didirikan</p> <h4>24 Desember 1946</h4> </div>
+                            <div class="nit-info-box"> <p>Dibubarkan</p> <h4>17 Agustus 1950</h4> </div>
+                            <div class="nit-info-box"> <p>Presiden</p> <h4>Tjokorda Gde Raka Soekawati</h4> </div>
+                        </div>
+                    </div>
+
+                    <!-- Map and Photo Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start mb-12">
+                        <div data-aos="fade-right" data-aos-delay="200">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/7/77/East_Indonesia_in_the_United_States_of_Indonesia.svg" alt="Peta Negara Indonesia Timur" class="rounded-lg border-2 border-gray-700 w-full zoomable-image">
+                            <p class="nit-image-caption">Wilayah Negara Indonesia Timur (merah) dalam Republik Indonesia Serikat.</p>
+                        </div>
+                        <div data-aos="fade-left" data-aos-delay="200">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/9/94/COLLECTIE_TROPENMUSEUM_President_Sukawati_van_Oost-Indonesi%C3%AB_met_zijn_Franse_vrouw_tijdens_een_bezoek_aan_de_Minahasa_op_Celebes_TMnr_60048846.jpg" alt="Presiden Soekawati" class="rounded-lg border-2 border-gray-700 w-full zoomable-image">
+                            <p class="nit-image-caption">Presiden Soekawati dari Negara Indonesia Timur bersama istri (orang Prancis) dalam kunjungan ke Minahasa (1948).</p>
+                        </div>
+                    </div>
+
+                    <!-- Tabs for Detailed Info -->
+                    <div data-aos="fade-up" data-aos-delay="300">
+                        <div id="nit-tabs-nav" class="flex justify-center flex-wrap gap-2 mb-6">
+                            <button class="tab-button active" data-target="pm-panel">Perdana Menteri</button>
+                            <button class="tab-button" data-target="events-panel">Peristiwa Penting</button>
+                            <button class="tab-button" data-target="regions-panel">Pembagian Wilayah</button>
+                            <button class="tab-button" data-target="people-panel">Tokoh Ternama</button>
+                        </div>
+                        <div id="nit-tabs-content">
+                            <!-- Prime Ministers Panel -->
+                            <div id="pm-panel" class="tab-panel active">
+                                <div class="space-y-4">
+                                    <div class="pm-card"> <h4 class="font-bold text-lg">Nadjamuddin Daeng Malewa</h4> <p class="text-gray-400">Kabinet I & II (13 Jan 1947 - 11 Okt 1947)</p> </div>
+                                    <div class="pm-card"> <h4 class="font-bold text-lg">Semuel Jusof Warouw</h4> <p class="text-gray-400">Kabinet Warouw (11 Okt 1947 - 15 Des 1947)</p> </div>
+                                    <div class="pm-card"> <h4 class="font-bold text-lg">Ida Anak Agung Gde Agung</h4> <p class="text-gray-400">Kabinet Gde Agung I & II (15 Des 1947 - 27 Des 1949)</p> </div>
+                                    <div class="pm-card"> <h4 class="font-bold text-lg">J.E. Tatengkeng</h4> <p class="text-gray-400">Kabinet Tatengkeng (27 Des 1949 - 14 Mar 1950)</p> </div>
+                                    <div class="pm-card"> <h4 class="font-bold text-lg">D.P. Diapari</h4> <p class="text-gray-400">Kabinet Diapari (14 Mar 1950 - 10 Mei 1950)</p> </div>
+                                    <div class="pm-card"> <h4 class="font-bold text-lg">Martinus Putuhena</h4> <p class="text-gray-400">Kabinet Putuhena (10 Mei 1950 - 17 Agu 1950)</p> </div>
+                                </div>
+                            </div>
+                            <!-- Key Events Panel -->
+                            <div id="events-panel" class="tab-panel">
+                                <div class="space-y-6">
+                                    <div class="event-item"> <p class="font-semibold text-white">27 Mei 1947</p> <p class="text-gray-300">Pengunduran diri ketua DPRS Tadjoeddin Noer.</p> </div>
+                                    <div class="event-item"> <p class="font-semibold text-white">3 Des 1947</p> <p class="text-gray-300">DPRS mengirim misi persaudaraan ke Republik Indonesia di Yogyakarta.</p> </div>
+                                    <div class="event-item"> <p class="font-semibold text-white">30 Des 1947</p> <p class="text-gray-300">Oposisi mendirikan Gabungan Perjuangan Kemerdekaan Indonesia (GAPKI) di Makassar.</p> </div>
+                                    <div class="event-item"> <p class="font-semibold text-white">22 Jan 1948</p> <p class="text-gray-300">RI mengakui NIT sebagai negara bagian dari RIS yang akan dibentuk.</p> </div>
+                                    <div class="event-item"> <p class="font-semibold text-white">Desember 1948</p> <p class="text-gray-300">Kabinet NIT memprotes keras Agresi Militer II ke wilayah RI.</p> </div>
+                                    <div class="event-item"> <p class="font-semibold text-white">6 Feb 1949</p> <p class="text-gray-300">PM Ide Anak Agung Gde Agung menemui Wapres Bung Hatta yang ditawan Belanda di Bangka.</p> </div>
+                                </div>
+                            </div>
+                            <!-- Regions Panel -->
+                            <div id="regions-panel" class="tab-panel">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div>
+                                        <h4 class="font-bold text-xl mb-4 text-white">13 Daerah Otonomi</h4>
+                                        <ul class="list-disc list-inside space-y-2 text-gray-300">
+                                            <li>Daerah Sulawesi Selatan</li>
+                                            <li>Daerah Minahassa</li>
+                                            <li>Daerah Kepulauan Sangihe dan Talaud</li>
+                                            <li>Daerah Sulawesi Utara</li>
+                                            <li>Daerah Sulawesi Tengah</li>
+                                            <li>Daerah Bali</li>
+                                            <li>Daerah Lombok</li>
+                                            <li>Daerah Sumbawa</li>
+                                            <li>Daerah Flores</li>
+                                            <li>Daerah Sumba</li>
+                                            <li>Daerah Timor dan kepulauan</li>
+                                            <li>Daerah Maluku Selatan</li>
+                                            <li>Daerah Maluku Utara</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-xl mb-4 text-white">5 Keresidenan</h4>
+                                        <ul class="list-disc list-inside space-y-2 text-gray-300">
+                                            <li>Keresidenan Sulawesi Selatan</li>
+                                            <li>Keresidenan Sulawesi Utara</li>
+                                            <li>Keresidenan Bali</li>
+                                            <li>Keresidenan Lombok</li>
+                                            <li>Keresidenan Maluku</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Famous People Panel -->
+                            <div id="people-panel" class="tab-panel">
+                                <dl class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    <div class="famous-person-card"><dt>Tjokorda Gde Raka Soekawati</dt><dd>Presiden</dd></div>
+                                    <div class="famous-person-card"><dt>Nadjamuddin Daeng Malewa</dt><dd>Perdana Menteri Pertama</dd></div>
+                                    <div class="famous-person-card"><dt>Semuel Jusof Warouw</dt><dd>Perdana Menteri Kedua</dd></div>
+                                    <div class="famous-person-card"><dt>Ide Anak Agung Gde Agung</dt><dd>Perdana Menteri Ketiga</dd></div>
+                                    <div class="famous-person-card"><dt>Jan Engelbert Tatengkeng</dt><dd>Perdana Menteri Keempat</dd></div>
+                                    <div class="famous-person-card"><dt>Patuan Doli Diapari</dt><dd>Perdana Menteri Kelima</dd></div>
+                                    <div class="famous-person-card"><dt>Martinus Putuhena</dt><dd>Perdana Menteri Keenam</dd></div>
+                                    <div class="famous-person-card"><dt>Eliza Urbanus Pupella</dt><dd>Perwakilan dari Maluku Selatan</dd></div>
+                                    <div class="famous-person-card"><dt>Muhammad Kaharuddin III</dt><dd>Anggota Senat USI</dd></div>
+                                    <div class="famous-person-card"><dt>Tadjuddin Noor</dt><dd>Ketua Badan Legislatif NIT</dd></div>
+                                    <div class="famous-person-card"><dt>Melkias Agustinus Pellaupessy</dt><dd>Ketua Senat</dd></div>
+                                    <div class="famous-person-card"><dt>Arnold Mononutu</dt><dd>Anggota Parlemen Sementara</dd></div>
+                                    <div class="famous-person-card"><dt>Julius Tahija</dt><dd>Perwakilan Indonesia Serikat di Batavia</dd></div>
+                                    <div class="famous-person-card"><dt>Gabriel Manek</dt><dd>Anggota Parlemen Sementara</dd></div>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dissolution Info -->
+                    <div class="mt-12 text-center bg-gray-900/50 p-6 rounded-lg border border-gray-700" data-aos="zoom-in">
+                        <p class="text-xl text-gray-200">Negara Indonesia Timur dibubarkan dan semua wilayahnya secara resmi melebur ke dalam Republik Indonesia pada tanggal <span class="font-bold text-white">17 Agustus 1950</span>.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
 
         <footer class="text-center py-10 border-t border-gray-900">
             <p>&copy; <span id="year"></span> benggg. All rights reserved.</p>
@@ -266,6 +434,20 @@
     </div>
 </div>
 
+<!-- NEW Image Zoom Modal -->
+<div id="image-zoom-modal" class="modal-container z-50">
+    <button id="close-zoom-modal-btn" class="close-modal-btn"><i class="fas fa-times text-white"></i></button>
+    <div class="modal-content">
+        <div id="image-zoom-container">
+            <img id="zoomed-image" src="" alt="Zoomed Image">
+        </div>
+    </div>
+    <div id="zoom-controls">
+        <button id="zoom-out-btn" class="zoom-btn"><i class="fas fa-search-minus"></i></button>
+        <button id="zoom-in-btn" class="zoom-btn"><i class="fas fa-search-plus"></i></button>
+    </div>
+</div>
+
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
@@ -273,47 +455,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add class to body to prevent scrolling during intro
     document.body.classList.add('intro-active');
 
-    // Data KTI
+    // Data KTI and Provinces (shortened for brevity, full data is in the original script)
     const ktiData = { "nama": "Indonesia Timur", "nama_lain": ["Kawasan Timur Indonesia", "KTI"], "wilayah": { "provinsi": [ "Bali", "Nusa Tenggara Barat", "Nusa Tenggara Timur", "Sulawesi Utara", "Gorontalo", "Sulawesi Tengah", "Sulawesi Barat", "Sulawesi Selatan", "Sulawesi Tenggara", "Maluku Utara", "Maluku", "Papua Barat", "Papua Barat Daya", "Papua Pegunungan", "Papua Tengah", "Papua Selatan", "Papua" ], "luas_km2": { "total": 3973245, "daratan": 573245, "perairan": 3400000 }, "zona_waktu": ["UTC+08:00", "UTC+09:00"] }, "penduduk": { "estimasi_2025": 29400000, "kepadatan_per_km2": 7.4, "penduduk_asli": "Orang Indonesia Timur" }, "bahasa": { "resmi": "Bahasa Indonesia", "daerah": [ "Bugis", "Makassar", "Bima", "Melayu Manado", "Minahasa", "Melayu Ambon", "Melayu Papua" ] }, "kota": { "terbesar": "Makassar", "besar_lainnya": [ "Denpasar", "Manado", "Kupang", "Mataram", "Jayapura", "Palu", "Ambon", "Kendari", "Sorong", "Bima" ], "10_terbesar_populasi": [ { "nama": "Makassar", "provinsi": "Sulawesi Selatan", "populasi": 1571814 }, { "nama": "Denpasar", "provinsi": "Bali", "populasi": 725314 }, { "nama": "Manado", "provinsi": "Sulawesi Utara", "populasi": 478192 }, { "nama": "Kupang", "provinsi": "Nusa Tenggara Timur", "populasi": 443349 }, { "nama": "Mataram", "provinsi": "Nusa Tenggara Barat", "populasi": 452812 }, { "nama": "Jayapura", "provinsi": "Papua", "populasi": 403859 }, { "nama": "Palu", "provinsi": "Sulawesi Tengah", "populasi": 373218 }, { "nama": "Ambon", "provinsi": "Maluku", "populasi": 348225 }, { "nama": "Kendari", "provinsi": "Sulawesi Tenggara", "populasi": 347381 }, { "nama": "Sorong", "provinsi": "Papua Barat Daya", "populasi": 295809 } ] }, "ekonomi": { "pusat_utama": ["Makassar", "Denpasar", "Manado"], "status_pembangunan": "Relatif tertinggal dibandingkan Indonesia Barat, berkembang dengan otonomi daerah dan prioritas nasional" }, "sejarah": [ { "periode": "1938-1946", "deskripsi": "Wilayah dikenal sebagai Groote Oost atau Timur Raya, terdiri dari keresidenan Bali-Lombok, Sulawesi Selatan, Sulawesi Utara, Maluku (termasuk Irian Barat), dan Timor" }, { "periode": "1945-1946", "deskripsi": "Dibagi menjadi tiga provinsi: Sunda Kecil, Sulawesi, dan Maluku" }, { "periode": "1946-1950", "deskripsi": "Menjadi Negara Indonesia timur dalam struktur RIS dengan ibu kota Makassar, Papua kemudian dipisahkan" } ] };
-    
-    // Populate Info KTI Section
-    const ktiGeneralInfoContainer = document.getElementById('kti-general-info');
-    const ktiLargestCitiesContainer = document.getElementById('kti-largest-cities');
-    const ktiProvincesListContainer = document.getElementById('kti-provinces-list');
-
-    const generalInfo = [
-        { title: 'Kota Terbesar', value: ktiData.kota.terbesar },
-        { title: 'Estimasi Populasi (2025)', value: ktiData.penduduk.estimasi_2025.toLocaleString('id-ID') },
-        { title: 'Luas Daratan (km²)', value: ktiData.wilayah.luas_km2.daratan.toLocaleString('id-ID') },
-        { title: 'Pusat Ekonomi Utama', value: ktiData.ekonomi.pusat_utama.join(', ') },
-        { title: 'Zona Waktu', value: ktiData.wilayah.zona_waktu.join(' & ') }
-    ];
-
-    ktiGeneralInfoContainer.innerHTML = generalInfo.map(item => `
-        <div class="info-card"><h4>${item.title}</h4><p>${item.value}</p></div>
-    `).join('');
-
-    ktiLargestCitiesContainer.innerHTML = ktiData.kota['10_terbesar_populasi'].map((city, index) => `
-        <div class="city-list-item p-3 rounded-md flex justify-between items-center">
-            <div class="flex items-center">
-                <span class="text-gray-400 font-bold w-6">${index + 1}.</span>
-                <div>
-                    <p class="font-semibold text-white">${city.nama}</p>
-                    <p class="text-sm text-gray-500">${city.provinsi}</p>
-                </div>
-            </div>
-            <p class="font-mono text-gray-300" data-population="${city.populasi}">0</p>
-        </div>
-    `).join('');
-    
-    ktiProvincesListContainer.innerHTML = ktiData.wilayah.provinsi.map(province => `
-        <div class="province-list-item">
-            <p class="font-medium text-gray-200">${province}</p>
-        </div>
-    `).join('');
-
-
-    // Data Provinsi (Reordered and New Provinces Added)
     const provincesData = {
         bali: { name: "Bali", logo: "https://upload.wikimedia.org/wikipedia/commons/e/ee/Official_seal_of_the_Province_of_Bali.png", tiktokLink: "https://vt.tiktok.com/ZSYgrRR9S/", governor: "Sang Made Mahendra Jaya (Pj.)", viceGovernor: "-", songTitle: "Janger - Lagu Daerah Bali", songSrc: "https://l.top4top.io/m_3510zuxq41.mp3", description: `<p>Bali, yang dikenal sebagai "Pulau Dewata", adalah destinasi wisata kelas dunia yang memadukan keindahan alam, budaya yang kaya, dan spiritualitas yang mendalam. Dari pantai-pantai yang ramai hingga sawah terasering yang tenang, Bali menawarkan pengalaman unik bagi setiap pengunjung. Seni dan budaya, yang tercermin dalam tarian, musik, dan upacara adat, merupakan bagian tak terpisahkan dari kehidupan sehari-hari masyarakatnya.</p>`, districts: ["Badung", "Bangli", "Buleleng", "Gianyar", "Jembrana", "Karangasem", "Klungkung", "Tabanan", "Kota Denpasar"], jumlah_penduduk: 4415100, ibu_kota: "Denpasar", hari_jadi: "14 Agustus 1958", suku_bangsa: ["Bali (Bali Aga, Bali Majapahit)", "Jawa", "Madura", "Sasak"], website_resmi: "baliprov.go.id" },
         nusa_tenggara_barat: { name: "Nusa Tenggara Barat", logo: "https://upload.wikimedia.org/wikipedia/commons/5/51/Coat_of_arms_of_West_Nusa_Tenggara.svg", tiktokLink: "https://vt.tiktok.com/ZSYgrC4x1/", governor: "Lalu Gita Ariadi (Pj.)", viceGovernor: "-", songTitle: "Helele U Ala De Teang - Lagu Daerah NTB", songSrc: "https://k.top4top.io/m_351025y9h1.mp3", description: `<p>Nusa Tenggara Barat (NTB) terdiri dari dua pulau utama, Lombok dan Sumbawa, serta pulau-pulau kecil di sekitarnya. Provinsi ini terkenal dengan keindahan alamnya yang spektakuler, mulai dari Gunung Rinjani yang megah, Gili-Gili yang eksotis, hingga Sirkuit Mandalika yang menjadi tuan rumah ajang balap internasional. Budaya Sasak di Lombok dan Samawa di Sumbawa memberikan warna unik pada provinsi ini.</p>`, districts: ["Bima", "Dompu", "Lombok Barat", "Lombok Tengah", "Lombok Timur", "Lombok Utara", "Sumbawa", "Sumbawa Barat", "Kota Bima", "Kota Mataram"], jumlah_penduduk: 5569213, ibu_kota: "Mataram", hari_jadi: "14 Agustus 1958", suku_bangsa: ["Sasak", "Samawa", "Mbojo", "Bali", "Jawa"], website_resmi: "ntbprov.go.id" },
@@ -333,6 +476,17 @@ document.addEventListener('DOMContentLoaded', () => {
         papua_pegunungan: { name: "Papua Pegunungan", logo: "https://upload.wikimedia.org/wikipedia/commons/2/27/Lambang_Papua_Pegunungan.svg", tiktokLink: "https://vt.tiktok.com/ZSYgr9p6E/", governor: "Velix Wanggai (Pj.)", viceGovernor: "-", songTitle: "Lembah Baliem - Lagu Daerah Papua", songSrc: "", description: `<p>Papua Pegunungan adalah satu-satunya provinsi di Indonesia yang terkurung daratan (landlocked). Beribukota di Jayawijaya, provinsi ini merupakan jantung dari Pegunungan Jayawijaya dan rumah bagi Lembah Baliem yang terkenal. Wilayah ini didominasi oleh masyarakat suku Dani, Lani, dan Yali, yang masih mempertahankan tradisi dan cara hidup mereka yang unik. Festival Budaya Lembah Baliem adalah acara tahunan yang menampilkan kekayaan budaya ini kepada dunia.</p>`, districts: ["Jayawijaya", "Lanny Jaya", "Mamberamo Tengah", "Nduga", "Pegunungan Bintang", "Tolikara", "Yahukimo", "Yalimo"], jumlah_penduduk: 1448400, ibu_kota: "Jayawijaya", hari_jadi: "25 Juli 2022", suku_bangsa: ["Dani", "Lani", "Yali", "Nduga", "Ngalik"], website_resmi: "papuapegununganprov.go.id" },
         papua_selatan: { name: "Papua Selatan", logo: "https://upload.wikimedia.org/wikipedia/commons/a/aa/Logo_Papua_Selatan.png", tiktokLink: "https://vt.tiktok.com/ZSYgrsK8W/", governor: "Apolo Safanpo (Pj.)", viceGovernor: "-", songTitle: "Sajojo - Lagu Daerah Papua", songSrc: "https://i.top4top.io/m_35103y2u51.mp3", description: `<p>Papua Selatan, dengan ibu kota Merauke, terletak di bagian selatan Pulau Papua yang berbatasan langsung dengan Papua Nugini. Dikenal sebagai lumbung pangan masa depan Indonesia, provinsi ini memiliki dataran rendah yang luas dan subur. Taman Nasional Wasur, yang sering disebut "Serengeti-nya Papua", adalah rumah bagi keanekaragaman satwa liar yang melimpah. Tugu Kembar Sabang-Merauke di kota ini menjadi simbol persatuan Indonesia dari ujung barat hingga timur.</p>`, districts: ["Asmat", "Boven Digoel", "Mappi", "Merauke"], jumlah_penduduk: 534400, ibu_kota: "Merauke", hari_jadi: "25 Juli 2022", suku_bangsa: ["Marind", "Asmat", "Mappi", "Awyu", "Muyu"], website_resmi: "papuaselatanprov.go.id" }
     };
+    
+    // --- SCRIPT LOGIC ---
+    
+    // Populate KTI Info
+    const ktiGeneralInfoContainer = document.getElementById('kti-general-info');
+    const ktiLargestCitiesContainer = document.getElementById('kti-largest-cities');
+    const ktiProvincesListContainer = document.getElementById('kti-provinces-list');
+    const generalInfo = [ { title: 'Kota Terbesar', value: ktiData.kota.terbesar }, { title: 'Estimasi Populasi (2025)', value: ktiData.penduduk.estimasi_2025.toLocaleString('id-ID') }, { title: 'Luas Daratan (km²)', value: ktiData.wilayah.luas_km2.daratan.toLocaleString('id-ID') }, { title: 'Pusat Ekonomi Utama', value: ktiData.ekonomi.pusat_utama.join(', ') }, { title: 'Zona Waktu', value: ktiData.wilayah.zona_waktu.join(' & ') } ];
+    ktiGeneralInfoContainer.innerHTML = generalInfo.map(item => `<div class="info-card"><h4>${item.title}</h4><p>${item.value}</p></div>`).join('');
+    ktiLargestCitiesContainer.innerHTML = ktiData.kota['10_terbesar_populasi'].map((city, index) => `<div class="city-list-item p-3 rounded-md flex justify-between items-center"><div class="flex items-center"><span class="text-gray-400 font-bold w-6">${index + 1}.</span><div><p class="font-semibold text-white">${city.nama}</p><p class="text-sm text-gray-500">${city.provinsi}</p></div></div><p class="font-mono text-gray-300" data-population="${city.populasi}">0</p></div>`).join('');
+    ktiProvincesListContainer.innerHTML = ktiData.wilayah.provinsi.map(province => `<div class="province-list-item"><p class="font-medium text-gray-200">${province}</p></div>`).join('');
 
     // Initialize Province Slider
     const destinationSliderWrapper = document.getElementById('destination-slider-wrapper');
@@ -340,21 +494,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const province = provincesData[key];
         const slide = document.createElement('div');
         slide.className = 'swiper-slide';
-        
         const card = document.createElement('div');
         card.className = 'destination-card';
         card.setAttribute('data-province', key);
         card.innerHTML = `<img src="${province.logo}" alt="Logo ${province.name}" class="card-logo">`;
-        
         const title = document.createElement('h3');
         title.className = 'card-title';
         title.textContent = province.name;
-
         slide.appendChild(card);
         slide.appendChild(title);
         destinationSliderWrapper.appendChild(slide);
     });
-
     var swiper = new Swiper("#destinations-slider", {
         effect: "slide", centeredSlides: true, slidesPerView: 3, loop: false, allowTouchMove: false,
         navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
@@ -364,12 +514,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Modal Elements
     const pageWrapper = document.getElementById('page-wrapper');
     const detailModal = document.getElementById('detail-modal');
-    const districtModal = document.getElementById('district-detail-modal');
     const confirmationModal = document.getElementById('confirmation-modal');
     const playlistWarningModal = document.getElementById('playlist-warning-modal');
     const mapModal = document.getElementById('map-modal');
     let currentProvinceId = null;
-    
+    let targetUrl = '';
+
     // Music Player Elements
     const provinceMusicPlayer = document.getElementById('province-music-player');
     const playProvinceBtn = document.getElementById('play-province-music-btn');
@@ -379,7 +529,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const backgroundMusic = document.getElementById('background-music');
     const provinceMusic = document.getElementById('province-music');
     let wasBgMusicPlaying = false;
-    let targetUrl = '';
 
     // Province Card Click Event
     destinationSliderWrapper.addEventListener('click', (e) => {
@@ -387,12 +536,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (card) {
             const slide = card.closest('.swiper-slide');
             if (!slide.classList.contains('swiper-slide-active')) return;
-
             const provinceId = card.dataset.province;
-            currentProvinceId = provinceId; // Store current province ID
+            currentProvinceId = provinceId;
             const data = provincesData[provinceId];
-            
-            // Populate Modal
             document.getElementById('modal-title').textContent = data.name;
             document.getElementById('modal-logo').src = data.logo;
             document.getElementById('modal-description').innerHTML = data.description;
@@ -403,7 +549,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('modal-anniversary').textContent = data.hari_jadi || '-';
             document.getElementById('modal-population').textContent = data.jumlah_penduduk ? data.jumlah_penduduk.toLocaleString('id-ID') : '-';
             document.getElementById('modal-ethnic-groups').textContent = data.suku_bangsa ? data.suku_bangsa.join(', ') : '-';
-
             const websiteContainer = document.getElementById('website-container');
             const websiteLink = document.getElementById('modal-website');
             if (data.website_resmi) {
@@ -413,7 +558,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 websiteContainer.style.display = 'none';
             }
-
             if (data.songSrc && data.songSrc.trim() !== "") {
                 provinceMusicPlayer.style.display = 'block';
                 provinceSongTitle.textContent = data.songTitle;
@@ -421,7 +565,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 provinceMusicPlayer.style.display = 'none';
             }
-
             const districtList = document.getElementById('district-list');
             districtList.innerHTML = '';
             data.districts.forEach(districtName => {
@@ -429,7 +572,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.textContent = districtName;
                 districtList.appendChild(item);
             });
-
             pageWrapper.classList.add('blurred');
             document.body.classList.add('modal-open');
             detailModal.classList.add('visible');
@@ -448,15 +590,8 @@ document.addEventListener('DOMContentLoaded', () => {
             playProvinceIcon.classList.replace('fa-pause', 'fa-play');
         }
     });
-    provinceMusic.addEventListener('timeupdate', () => {
-        if (provinceMusic.duration) {
-            provinceProgressBar.style.width = `${(provinceMusic.currentTime / provinceMusic.duration) * 100}%`;
-        }
-    });
-    provinceMusic.addEventListener('ended', () => {
-        playProvinceIcon.classList.replace('fa-pause', 'fa-play');
-        provinceProgressBar.style.width = '0%';
-    });
+    provinceMusic.addEventListener('timeupdate', () => { if (provinceMusic.duration) { provinceProgressBar.style.width = `${(provinceMusic.currentTime / provinceMusic.duration) * 100}%`; } });
+    provinceMusic.addEventListener('ended', () => { playProvinceIcon.classList.replace('fa-pause', 'fa-play'); provinceProgressBar.style.width = '0%'; });
 
     // Modal Closing Logic
     const closeDetailModal = () => {
@@ -468,48 +603,25 @@ document.addEventListener('DOMContentLoaded', () => {
         pageWrapper.classList.remove('blurred');
         document.body.classList.remove('modal-open');
         detailModal.classList.remove('visible');
-        currentProvinceId = null; // Reset current province
+        currentProvinceId = null;
     };
-    
     document.getElementById('close-modal-btn').addEventListener('click', closeDetailModal);
     
-    // Map Modal Logic
-    document.getElementById('map-container').addEventListener('click', () => {
-        pageWrapper.classList.add('blurred');
-        document.body.classList.add('modal-open');
-        mapModal.classList.add('visible');
-    });
-    document.getElementById('close-map-modal-btn').addEventListener('click', () => {
-        pageWrapper.classList.remove('blurred');
-        document.body.classList.remove('modal-open');
-        mapModal.classList.remove('visible');
-    });
-
     // Confirmation & Playlist Warning Modal Logic
-    document.getElementById('modal-website').addEventListener('click', (e) => {
-        e.preventDefault();
-        targetUrl = e.currentTarget.href;
-        confirmationModal.classList.add('visible');
-    });
-    document.getElementById('confirm-yes').addEventListener('click', () => {
-        window.open(targetUrl, '_blank');
-        confirmationModal.classList.remove('visible');
-    });
+    document.getElementById('modal-website').addEventListener('click', (e) => { e.preventDefault(); targetUrl = e.currentTarget.href; confirmationModal.classList.add('visible'); });
+    document.getElementById('confirm-yes').addEventListener('click', () => { window.open(targetUrl, '_blank'); confirmationModal.classList.remove('visible'); });
     document.getElementById('confirm-no').addEventListener('click', () => confirmationModal.classList.remove('visible'));
-
     document.getElementById('modal-tiktok-link').addEventListener('click', (e) => {
         e.preventDefault();
         const unavailableProvinces = ['bali', 'nusa_tenggara_barat', 'nusa_tenggara_timur', 'papua_barat', 'papua_barat_daya', 'papua', 'papua_tengah', 'papua_pegunungan', 'papua_selatan'];
         if (currentProvinceId && unavailableProvinces.includes(currentProvinceId)) {
             playlistWarningModal.classList.add('visible');
         } else {
-            // For available playlists, show the confirmation modal first
              targetUrl = e.currentTarget.href;
              confirmationModal.classList.add('visible');
         }
     });
     document.getElementById('close-warning-modal').addEventListener('click', () => playlistWarningModal.classList.remove('visible'));
-
 
     // Intro Screen Logic
     const kenalanButton = document.getElementById('kenalan-button');
@@ -521,20 +633,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const missionTextWrapper = document.getElementById('mission-text-wrapper');
     const missionText = "Melalui lensa kamera dan penceritaan visual, proyek ini lahir dari sebuah visi: untuk menyalakan kembali rasa ingin tahu dan kebanggaan terhadap kekayaan Nusantara. Misi kami adalah menyajikan serpihan surga Indonesia dalam format yang relevan dan mudah diakses oleh generasi muda, mengubah setiap video TikTok menjadi jendela pengetahuan yang menginspirasi.";
     const introductions = ["Perkenalkan, petualang di balik layar ini adalah BoBeng.", "Salam kenal! Saya BoBeng, siap memandu Anda menjelajahi Nusantara.", "Halo! Nama saya BoBeng, selamat menikmati perjalanan ini."];
-
     setTimeout(() => { kenalanButton.style.opacity = '1'; kenalanButton.classList.remove('border-transparent'); }, 1500);
-
     kenalanButton.addEventListener('click', () => {
         backgroundMusic.play().catch(error => console.log("Autoplay music blocked."));
         welcomeContainer.style.opacity = '0';
         welcomeContainer.style.pointerEvents = 'none';
-
         setTimeout(() => {
             const randomIndex = Math.floor(Math.random() * introductions.length);
             document.getElementById('introduction-text').textContent = introductions[randomIndex];
             introductionContainer.style.opacity = '1';
         }, 700);
-
         setTimeout(() => {
             introductionContainer.style.opacity = '0';
             setTimeout(() => {
@@ -545,28 +653,28 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 700);
         }, 3000);
     });
+    continueButton.addEventListener('click', () => { document.body.classList.remove('intro-active'); introScreen.classList.add('hidden'); });
 
-    continueButton.addEventListener('click', () => {
-        document.body.classList.remove('intro-active');
-        introScreen.classList.add('hidden');
-    });
-
-    // Population Counter Animation
+    // **UPDATED** Population Counter Animation
     function animateCounter(element, finalValue) {
-        let duration = 1500; // ms
-        let randomInterval = 50; // ms, how often to update with a random number
+        let start = 0;
+        const duration = 2000; // 2 seconds
+        const startTime = performance.now();
 
-        let randomizer = setInterval(() => {
-            const randomNum = Math.floor(Math.random() * (finalValue * 1.1));
-            element.textContent = randomNum.toLocaleString('id-ID');
-        }, randomInterval);
+        function step(currentTime) {
+            const elapsedTime = currentTime - startTime;
+            const progress = Math.min(elapsedTime / duration, 1);
+            const currentNum = Math.floor(progress * finalValue);
+            element.textContent = currentNum.toLocaleString('id-ID');
 
-        setTimeout(() => {
-            clearInterval(randomizer);
-            element.textContent = finalValue.toLocaleString('id-ID');
-        }, duration);
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            } else {
+                element.textContent = finalValue.toLocaleString('id-ID');
+            }
+        }
+        requestAnimationFrame(step);
     }
-
     const cityListObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -575,76 +683,81 @@ document.addEventListener('DOMContentLoaded', () => {
                     const finalPop = parseInt(el.dataset.population, 10);
                     animateCounter(el, finalPop);
                 });
-                observer.unobserve(entry.target); // Animate only once
+                observer.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.5 }); // Trigger when 50% of the element is visible
+    }, { threshold: 0.5 });
+    if(document.getElementById('kti-largest-cities')) {
+        cityListObserver.observe(document.getElementById('kti-largest-cities'));
+    }
 
-    cityListObserver.observe(document.getElementById('kti-largest-cities'));
+    // NIT Section Tab Logic
+    const tabButtons = document.querySelectorAll('#nit-tabs-nav .tab-button');
+    const tabPanels = document.querySelectorAll('#nit-tabs-content .tab-panel');
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabPanels.forEach(panel => panel.classList.remove('active'));
+            button.classList.add('active');
+            document.getElementById(button.dataset.target).classList.add('active');
+        });
+    });
+
+    // **NEW** Image Zoom Modal Logic
+    const zoomModal = document.getElementById('image-zoom-modal');
+    const zoomedImage = document.getElementById('zoomed-image');
+    let currentZoom = 1;
+    const maxZoom = 10;
+    const minZoom = 1;
+
+    document.querySelectorAll('.zoomable-image').forEach(img => {
+        img.addEventListener('click', (e) => {
+            zoomedImage.src = e.target.src;
+            currentZoom = 1;
+            zoomedImage.style.transform = `scale(${currentZoom})`;
+            pageWrapper.classList.add('blurred');
+            document.body.classList.add('modal-open');
+            zoomModal.classList.add('visible');
+        });
+    });
+
+    document.getElementById('close-zoom-modal-btn').addEventListener('click', () => {
+        pageWrapper.classList.remove('blurred');
+        document.body.classList.remove('modal-open');
+        zoomModal.classList.remove('visible');
+    });
+
+    document.getElementById('zoom-in-btn').addEventListener('click', () => {
+        if (currentZoom < maxZoom) {
+            currentZoom += 0.5;
+            zoomedImage.style.transform = `scale(${currentZoom})`;
+        }
+    });
+
+    document.getElementById('zoom-out-btn').addEventListener('click', () => {
+        if (currentZoom > minZoom) {
+            currentZoom -= 0.5;
+            zoomedImage.style.transform = `scale(${currentZoom})`;
+        }
+    });
 
 
     // Initializations
     AOS.init({ once: true, duration: 800 });
     document.getElementById('year').textContent = new Date().getFullYear();
     
-    // Particle Animation (Indonesian Flag Theme)
+    // Particle Animation
     const canvas = document.getElementById('particle-canvas');
     if (canvas) {
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         let particlesArray = []; const numberOfParticles = 80;
         const colors = ['rgba(255, 0, 0, 0.7)', 'rgba(255, 255, 255, 0.7)'];
-        class Particle { 
-            constructor() { 
-                this.x = Math.random() * canvas.width; 
-                this.y = Math.random() * canvas.height; 
-                this.size = Math.random() * 5 + 1; 
-                this.speedX = Math.random() * 1 - 0.5; 
-                this.speedY = Math.random() * 1.5 + 0.5; 
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-            } 
-            update() { 
-                this.x += this.speedX; 
-                this.y += this.speedY; 
-                if (this.size > 0.2) this.size -= 0.02;
-                if (this.size <= 0.2) {
-                    this.x = Math.random() * canvas.width;
-                    this.y = -this.size;
-                    this.size = Math.random() * 5 + 1;
-                }
-                if (this.y > canvas.height) { 
-                    this.y = -this.size; 
-                    this.x = Math.random() * canvas.width; 
-                } 
-            } 
-            draw() { 
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            } 
-        }
-        function initParticles() { 
-            particlesArray = [];
-            for (let i = 0; i < numberOfParticles; i++) { 
-                particlesArray.push(new Particle()); 
-            } 
-        }
-        function animateParticles() { 
-            ctx.clearRect(0, 0, canvas.width, canvas.height); 
-            for (let i = 0; i < particlesArray.length; i++) { 
-                particlesArray[i].update(); 
-                particlesArray[i].draw(); 
-            } 
-            requestAnimationFrame(animateParticles); 
-        }
-        initParticles(); 
-        animateParticles();
-        window.addEventListener('resize', () => { 
-            canvas.width = window.innerWidth; 
-            canvas.height = window.innerHeight;
-            initParticles();
-        });
+        class Particle { constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 5 + 1; this.speedX = Math.random() * 1 - 0.5; this.speedY = Math.random() * 1.5 + 0.5; this.color = colors[Math.floor(Math.random() * colors.length)]; } update() { this.x += this.speedX; this.y += this.speedY; if (this.size > 0.2) this.size -= 0.02; if (this.size <= 0.2) { this.x = Math.random() * canvas.width; this.y = -this.size; this.size = Math.random() * 5 + 1; } if (this.y > canvas.height) { this.y = -this.size; this.x = Math.random() * canvas.width; } } draw() { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); } }
+        function initParticles() { particlesArray = []; for (let i = 0; i < numberOfParticles; i++) { particlesArray.push(new Particle()); } }
+        function animateParticles() { ctx.clearRect(0, 0, canvas.width, canvas.height); for (let i = 0; i < particlesArray.length; i++) { particlesArray[i].update(); particlesArray[i].draw(); } requestAnimationFrame(animateParticles); }
+        initParticles(); animateParticles();
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; initParticles(); });
     }
 });
 </script>
