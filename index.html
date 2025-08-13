@@ -1,3 +1,5 @@
+</body>
+</html>
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
@@ -29,12 +31,38 @@
         background-color: #0a0a0a; 
         color: #f1f1f1; 
         overflow-x: hidden; 
-        /* Anti-copy security */
-        -webkit-user-select: none; 
-        -ms-user-select: none; 
-        user-select: none; 
     }
     body.modal-open { overflow: hidden; }
+
+    /* Anti-Screenshot Layer */
+    @media print {
+        body * {
+            display: none !important;
+        }
+        body::before {
+            content: " ";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000 !important;
+            z-index: 999999;
+            display: block !important;
+        }
+    }
+    #secure-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0;
+        background: radial-gradient(circle, transparent 50%, #000 51%);
+        background-size: 1px 1px;
+    }
 
     #page-wrapper { transition: filter 0.4s ease, transform 0.4s ease; }
     #page-wrapper.blurred { filter: blur(8px) brightness(0.7); transform: scale(0.98); pointer-events: none; }
@@ -45,15 +73,15 @@
     @keyframes fadeInPanel { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     /* Modal Styles */
-    .modal-container { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.7); opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
+    .modal-container { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
     .modal-container.visible { opacity: 1; visibility: visible; }
-    .modal-content { background-color: #181818; border-radius: 1rem; padding: 2rem; width: 90%; position: relative; transform: translateY(40px) scale(0.95); opacity: 0; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
+    .modal-content { background-color: #181818; border-radius: 1rem; padding: 1.5rem; width: 90%; position: relative; transform: translateY(40px) scale(0.95); opacity: 0; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
     .modal-container.visible .modal-content { transform: translateY(0) scale(1); opacity: 1; }
     #detail-modal .modal-content { max-width: 650px; max-height: 90vh; overflow-y: auto; }
     #confirmation-modal .modal-content, #playlist-warning-modal .modal-content { max-width: 400px; z-index: 70; }
     .modal-item { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
     #detail-modal.visible .modal-item { opacity: 1; transform: translateY(0); }
-    .close-modal-btn { position: absolute; top: 1rem; right: 1rem; width: 2.5rem; height: 2.5rem; background-color: rgba(0,0,0,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; z-index: 70; }
+    .close-modal-btn { position: absolute; top: 1rem; right: 1rem; width: 2.5rem; height: 2.5rem; background-color: rgba(0,0,0,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; z-index: 120; }
     .close-modal-btn:hover { background-color: rgba(0,0,0,0.7); transform: rotate(90deg); }
     
     /* Image Zoom Modal Styles */
@@ -66,16 +94,17 @@
     .zoom-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s, opacity 0.2s; }
     .zoom-btn:hover:not(:disabled) { transform: scale(1.2); }
     .zoom-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    #download-zoom-btn { position: absolute; top: 1rem; right: 4.5rem; width: 2.5rem; height: 2.5rem; background-color: rgba(0,0,0,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; z-index: 120; color: white; font-size: 1.2rem; }
+    #download-zoom-btn:hover { background-color: rgba(0,0,0,0.7); transform: scale(1.1); }
 
     /* Gradient Text & BG */
-    .info-title, .tiktok-gradient-text, .instagram-gradient-text { -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .info-title { background: linear-gradient(to right, #a855f7, #ec4899); }
-    .tiktok-gradient-text { background: linear-gradient(to right, #69C9D0, #EE1D52); }
-    .instagram-gradient-text { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+    .info-title { background: linear-gradient(to right, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .tiktok-gradient-text { background: linear-gradient(to right, #69C9D0, #EE1D52); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .instagram-gradient-text { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .tiktok-gradient-bg { background-image: linear-gradient(to right, #69C9D0, #EE1D52); }
     
     /* Province Slider */
-    #destinations-slider { width: 100%; height: 350px; position: relative; }
+    #destinations-slider { width: 100%; height: 350px; position: relative; padding-bottom: 40px; }
     .swiper-slide { width: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 0.5s ease, filter 0.5s ease; }
     .destination-card { width: 180px; height: 180px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.5s ease, filter 0.5s ease; filter: grayscale(100%) brightness(0.7); transform: scale(0.8); }
     .card-logo { width: 120px; height: 120px; object-fit: contain; pointer-events: none; }
@@ -88,9 +117,17 @@
     .swiper-button-prev:after { content: '\f053'; }
     .swiper-button-next:after { content: '\f054'; }
     .swiper-button-disabled { opacity: 0.2; cursor: auto; pointer-events: none; }
+    .swiper-pagination { bottom: 0 !important; }
+    .swiper-pagination-bullet { background: #4a5568; }
+    .swiper-pagination-bullet-active { background: #a855f7; }
+
+    /* Music Player */
+    .music-player { display: none; }
+    .music-player-button { background-color: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px); }
+    .music-progress-bar { transition: width 0.1s linear; }
 
     /* KTI & NIT Section Styles */
-    .info-section, .content-card { background: #121212; border: 1px solid #27272a; }
+    .info-section, .content-card { background: #121212; border: 1px solid #27272a; border-radius: 1rem; }
     .info-card { background: #181818; padding: 1.5rem; border-radius: 0.75rem; border: 1px solid #27272a; }
     .info-card h4 { color: #a1a1aa; font-size: 0.875rem; margin-bottom: 0.5rem; }
     .info-card p, .info-card li { color: #e4e4e7; font-weight: 500; }
@@ -124,7 +161,8 @@
 </style>
 
 </head>
-<body oncontextmenu="return false;">
+<body>
+<div id="secure-overlay"></div>
 
 <div id="fixed-logo" class="fixed top-4 left-4 z-50 mix-blend-screen">
     <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/80_RI_2025.svg" alt="Logo RI 80" class="h-16 w-16 md:h-20 md:w-20">
@@ -147,6 +185,7 @@
                     <div class="swiper-wrapper" id="destination-slider-wrapper"></div>
                     <div class="swiper-button-next"></div>
                     <div class="swiper-button-prev"></div>
+                    <div class="swiper-pagination"></div>
                 </div>
             </div>
         </div>
@@ -154,7 +193,7 @@
         <div id="map-section" class="py-16 px-4 sm:px-6 lg:px-8" data-aos="fade-up">
             <div class="container mx-auto max-w-4xl text-center">
                  <h2 class="text-3xl font-bold text-center mb-8 text-white">Peta Wilayah Indonesia Timur</h2>
-                 <div id="map-container" class="relative p-2 bg-gray-800/50 border-2 border-gray-700 rounded-lg shadow-lg inline-block transition-all duration-300 hover:border-cyan-400 hover:shadow-cyan-400/20">
+                 <div class="relative p-2 bg-gray-800/50 border-2 border-gray-700 rounded-lg shadow-lg inline-block transition-all duration-300 hover:border-cyan-400 hover:shadow-cyan-400/20">
                      <img src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Map_of_Eastern_Indonesia.png" alt="Peta Indonesia Timur" class="rounded-md max-w-full h-auto zoomable-image">
                  </div>
                  <p class="mt-4 text-gray-400 italic">Klik pada peta untuk memperbesar.</p>
@@ -184,15 +223,15 @@
         </div>
 
         <!-- Combined RIS Section -->
-        <div id="ris-section" class="py-20 px-4 sm:px-6 lg:px-8">
+        <div id="ris-section" class="py-20 px-4 sm:px-6 lg:px-8 scroll-mt-20">
             <div class="container mx-auto max-w-6xl">
                 <div class="info-section p-6 md:p-8 rounded-2xl">
                     <header class="text-center mb-16">
-                        <h2 class="text-4xl md:text-6xl font-bold info-title" data-aos="fade-down">Republik Indonesia Serikat</h2>
-                        <p class="text-xl text-gray-400" data-aos="fade-down" data-aos-delay="100">1949 – 1950</p>
+                        <h2 class="text-4xl md:text-5xl font-bold info-title" data-aos="fade-down">Republik Indonesia Serikat</h2>
+                        <p class="text-lg text-gray-400" data-aos="fade-down" data-aos-delay="100">1949 – 1950</p>
                     </header>
                     <main class="space-y-8">
-                        <div class="content-card" data-aos="fade-up">
+                        <div class="content-card p-4 md:p-8" data-aos="fade-up">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
                                 <div class="md:col-span-1 flex flex-col items-center">
                                     <div class="flex justify-around w-full items-center mb-4">
@@ -213,18 +252,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="content-card" data-aos="fade-up">
+                        <div class="content-card p-4 md:p-8" data-aos="fade-up">
                             <p class="text-gray-300 leading-relaxed text-lg">
                                 Republik Indonesia Serikat (RIS) adalah sebuah negara federal berumur pendek tempat Belanda secara resmi mengalihkan kedaulatan Hindia Belanda pada 27 Desember 1949. Penyerahan ini mengakhiri konflik empat tahun antara nasionalis Indonesia dan Belanda, namun RIS sendiri hanya bertahan kurang dari satu tahun sebelum digantikan oleh negara kesatuan Republik Indonesia.
                             </p>
                         </div>
-                         <div class="content-card" data-aos="fade-up">
-                            <h3 class="text-3xl font-bold mb-6">Pembagian Administratif</h3>
+                         <div class="content-card p-4 md:p-8" data-aos="fade-up">
+                            <h3 class="text-2xl font-bold mb-6">Pembagian Administratif</h3>
                             <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Map_of_the_United_States_of_Indonesia-id.svg" alt="Peta Pembagian Administratif RIS" class="w-full rounded-lg shadow-lg my-4 zoomable-image bg-white p-2">
                             <p class="image-caption">Peta wilayah negara-negara bagian dan daerah otonom dalam Republik Indonesia Serikat.</p>
                         </div>
-                        <div class="content-card" data-aos="fade-up">
-                            <h3 class="text-3xl font-bold mb-6">Negara Bagian</h3>
+                        <div class="content-card p-4 md:p-8" data-aos="fade-up">
+                            <h3 class="text-2xl font-bold mb-6">Negara Bagian</h3>
                             <div class="table-container">
                                 <table class="table-auto">
                                     <thead><tr><th>Bendera</th><th>Negara Bagian</th><th>Pusat Pemerintahan</th><th>Wali Negara</th><th>Didirikan</th><th>Dibubarkan</th></tr></thead>
@@ -240,8 +279,8 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="content-card" data-aos="fade-up">
-                            <h3 class="text-3xl font-bold mb-6">Daerah Otonom</h3>
+                        <div class="content-card p-4 md:p-8" data-aos="fade-up">
+                            <h3 class="text-2xl font-bold mb-6">Daerah Otonom</h3>
                             <div class="table-container">
                                 <table class="table-auto">
                                     <thead><tr><th>Bendera</th><th>Daerah Otonom</th><th>Pusat Pemerintahan</th><th>Kepala Daerah</th><th>Didirikan</th><th>Dibubarkan</th></tr></thead>
@@ -259,8 +298,8 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="content-card" data-aos="fade-up">
-                            <h3 class="text-3xl font-bold mb-6">Distrik Federal</h3>
+                        <div class="content-card p-4 md:p-8" data-aos="fade-up">
+                            <h3 class="text-2xl font-bold mb-6">Distrik Federal</h3>
                             <div class="table-container">
                                 <table class="table-auto">
                                     <thead><tr><th>Bendera</th><th>Distrik Federal</th><th>Pusat Pemerintahan</th><th>Gubernur</th><th>Didirikan</th><th>Dibubarkan</th></tr></thead>
@@ -307,9 +346,20 @@
             <div class="bg-white/5 p-3 rounded-lg"><p class="text-sm text-gray-400">Gubernur</p><h3 id="modal-governor" class="font-bold text-md"></h3></div>
             <div class="bg-white/5 p-3 rounded-lg"><p class="text-sm text-gray-400">Wakil Gubernur</p><h3 id="modal-vice-governor" class="font-bold text-md"></h3></div>
         </div>
+        <div id="province-music-player" class="music-player my-6 modal-item space-y-3">
+            <p id="province-song-title" class="font-semibold text-center text-gray-300"></p>
+            <div class="flex items-center justify-center gap-4">
+                <button id="play-province-music-btn" class="music-player-button w-12 h-12 rounded-full flex items-center justify-center text-lg flex-shrink-0">
+                    <i id="play-province-icon" class="fas fa-play"></i>
+                </button>
+                <div class="w-full bg-white/10 rounded-full h-1.5">
+                    <div id="province-progress-bar" class="music-progress-bar bg-cyan-400 h-1.5 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
         <div class="my-6 modal-item">
             <h4 class="font-semibold text-xl mb-3 text-gray-200">Kabupaten & Kota</h4>
-            <div id="district-list" class="list-none p-0 columns-2 gap-3"></div>
+            <div id="district-list" class="list-none p-0 columns-2 gap-x-4"></div>
         </div>
         <div class="text-center modal-item">
             <a id="modal-tiktok-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-block px-8 py-3 rounded-full text-white font-semibold tiktok-gradient-bg shadow-lg transition-transform transform hover:scale-105"><i class="fab fa-tiktok mr-2"></i> Kunjungi Playlist</a>
@@ -338,6 +388,7 @@
 
 <div id="image-zoom-modal" class="modal-container">
     <button class="close-modal-btn"><i class="fas fa-times text-white"></i></button>
+    <a id="download-zoom-btn" href="#" download="gambar.jpg"><i class="fas fa-download"></i></a>
     <div class="modal-content">
         <div id="image-zoom-container">
             <img id="zoomed-image" src="" alt="Zoomed Image">
@@ -349,54 +400,34 @@
     </div>
 </div>
 
+<!-- Audio element for province music -->
+<audio id="province-music"></audio>
+
 <!-- Scripts -->
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
-// --- ANTI-INSPECT SECURITY ---
-(function() {
-    const blockInspect = () => {
-        // Method 1: Check for debugger statement
-        const startTime = new Date();
-        debugger;
-        const endTime = new Date();
-        if (endTime - startTime > 100) {
-            document.body.innerHTML = '<div style="position:fixed;inset:0;background:black;color:red;display:flex;align-items:center;justify-content:center;font-size:2rem;text-align:center;">INSPEKSI KODE DILARANG.</div>';
-        }
-        
-        // Method 2: Check window size difference
-        const threshold = 160;
-        if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) {
-            document.body.innerHTML = '<div style="position:fixed;inset:0;background:black;color:red;display:flex;align-items:center;justify-content:center;font-size:2rem;text-align:center;">INSPEKSI KODE DILARANG.</div>';
-        }
-    };
-    
-    // Run the check repeatedly
-    setInterval(blockInspect, 1000);
-})();
-
-
 document.addEventListener('DOMContentLoaded', () => {
     // --- DATA ---
     const ktiData = { "nama": "Indonesia Timur", "nama_lain": ["Kawasan Timur Indonesia", "KTI"], "wilayah": { "provinsi": [ "Bali", "Nusa Tenggara Barat", "Nusa Tenggara Timur", "Sulawesi Utara", "Gorontalo", "Sulawesi Tengah", "Sulawesi Barat", "Sulawesi Selatan", "Sulawesi Tenggara", "Maluku Utara", "Maluku", "Papua Barat", "Papua Barat Daya", "Papua Pegunungan", "Papua Tengah", "Papua Selatan", "Papua" ], "luas_km2": { "total": 3973245, "daratan": 573245, "perairan": 3400000 }, "zona_waktu": ["UTC+08:00", "UTC+09:00"] }, "penduduk": { "estimasi_2025": 29400000, "kepadatan_per_km2": 7.4, "penduduk_asli": "Orang Indonesia Timur" }, "bahasa": { "resmi": "Bahasa Indonesia", "daerah": [ "Bugis", "Makassar", "Bima", "Melayu Manado", "Minahasa", "Melayu Ambon", "Melayu Papua" ] }, "kota": { "terbesar": "Makassar", "besar_lainnya": [ "Denpasar", "Manado", "Kupang", "Mataram", "Jayapura", "Palu", "Ambon", "Kendari", "Sorong", "Bima" ], "10_terbesar_populasi": [ { "nama": "Makassar", "provinsi": "Sulawesi Selatan", "populasi": 1571814 }, { "nama": "Denpasar", "provinsi": "Bali", "populasi": 725314 }, { "nama": "Manado", "provinsi": "Sulawesi Utara", "populasi": 478192 }, { "nama": "Kupang", "provinsi": "Nusa Tenggara Timur", "populasi": 443349 }, { "nama": "Mataram", "provinsi": "Nusa Tenggara Barat", "populasi": 452812 }, { "nama": "Jayapura", "provinsi": "Papua", "populasi": 403859 }, { "nama": "Palu", "provinsi": "Sulawesi Tengah", "populasi": 373218 }, { "nama": "Ambon", "provinsi": "Maluku", "populasi": 348225 }, { "nama": "Kendari", "provinsi": "Sulawesi Tenggara", "populasi": 347381 }, { "nama": "Sorong", "provinsi": "Papua Barat Daya", "populasi": 295809 } ] }, "ekonomi": { "pusat_utama": ["Makassar", "Denpasar", "Manado"], "status_pembangunan": "Relatif tertinggal dibandingkan Indonesia Barat, berkembang dengan otonomi daerah dan prioritas nasional" } };
     const provincesData = {
-        bali: { name: "Bali", logo: "https://upload.wikimedia.org/wikipedia/commons/e/ee/Official_seal_of_the_Province_of_Bali.png", tiktokLink: "https://vt.tiktok.com/ZSYgrRR9S/", governor: "Sang Made Mahendra Jaya (Pj.)", viceGovernor: "-", description: `<p>Bali, yang dikenal sebagai "Pulau Dewata", adalah destinasi wisata kelas dunia yang memadukan keindahan alam, budaya yang kaya, dan spiritualitas yang mendalam. Dari pantai-pantai yang ramai hingga sawah terasering yang tenang, Bali menawarkan pengalaman unik bagi setiap pengunjung. Seni dan budaya, yang tercermin dalam tarian, musik, dan upacara adat, merupakan bagian tak terpisahkan dari kehidupan sehari-hari masyarakatnya.</p>`, districts: ["Badung", "Bangli", "Buleleng", "Gianyar", "Jembrana", "Karangasem", "Klungkung", "Tabanan", "Kota Denpasar"], jumlah_penduduk: 4415100, ibu_kota: "Denpasar", hari_jadi: "14 Agustus 1958", suku_bangsa: ["Bali (Bali Aga, Bali Majapahit)", "Jawa", "Madura", "Sasak"], website_resmi: "baliprov.go.id" },
-        nusa_tenggara_barat: { name: "Nusa Tenggara Barat", logo: "https://upload.wikimedia.org/wikipedia/commons/5/51/Coat_of_arms_of_West_Nusa_Tenggara.svg", tiktokLink: "https://vt.tiktok.com/ZSYgrC4x1/", governor: "Lalu Gita Ariadi (Pj.)", viceGovernor: "-", description: `<p>Nusa Tenggara Barat (NTB) terdiri dari dua pulau utama, Lombok dan Sumbawa, serta pulau-pulau kecil di sekitarnya. Provinsi ini terkenal dengan keindahan alamnya yang spektakuler, mulai dari Gunung Rinjani yang megah, Gili-Gili yang eksotis, hingga Sirkuit Mandalika yang menjadi tuan rumah ajang balap internasional. Budaya Sasak di Lombok dan Samawa di Sumbawa memberikan warna unik pada provinsi ini.</p>`, districts: ["Bima", "Dompu", "Lombok Barat", "Lombok Tengah", "Lombok Timur", "Lombok Utara", "Sumbawa", "Sumbawa Barat", "Kota Bima", "Kota Mataram"], jumlah_penduduk: 5569213, ibu_kota: "Mataram", hari_jadi: "14 Agustus 1958", suku_bangsa: ["Sasak", "Samawa", "Mbojo", "Bali", "Jawa"], website_resmi: "ntbprov.go.id" },
-        nusa_tenggara_timur: { name: "Nusa Tenggara Timur", logo: "https://upload.wikimedia.org/wikipedia/commons/e/e9/Coat_of_Arms_of_East_Nusa_Tenggara_NEW.png", tiktokLink: "https://vt.tiktok.com/ZSYgrb8cY/", governor: "Ayodhia G. L. Kalake (Pj.)", viceGovernor: "-", description: `<p>Nusa Tenggara Timur (NTT) adalah provinsi kepulauan yang menakjubkan dengan keragaman alam dan budaya yang luar biasa. Dari kadal raksasa di Taman Nasional Komodo, danau tiga warna di Kelimutu, hingga tradisi Pasola di Sumba dan desa adat Wae Rebo di Flores, NTT menawarkan petualangan yang tak terlupakan. Kain tenun ikat dari berbagai daerah di NTT juga merupakan warisan budaya yang sangat berharga.</p>`, districts: ["Alor", "Belu", "Ende", "Flores Timur", "Kupang", "Lembata", "Malaka", "Manggarai", "Manggarai Barat", "Manggarai Timur", "Nagekeo", "Ngada", "Rote Ndao", "Sabu Raijua", "Sikka", "Sumba Barat", "Sumba Barat Daya", "Sumba Tengah", "Sumba Timur", "Timor Tengah Selatan", "Timor Tengah Utara", "Kota Kupang"], jumlah_penduduk: 5613374, ibu_kota: "Kupang", hari_jadi: "14 Agustus 1958", suku_bangsa: ["Atoni", "Manggarai", "Sumba", "Lamaholot", "Belu", "Rote"], website_resmi: "nttprov.go.id" },
-        sulawesi_utara: { name: "Sulawesi Utara", logo: "https://upload.wikimedia.org/wikipedia/commons/6/68/Coat_of_arms_of_North_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttLvCw/", governor: "Yulius Selvanus", viceGovernor: "Victor Mailangkay", description: `<p>Sulawesi Utara adalah provinsi yang terletak di ujung utara Pulau Sulawesi, Indonesia, dengan ibu kota di Manado. Provinsi ini merupakan surga bagi pecinta kehidupan bawah laut, dengan Taman Nasional Bunaken sebagai ikon utamanya. Masyarakat Minahasa yang ramah dan terbuka mendominasi wilayah yang dijuluki "Kota Seribu Gereja" ini.</p>`, districts: [ "Bolaang Mongondow", "Bolaang Mongondow Selatan", "Bolaang Mongondow Timur", "Bolaang Mongondow Utara", "Kepulauan Sangihe", "Kepulauan Siau Tagulandang Biaro", "Kepulauan Talaud", "Minahasa", "Minahasa Selatan", "Minahasa Tenggara", "Minahasa Utara", "Kota Bitung", "Kota Kotamobagu", "Kota Manado", "Kota Tomohon" ], jumlah_penduduk: 2645291, ibu_kota: "Manado", hari_jadi: "14 Agustus 1959", suku_bangsa: ["Minahasa", "Sangir-Talaud", "Bolaang Mongondow", "Gorontalo", "Tionghoa"], website_resmi: "sulutprov.go.id" },
-        gorontalo: { name: "Gorontalo", logo: "https://upload.wikimedia.org/wikipedia/commons/0/01/Coat_of_arms_of_Gorontalo.svg", tiktokLink: "https://vt.tiktok.com/ZSSttBCHy/", governor: "Gusnar Ismail", viceGovernor: "Idah Syahidah Rusli Habibie", description: `<p>Gorontalo adalah sebuah provinsi di Indonesia yang terletak di Semenanjung Gorontalo. Dikenal dengan julukan "Serambi Madinah", Gorontalo memiliki tradisi Islam yang kental. Provinsi ini mengelilingi Teluk Tomini yang tenang, lokasi ideal untuk mengamati hiu paus, dan memiliki peninggalan sejarah seperti Benteng Otanaha.</p>`, districts: [ "Boalemo", "Bone Bolango", "Gorontalo", "Gorontalo Utara", "Pohuwato", "Kota Gorontalo" ], jumlah_penduduk: 1213180, ibu_kota: "Gorontalo", hari_jadi: "5 Desember 2000", suku_bangsa: ["Gorontalo"], website_resmi: "gorontaloprov.go.id" },
-        sulawesi_tengah: { name: "Sulawesi Tengah", logo: "https://upload.wikimedia.org/wikipedia/commons/4/46/Coat_of_arms_of_Central_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttU1BB/", governor: "Anwar Hafid", viceGovernor: "Reny Lamadjido", description: `<p>Sulawesi Tengah adalah sebuah provinsi Indonesia yang terletak di bagian tengah pulau Sulawesi. Ibu kotanya adalah Palu. Provinsi ini menyimpan pesona alam seperti Teluk Palu dan Danau Poso, serta misteri purbakala di Taman Nasional Lore Lindu, yang menjadi rumah bagi flora fauna endemik dan situs-situs megalitikum kuno.</p>`, districts: [ "Banggai", "Banggai Kepulauan", "Banggai Laut", "Buol", "Donggala", "Morowali", "Morowali Utara", "Parigi Moutong", "Poso", "Sigi", "Tojo Una-Una", "Tolitoli", "Kota Palu" ], jumlah_penduduk: 3154499, ibu_kota: "Palu", hari_jadi: "13 April 1964", suku_bangsa: ["Kaili", "Pamona", "Banggai", "Saluan", "Buol", "Mori", "Bungku", "Balantak", "Lore", "Mamasa", "Tolitoli", "Pendau", "Dondo", "Dampal", "Tomini"], website_resmi: "sultengprov.go.id" },
-        sulawesi_barat: { name: "Sulawesi Barat", logo: "https://upload.wikimedia.org/wikipedia/commons/8/89/Coat_of_arms_of_West_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttY2dj/", governor: "Suhardi Duka", viceGovernor: "Salim S. Mengga", description: `<p>Sulawesi Barat adalah provinsi hasil pemekaran dari Sulawesi Selatan yang dibentuk pada 5 Oktober 2004. Ibu kotanya adalah Mamuju. Provinsi ini memiliki identitas budaya yang kuat dari Suku Mandar, dikenal dengan para pelaut andal dan Sarung Sutra Mandar yang indah, serta memiliki garis pantai menawan dan perkebunan kopi yang subur.</p>`, districts: [ "Majene", "Mamasa", "Mamuju", "Mamuju Tengah", "Pasangkayu", "Polewali Mandar" ], jumlah_penduduk: 1466741, ibu_kota: "Mamuju", hari_jadi: "22 September 2004", suku_bangsa: ["Mandar", "Toraja", "Bugis", "Mamasa", "Kalumpang", "Jawa", "Makassar"], website_resmi: null },
-        sulawesi_selatan: { name: "Sulawesi Selatan", logo: "https://upload.wikimedia.org/wikipedia/commons/6/67/Coat_of_arms_of_South_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSStt8Ym9/", governor: "Andi Sudirman Sulaiman", viceGovernor: "Fatmawati Rusdi", description: `<p>Sulawesi Selatan adalah provinsi di pesisir barat daya Sulawesi, dengan ibu kota di Makassar. Provinsi ini memiliki warisan budaya Bugis-Makassar yang kuat dan merupakan tanah kelahiran Kapal Pinisi, sebuah mahakarya yang diakui sebagai Warisan Budaya Takbenda UNESCO. Keunikan Tana Toraja dengan ritual megah dan arsitektur ikoniknya juga menjadi daya tarik utama.</p>`, districts: [ "Bantaeng", "Barru", "Bone", "Bulukumba", "Enrekang", "Gowa", "Jeneponto", "Kepulauan Selayar", "Luwu", "Luwu Timur", "Luwu Utara", "Maros", "Pangkajene dan Kepulauan", "Pinrang", "Sidenreng Rappang", "Sinjai", "Soppeng", "Takalar", "Tana Toraja", "Toraja Utara", "Wajo", "Kota Makassar", "Kota Palopo", "Kota Parepare" ], jumlah_penduduk: 9460344, ibu_kota: "Makassar", hari_jadi: "13 Desember 1960", suku_bangsa: ["Bugis", "Makassar", "Toraja", "Mandar"], website_resmi: null },
-        sulawesi_tenggara: { name: "Sulawesi Tenggara", logo: "https://upload.wikimedia.org/wikipedia/commons/3/31/Coat_of_arms_of_Southeast_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSStt649m/", governor: "Andi Sumangerukka", viceGovernor: "Hugua", description: `<p>Sulawesi Tenggara adalah sebuah provinsi di Indonesia yang terletak di bagian tenggara pulau Sulawesi, dengan ibu kota di Kendari. Provinsi ini merupakan rumah bagi Taman Nasional Wakatobi, salah satu surga bawah laut terbaik dunia yang diakui UNESCO, serta dikenal dengan masyarakat Suku Bajo yang hidup harmonis dengan laut.</p>`, districts: [ "Bombana", "Buton", "Buton Selatan", "Buton Tengah", "Buton Utara", "Kolaka", "Kolaka Timur", "Kolaka Utara", "Konawe", "Konawe Kepulauan", "Konawe Selatan", "Konawe Utara", "Muna", "Muna Barat", "Wakatobi", "Kota Baubau", "Kota Kendari" ], jumlah_penduduk: 2755589, ibu_kota: "Kendari", hari_jadi: "27 April 1964", suku_bangsa: ["Tolaki", "Buton", "Muna", "Moronene", "Wawonii"], website_resmi: null },
-        maluku_utara: { name: "Maluku Utara", logo: "https://upload.wikimedia.org/wikipedia/commons/7/73/Coat_of_arms_of_North_Maluku.svg", tiktokLink: "https://vt.tiktok.com/ZSStthBan/", governor: "Sherly Tjoanda", viceGovernor: "Sarbin Sehe", description: `<p>Maluku Utara adalah provinsi di Indonesia bagian timur yang beribukota di Sofifi. Wilayah ini resmi menjadi provinsi sendiri pada 4 Oktober 1999. Dikenal dengan sejarah kesultanan Ternate dan Tidore yang legendaris, Maluku Utara merupakan episentrum sejarah rempah-rempah yang menawarkan pemandangan gunung berapi dramatis dan pulau-pulau eksotis.</p>`, districts: [ "Halmahera Barat", "Halmahera Tengah", "Halmahera Utara", "Halmahera Selatan", "Kepulauan Sula", "Halmahera Timur", "Pulau Morotai", "Pulau Taliabu", "Kota Ternate", "Kota Tidore Kepulauan" ], jumlah_penduduk: 1394231, ibu_kota: "Sofifi", hari_jadi: "4 Oktober 1999", suku_bangsa: null, website_resmi: "malutprov.go.id" },
-        maluku: { name: "Maluku", logo: "https://upload.wikimedia.org/wikipedia/commons/3/39/Coat_of_arms_of_Maluku.svg", tiktokLink: "https://vt.tiktok.com/ZSStthU7e/", governor: "Hendrik Lewerissa", viceGovernor: "Abdullah Vanath", description: `<p>Maluku adalah sebuah provinsi yang meliputi bagian selatan Kepulauan Maluku, Indonesia. Provinsi ini berbatasan dengan Laut Seram di utara, Samudra Hindia dan Laut Arafura di selatan, Papua di timur, dan Sulawesi di barat. Ibu kota dan kota terbesarnya adalah Ambon. Sejarah Maluku yang kaya sebagai "Kepulauan Rempah-Rempah" menjadikannya pusat perdagangan penting yang menarik berbagai bangsa.</p>`, districts: [ "Buru", "Buru Selatan", "Kepulauan Aru", "Kepulauan Tanimbar", "Maluku Barat Daya", "Maluku Tengah", "Maluku Tenggara", "Seram Bagian Barat", "Seram Bagian Timur", "Kota Ambon", "Kota Tual" ], jumlah_penduduk: 1945648, ibu_kota: "Ambon", hari_jadi: null, suku_bangsa: ["Alfur", "Ambon", "Tionghoa", "Bugis", "Buton", "Jawa"], website_resmi: "malukuprov.go.id" },
-        papua_barat: { name: "Papua Barat", logo: "https://upload.wikimedia.org/wikipedia/commons/d/de/Coat_of_arms_of_West_Papua.svg", tiktokLink: "https://vt.tiktok.com/ZSYgrYjG4/", governor: "Ali Baham Temongmere (Pj.)", viceGovernor: "-", description: `<p>Papua Barat terletak di ujung barat Pulau Papua, di wilayah Semenanjung Kepala Burung dan Bomberai. Provinsi ini adalah rumah bagi keanekaragaman hayati yang luar biasa, baik di darat maupun di laut. Pegunungan Arfak yang megah dan Taman Nasional Teluk Cenderawasih, tempat para wisatawan dapat berenang bersama hiu paus, adalah beberapa dari banyak keajaiban alamnya. Manokwari, sebagai ibu kota, adalah kota bersejarah yang menjadi titik awal penyebaran Injil di Tanah Papua.</p>`, districts: ["Fakfak", "Kaimana", "Manokwari", "Manokwari Selatan", "Pegunungan Arfak", "Teluk Bintuni", "Teluk Wondama"], jumlah_penduduk: 571119, ibu_kota: "Manokwari", hari_jadi: "4 Oktober 1999", suku_bangsa: ["Arfak", "Doteri", "Kuri", "Simuri", "Irarutu", "Sebyar"], website_resmi: "papuabaratprov.go.id" },
-        papua_barat_daya: { name: "Papua Barat Daya", logo: "https://upload.wikimedia.org/wikipedia/commons/9/97/Logo_Papua_Barat_Daya1.png", tiktokLink: "https://vt.tiktok.com/ZSYgr7pWb/", governor: "Muhammad Musa'ad (Pj.)", viceGovernor: "-", description: `<p>Papua Barat Daya adalah provinsi termuda di Indonesia, diresmikan pada akhir tahun 2022. Wilayahnya mencakup Kota Sorong dan sekitarnya, serta gugusan kepulauan Raja Ampat yang legendaris. Sebagai "Jantung Segitiga Terumbu Karang Dunia", Raja Ampat menawarkan pemandangan bawah laut yang tak tertandingi, menjadikannya destinasi impian bagi para penyelam dari seluruh dunia. Kota Sorong berfungsi sebagai gerbang utama dan pusat ekonomi provinsi ini.</p>`, districts: ["Maybrat", "Raja Ampat", "Sorong", "Sorong Selatan", "Tambrauw", "Kota Sorong"], jumlah_penduduk: 619705, ibu_kota: "Sorong", hari_jadi: "9 Desember 2022", suku_bangsa: ["Moi", "Maya", "Matbat", "Ambel", "Ma'ya"], website_resmi: "pbdprov.go.id" },
-        papua: { name: "Papua", logo: "https://upload.wikimedia.org/wikipedia/commons/9/98/Coat_of_arms_of_Papua_2.svg", tiktokLink: "https://vt.tiktok.com/ZSYgrQc5u/", governor: "Muhammad Ridwan Rumasukun (Pj.)", viceGovernor: "-", description: `<p>Provinsi Papua, setelah pemekaran, kini meliputi wilayah utara Pulau Papua. Ibu kotanya, Jayapura, terletak di tepi Danau Sentani yang indah, sebuah pusat budaya dan sejarah yang penting. Provinsi ini masih menyimpan hutan hujan tropis yang luas dengan keanekaragaman hayati yang kaya. Budaya masyarakat adat, seperti yang terlihat dalam Festival Danau Sentani, tetap menjadi daya tarik utama.</p>`, districts: ["Biak Numfor", "Jayapura", "Keerom", "Kepulauan Yapen", "Mamberamo Raya", "Sarmi", "Supiori", "Waropen", "Kota Jayapura"], jumlah_penduduk: 1047900, ibu_kota: "Jayapura", hari_jadi: "27 Desember 1949", suku_bangsa: ["Biak", "Sentani", "Waropen", "Yapen", "Sobei"], website_resmi: "papua.go.id" },
-        papua_tengah: { name: "Papua Tengah", logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/Lambang_Papua_Tengah.png", tiktokLink: "https://vt.tiktok.com/ZSYgrHq21/", governor: "Ribka Haluk (Pj.)", viceGovernor: "-", description: `<p>Papua Tengah adalah provinsi yang membentang dari pesisir utara hingga selatan, mencakup sebagian besar wilayah adat Mee Pago dan Saireri. Ibu kotanya, Nabire, terletak di Teluk Cenderawasih. Provinsi ini memiliki topografi yang beragam, dari pantai hingga pegunungan. Kehadiran perusahaan pertambangan besar di Kabupaten Mimika menjadikannya salah satu pusat ekonomi terpenting di Tanah Papua, sementara wilayah pedalamannya masih menyimpan kekayaan alam dan budaya yang otentik.</p>`, districts: ["Deiyai", "Dogiyai", "Intan Jaya", "Mimika", "Nabire", "Paniai", "Puncak", "Puncak Jaya"], jumlah_penduduk: 1452800, ibu_kota: "Nabire", hari_jadi: "25 Juli 2022", suku_bangsa: ["Mee", "Moni", "Amungme", "Kamoro", "Dani Barat"], website_resmi: "papuatengahprov.go.id" },
-        papua_pegunungan: { name: "Papua Pegunungan", logo: "https://upload.wikimedia.org/wikipedia/commons/2/27/Lambang_Papua_Pegunungan.svg", tiktokLink: "https://vt.tiktok.com/ZSYgr9p6E/", governor: "Velix Wanggai (Pj.)", viceGovernor: "-", description: `<p>Papua Pegunungan adalah satu-satunya provinsi di Indonesia yang terkurung daratan (landlocked). Beribukota di Jayawijaya, provinsi ini merupakan jantung dari Pegunungan Jayawijaya dan rumah bagi Lembah Baliem yang terkenal. Wilayah ini didominasi oleh masyarakat suku Dani, Lani, dan Yali, yang masih mempertahankan tradisi dan cara hidup mereka yang unik. Festival Budaya Lembah Baliem adalah acara tahunan yang menampilkan kekayaan budaya ini kepada dunia.</p>`, districts: ["Jayawijaya", "Lanny Jaya", "Mamberamo Tengah", "Nduga", "Pegunungan Bintang", "Tolikara", "Yahukimo", "Yalimo"], jumlah_penduduk: 1448400, ibu_kota: "Jayawijaya", hari_jadi: "25 Juli 2022", suku_bangsa: ["Dani", "Lani", "Yali", "Nduga", "Ngalik"], website_resmi: "papuapegununganprov.go.id" },
-        papua_selatan: { name: "Papua Selatan", logo: "https://upload.wikimedia.org/wikipedia/commons/a/aa/Logo_Papua_Selatan.png", tiktokLink: "https://vt.tiktok.com/ZSYgrsK8W/", governor: "Apolo Safanpo (Pj.)", viceGovernor: "-", description: `<p>Papua Selatan, dengan ibu kota Merauke, terletak di bagian selatan Pulau Papua yang berbatasan langsung dengan Papua Nugini. Dikenal sebagai lumbung pangan masa depan Indonesia, provinsi ini memiliki dataran rendah yang luas dan subur. Taman Nasional Wasur, yang sering disebut "Serengeti-nya Papua", adalah rumah bagi keanekaragaman satwa liar yang melimpah. Tugu Kembar Sabang-Merauke di kota ini menjadi simbol persatuan Indonesia dari ujung barat hingga timur.</p>`, districts: ["Asmat", "Boven Digoel", "Mappi", "Merauke"], jumlah_penduduk: 534400, ibu_kota: "Merauke", hari_jadi: "25 Juli 2022", suku_bangsa: ["Marind", "Asmat", "Mappi", "Awyu", "Muyu"], website_resmi: "papuaselatanprov.go.id" }
+        bali: { name: "Bali", logo: "https://upload.wikimedia.org/wikipedia/commons/e/ee/Official_seal_of_the_Province_of_Bali.png", tiktokLink: "https://vt.tiktok.com/ZSYgrRR9S/", governor: "Sang Made Mahendra Jaya (Pj.)", viceGovernor: "-", songTitle: "Janger - Lagu Daerah Bali", songSrc: "https://l.top4top.io/m_3510zuxq41.mp3", description: `<p>Bali, yang dikenal sebagai "Pulau Dewata", adalah destinasi wisata kelas dunia yang memadukan keindahan alam, budaya yang kaya, dan spiritualitas yang mendalam. Dari pantai-pantai yang ramai hingga sawah terasering yang tenang, Bali menawarkan pengalaman unik bagi setiap pengunjung. Seni dan budaya, yang tercermin dalam tarian, musik, dan upacara adat, merupakan bagian tak terpisahkan dari kehidupan sehari-hari masyarakatnya.</p>`, districts: ["Badung", "Bangli", "Buleleng", "Gianyar", "Jembrana", "Karangasem", "Klungkung", "Tabanan", "Kota Denpasar"], jumlah_penduduk: 4415100, ibu_kota: "Denpasar", hari_jadi: "14 Agustus 1958", suku_bangsa: ["Bali (Bali Aga, Bali Majapahit)", "Jawa", "Madura", "Sasak"], website_resmi: "baliprov.go.id" },
+        nusa_tenggara_barat: { name: "Nusa Tenggara Barat", logo: "https://upload.wikimedia.org/wikipedia/commons/5/51/Coat_of_arms_of_West_Nusa_Tenggara.svg", tiktokLink: "https://vt.tiktok.com/ZSYgrC4x1/", governor: "Lalu Gita Ariadi (Pj.)", viceGovernor: "-", songTitle: "Helele U Ala De Teang - Lagu Daerah NTB", songSrc: "https://k.top4top.io/m_351025y9h1.mp3", description: `<p>Nusa Tenggara Barat (NTB) terdiri dari dua pulau utama, Lombok dan Sumbawa, serta pulau-pulau kecil di sekitarnya. Provinsi ini terkenal dengan keindahan alamnya yang spektakuler, mulai dari Gunung Rinjani yang megah, Gili-Gili yang eksotis, hingga Sirkuit Mandalika yang menjadi tuan rumah ajang balap internasional. Budaya Sasak di Lombok dan Samawa di Sumbawa memberikan warna unik pada provinsi ini.</p>`, districts: ["Bima", "Dompu", "Lombok Barat", "Lombok Tengah", "Lombok Timur", "Lombok Utara", "Sumbawa", "Sumbawa Barat", "Kota Bima", "Kota Mataram"], jumlah_penduduk: 5569213, ibu_kota: "Mataram", hari_jadi: "14 Agustus 1958", suku_bangsa: ["Sasak", "Samawa", "Mbojo", "Bali", "Jawa"], website_resmi: "ntbprov.go.id" },
+        nusa_tenggara_timur: { name: "Nusa Tenggara Timur", logo: "https://upload.wikimedia.org/wikipedia/commons/e/e9/Coat_of_Arms_of_East_Nusa_Tenggara_NEW.png", tiktokLink: "https://vt.tiktok.com/ZSYgrb8cY/", governor: "Ayodhia G. L. Kalake (Pj.)", viceGovernor: "-", songTitle: "Anak Kambing Saya - Lagu Daerah NTT", songSrc: "https://j.top4top.io/m_35101x5y31.mp3", description: `<p>Nusa Tenggara Timur (NTT) adalah provinsi kepulauan yang menakjubkan dengan keragaman alam dan budaya yang luar biasa. Dari kadal raksasa di Taman Nasional Komodo, danau tiga warna di Kelimutu, hingga tradisi Pasola di Sumba dan desa adat Wae Rebo di Flores, NTT menawarkan petualangan yang tak terlupakan. Kain tenun ikat dari berbagai daerah di NTT juga merupakan warisan budaya yang sangat berharga.</p>`, districts: ["Alor", "Belu", "Ende", "Flores Timur", "Kupang", "Lembata", "Malaka", "Manggarai", "Manggarai Barat", "Manggarai Timur", "Nagekeo", "Ngada", "Rote Ndao", "Sabu Raijua", "Sikka", "Sumba Barat", "Sumba Barat Daya", "Sumba Tengah", "Sumba Timur", "Timor Tengah Selatan", "Timor Tengah Utara", "Kota Kupang"], jumlah_penduduk: 5613374, ibu_kota: "Kupang", hari_jadi: "14 Agustus 1958", suku_bangsa: ["Atoni", "Manggarai", "Sumba", "Lamaholot", "Belu", "Rote"], website_resmi: "nttprov.go.id" },
+        sulawesi_utara: { name: "Sulawesi Utara", logo: "https://upload.wikimedia.org/wikipedia/commons/6/68/Coat_of_arms_of_North_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttLvCw/", governor: "Yulius Selvanus", viceGovernor: "Victor Mailangkay", songTitle: "O Ina Ni Keke - Lagu Daerah Sulawesi Utara", songSrc: "https://j.top4top.io/m_3511v828b1.mp3", description: `<p>Sulawesi Utara adalah provinsi yang terletak di ujung utara Pulau Sulawesi, Indonesia, dengan ibu kota di Manado. Provinsi ini merupakan surga bagi pecinta kehidupan bawah laut, dengan Taman Nasional Bunaken sebagai ikon utamanya. Masyarakat Minahasa yang ramah dan terbuka mendominasi wilayah yang dijuluki "Kota Seribu Gereja" ini.</p>`, districts: [ "Bolaang Mongondow", "Bolaang Mongondow Selatan", "Bolaang Mongondow Timur", "Bolaang Mongondow Utara", "Kepulauan Sangihe", "Kepulauan Siau Tagulandang Biaro", "Kepulauan Talaud", "Minahasa", "Minahasa Selatan", "Minahasa Tenggara", "Minahasa Utara", "Kota Bitung", "Kota Kotamobagu", "Kota Manado", "Kota Tomohon" ], jumlah_penduduk: 2645291, ibu_kota: "Manado", hari_jadi: "14 Agustus 1959", suku_bangsa: ["Minahasa", "Sangir-Talaud", "Bolaang Mongondow", "Gorontalo", "Tionghoa"], website_resmi: "sulutprov.go.id" },
+        gorontalo: { name: "Gorontalo", logo: "https://upload.wikimedia.org/wikipedia/commons/0/01/Coat_of_arms_of_Gorontalo.svg", tiktokLink: "https://vt.tiktok.com/ZSSttBCHy/", governor: "Gusnar Ismail", viceGovernor: "Idah Syahidah Rusli Habibie", songTitle: "Hulonthalo Lipu'u - Lagu Daerah Gorontalo", songSrc: "https://k.top4top.io/m_3511zwp0w2.mp3", description: `<p>Gorontalo adalah sebuah provinsi di Indonesia yang terletak di Semenanjung Gorontalo. Dikenal dengan julukan "Serambi Madinah", Gorontalo memiliki tradisi Islam yang kental. Provinsi ini mengelilingi Teluk Tomini yang tenang, lokasi ideal untuk mengamati hiu paus, dan memiliki peninggalan sejarah seperti Benteng Otanaha.</p>`, districts: [ "Boalemo", "Bone Bolango", "Gorontalo", "Gorontalo Utara", "Pohuwato", "Kota Gorontalo" ], jumlah_penduduk: 1213180, ibu_kota: "Gorontalo", hari_jadi: "5 Desember 2000", suku_bangsa: ["Gorontalo"], website_resmi: "gorontaloprov.go.id" },
+        sulawesi_tengah: { name: "Sulawesi Tengah", logo: "https://upload.wikimedia.org/wikipedia/commons/4/46/Coat_of_arms_of_Central_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttU1BB/", governor: "Anwar Hafid", viceGovernor: "Reny Lamadjido", songTitle: "Tondok Kadadingku - Lagu Daerah Sulawesi Tengah", songSrc: "https://l.top4top.io/m_3511n1q9c3.mp3", description: `<p>Sulawesi Tengah adalah sebuah provinsi Indonesia yang terletak di bagian tengah pulau Sulawesi. Ibu kotanya adalah Palu. Provinsi ini menyimpan pesona alam seperti Teluk Palu dan Danau Poso, serta misteri purbakala di Taman Nasional Lore Lindu, yang menjadi rumah bagi flora fauna endemik dan situs-situs megalitikum kuno.</p>`, districts: [ "Banggai", "Banggai Kepulauan", "Banggai Laut", "Buol", "Donggala", "Morowali", "Morowali Utara", "Parigi Moutong", "Poso", "Sigi", "Tojo Una-Una", "Tolitoli", "Kota Palu" ], jumlah_penduduk: 3154499, ibu_kota: "Palu", hari_jadi: "13 April 1964", suku_bangsa: ["Kaili", "Pamona", "Banggai", "Saluan", "Buol", "Mori", "Bungku", "Balantak", "Lore", "Mamasa", "Tolitoli", "Pendau", "Dondo", "Dampal", "Tomini"], website_resmi: "sultengprov.go.id" },
+        sulawesi_barat: { name: "Sulawesi Barat", logo: "https://upload.wikimedia.org/wikipedia/commons/8/89/Coat_of_arms_of_West_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttY2dj/", governor: "Suhardi Duka", viceGovernor: "Salim S. Mengga", songTitle: "Tenggang Tenggang Lopi - Lagu Daerah Sulawesi Barat", songSrc: "https://h.top4top.io/m_3510lsqsl1.mp3", description: `<p>Sulawesi Barat adalah provinsi hasil pemekaran dari Sulawesi Selatan yang dibentuk pada 5 Oktober 2004. Ibu kotanya adalah Mamuju. Provinsi ini memiliki identitas budaya yang kuat dari Suku Mandar, dikenal dengan para pelaut andal dan Sarung Sutra Mandar yang indah, serta memiliki garis pantai menawan dan perkebunan kopi yang subur.</p>`, districts: [ "Majene", "Mamasa", "Mamuju", "Mamuju Tengah", "Pasangkayu", "Polewali Mandar" ], jumlah_penduduk: 1466741, ibu_kota: "Mamuju", hari_jadi: "22 September 2004", suku_bangsa: ["Mandar", "Toraja", "Bugis", "Mamasa", "Kalumpang", "Jawa", "Makassar"], website_resmi: null },
+        sulawesi_selatan: { name: "Sulawesi Selatan", logo: "https://upload.wikimedia.org/wikipedia/commons/6/67/Coat_of_arms_of_South_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSStt8Ym9/", governor: "Andi Sudirman Sulaiman", viceGovernor: "Fatmawati Rusdi", songTitle: "Anging Mammiri - Lagu Daerah Sulawesi Selatan", songSrc: "https://a.top4top.io/m_3511z4w2o4.mp3", description: `<p>Sulawesi Selatan adalah provinsi di pesisir barat daya Sulawesi, dengan ibu kota di Makassar. Provinsi ini memiliki warisan budaya Bugis-Makassar yang kuat dan merupakan tanah kelahiran Kapal Pinisi, sebuah mahakarya yang diakui sebagai Warisan Budaya Takbenda UNESCO. Keunikan Tana Toraja dengan ritual megah dan arsitektur ikoniknya juga menjadi daya tarik utama.</p>`, districts: [ "Bantaeng", "Barru", "Bone", "Bulukumba", "Enrekang", "Gowa", "Jeneponto", "Kepulauan Selayar", "Luwu", "Luwu Timur", "Luwu Utara", "Maros", "Pangkajene dan Kepulauan", "Pinrang", "Sidenreng Rappang", "Sinjai", "Soppeng", "Takalar", "Tana Toraja", "Toraja Utara", "Wajo", "Kota Makassar", "Kota Palopo", "Kota Parepare" ], jumlah_penduduk: 9460344, ibu_kota: "Makassar", hari_jadi: "13 Desember 1960", suku_bangsa: ["Bugis", "Makassar", "Toraja", "Mandar"], website_resmi: null },
+        sulawesi_tenggara: { name: "Sulawesi Tenggara", logo: "https://upload.wikimedia.org/wikipedia/commons/3/31/Coat_of_arms_of_Southeast_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSStt649m/", governor: "Andi Sumangerukka", viceGovernor: "Hugua", songTitle: "Tana Wolio - Lagu Daerah Sulawesi Tenggara", songSrc: "https://b.top4top.io/m_3510m8pks1.mp3", description: `<p>Sulawesi Tenggara adalah sebuah provinsi di Indonesia yang terletak di bagian tenggara pulau Sulawesi, dengan ibu kota di Kendari. Provinsi ini merupakan rumah bagi Taman Nasional Wakatobi, salah satu surga bawah laut terbaik dunia yang diakui UNESCO, serta dikenal dengan masyarakat Suku Bajo yang hidup harmonis dengan laut.</p>`, districts: [ "Bombana", "Buton", "Buton Selatan", "Buton Tengah", "Buton Utara", "Kolaka", "Kolaka Timur", "Kolaka Utara", "Konawe", "Konawe Kepulauan", "Konawe Selatan", "Konawe Utara", "Muna", "Muna Barat", "Wakatobi", "Kota Baubau", "Kota Kendari" ], jumlah_penduduk: 2755589, ibu_kota: "Kendari", hari_jadi: "27 April 1964", suku_bangsa: ["Tolaki", "Buton", "Muna", "Moronene", "Wawonii"], website_resmi: null },
+        maluku_utara: { name: "Maluku Utara", logo: "https://upload.wikimedia.org/wikipedia/commons/7/73/Coat_of_arms_of_North_Maluku.svg", tiktokLink: "https://vt.tiktok.com/ZSStthBan/", governor: "Sherly Tjoanda", viceGovernor: "Sarbin Sehe", songTitle: "Borero - Lagu Daerah Maluku Utara", songSrc: "https://d.top4top.io/m_3510likks1.mp3", description: `<p>Maluku Utara adalah provinsi di Indonesia bagian timur yang beribukota di Sofifi. Wilayah ini resmi menjadi provinsi sendiri pada 4 Oktober 1999. Dikenal dengan sejarah kesultanan Ternate dan Tidore yang legendaris, Maluku Utara merupakan episentrum sejarah rempah-rempah yang menawarkan pemandangan gunung berapi dramatis dan pulau-pulau eksotis.</p>`, districts: [ "Halmahera Barat", "Halmahera Tengah", "Halmahera Utara", "Halmahera Selatan", "Kepulauan Sula", "Halmahera Timur", "Pulau Morotai", "Pulau Taliabu", "Kota Ternate", "Kota Tidore Kepulauan" ], jumlah_penduduk: 1394231, ibu_kota: "Sofifi", hari_jadi: "4 Oktober 1999", suku_bangsa: null, website_resmi: "malutprov.go.id" },
+        maluku: { name: "Maluku", logo: "https://upload.wikimedia.org/wikipedia/commons/3/39/Coat_of_arms_of_Maluku.svg", tiktokLink: "https://vt.tiktok.com/ZSStthU7e/", governor: "Hendrik Lewerissa", viceGovernor: "Abdullah Vanath", songTitle: "Ayo Mama - Lagu Daerah Maluku", songSrc: "https://f.top4top.io/m_35106b3xv1.mp3", description: `<p>Maluku adalah sebuah provinsi yang meliputi bagian selatan Kepulauan Maluku, Indonesia. Provinsi ini berbatasan dengan Laut Seram di utara, Samudra Hindia dan Laut Arafura di selatan, Papua di timur, dan Sulawesi di barat. Ibu kota dan kota terbesarnya adalah Ambon. Sejarah Maluku yang kaya sebagai "Kepulauan Rempah-Rempah" menjadikannya pusat perdagangan penting yang menarik berbagai bangsa.</p>`, districts: [ "Buru", "Buru Selatan", "Kepulauan Aru", "Kepulauan Tanimbar", "Maluku Barat Daya", "Maluku Tengah", "Maluku Tenggara", "Seram Bagian Barat", "Seram Bagian Timur", "Kota Ambon", "Kota Tual" ], jumlah_penduduk: 1945648, ibu_kota: "Ambon", hari_jadi: null, suku_bangsa: ["Alfur", "Ambon", "Tionghoa", "Bugis", "Buton", "Jawa"], website_resmi: "malukuprov.go.id" },
+        papua_barat: { name: "Papua Barat", logo: "https://upload.wikimedia.org/wikipedia/commons/d/de/Coat_of_arms_of_West_Papua.svg", tiktokLink: "https://vt.tiktok.com/ZSYgrYjG4/", governor: "Ali Baham Temongmere (Pj.)", viceGovernor: "-", songTitle: "E Mambo Simbo - Lagu Daerah Papua Barat", songSrc: "", description: `<p>Papua Barat terletak di ujung barat Pulau Papua, di wilayah Semenanjung Kepala Burung dan Bomberai. Provinsi ini adalah rumah bagi keanekaragaman hayati yang luar biasa, baik di darat maupun di laut. Pegunungan Arfak yang megah dan Taman Nasional Teluk Cenderawasih, tempat para wisatawan dapat berenang bersama hiu paus, adalah beberapa dari banyak keajaiban alamnya. Manokwari, sebagai ibu kota, adalah kota bersejarah yang menjadi titik awal penyebaran Injil di Tanah Papua.</p>`, districts: ["Fakfak", "Kaimana", "Manokwari", "Manokwari Selatan", "Pegunungan Arfak", "Teluk Bintuni", "Teluk Wondama"], jumlah_penduduk: 571119, ibu_kota: "Manokwari", hari_jadi: "4 Oktober 1999", suku_bangsa: ["Arfak", "Doteri", "Kuri", "Simuri", "Irarutu", "Sebyar"], website_resmi: "papuabaratprov.go.id" },
+        papua_barat_daya: { name: "Papua Barat Daya", logo: "https://upload.wikimedia.org/wikipedia/commons/9/97/Logo_Papua_Barat_Daya1.png", tiktokLink: "https://vt.tiktok.com/ZSYgr7pWb/", governor: "Muhammad Musa'ad (Pj.)", viceGovernor: "-", songTitle: "Sajojo - Lagu Daerah Papua", songSrc: "https://i.top4top.io/m_35103y2u51.mp3", description: `<p>Papua Barat Daya adalah provinsi termuda di Indonesia, diresmikan pada akhir tahun 2022. Wilayahnya mencakup Kota Sorong dan sekitarnya, serta gugusan kepulauan Raja Ampat yang legendaris. Sebagai "Jantung Segitiga Terumbu Karang Dunia", Raja Ampat menawarkan pemandangan bawah laut yang tak tertandingi, menjadikannya destinasi impian bagi para penyelam dari seluruh dunia. Kota Sorong berfungsi sebagai gerbang utama dan pusat ekonomi provinsi ini.</p>`, districts: ["Maybrat", "Raja Ampat", "Sorong", "Sorong Selatan", "Tambrauw", "Kota Sorong"], jumlah_penduduk: 619705, ibu_kota: "Sorong", hari_jadi: "9 Desember 2022", suku_bangsa: ["Moi", "Maya", "Matbat", "Ambel", "Ma'ya"], website_resmi: "pbdprov.go.id" },
+        papua: { name: "Papua", logo: "https://upload.wikimedia.org/wikipedia/commons/9/98/Coat_of_arms_of_Papua_2.svg", tiktokLink: "https://vt.tiktok.com/ZSYgrQc5u/", governor: "Muhammad Ridwan Rumasukun (Pj.)", viceGovernor: "-", songTitle: "Apuse - Lagu Daerah Papua", songSrc: "https://g.top4top.io/m_351061c2n1.mp3", description: `<p>Provinsi Papua, setelah pemekaran, kini meliputi wilayah utara Pulau Papua. Ibu kotanya, Jayapura, terletak di tepi Danau Sentani yang indah, sebuah pusat budaya dan sejarah yang penting. Provinsi ini masih menyimpan hutan hujan tropis yang luas dengan keanekaragaman hayati yang kaya. Budaya masyarakat adat, seperti yang terlihat dalam Festival Danau Sentani, tetap menjadi daya tarik utama.</p>`, districts: ["Biak Numfor", "Jayapura", "Keerom", "Kepulauan Yapen", "Mamberamo Raya", "Sarmi", "Supiori", "Waropen", "Kota Jayapura"], jumlah_penduduk: 1047900, ibu_kota: "Jayapura", hari_jadi: "27 Desember 1949", suku_bangsa: ["Biak", "Sentani", "Waropen", "Yapen", "Sobei"], website_resmi: "papua.go.id" },
+        papua_tengah: { name: "Papua Tengah", logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/Lambang_Papua_Tengah.png", tiktokLink: "https://vt.tiktok.com/ZSYgrHq21/", governor: "Ribka Haluk (Pj.)", viceGovernor: "-", songTitle: "Yamko Rambe Yamko - Lagu Daerah Papua", songSrc: "https://h.top4top.io/m_351042w731.mp3", description: `<p>Papua Tengah adalah provinsi yang membentang dari pesisir utara hingga selatan, mencakup sebagian besar wilayah adat Mee Pago dan Saireri. Ibu kotanya, Nabire, terletak di Teluk Cenderawasih. Provinsi ini memiliki topografi yang beragam, dari pantai hingga pegunungan. Kehadiran perusahaan pertambangan besar di Kabupaten Mimika menjadikannya salah satu pusat ekonomi terpenting di Tanah Papua, sementara wilayah pedalamannya masih menyimpan kekayaan alam dan budaya yang otentik.</p>`, districts: ["Deiyai", "Dogiyai", "Intan Jaya", "Mimika", "Nabire", "Paniai", "Puncak", "Puncak Jaya"], jumlah_penduduk: 1452800, ibu_kota: "Nabire", hari_jadi: "25 Juli 2022", suku_bangsa: ["Mee", "Moni", "Amungme", "Kamoro", "Dani Barat"], website_resmi: "papuatengahprov.go.id" },
+        papua_pegunungan: { name: "Papua Pegunungan", logo: "https://upload.wikimedia.org/wikipedia/commons/2/27/Lambang_Papua_Pegunungan.svg", tiktokLink: "https://vt.tiktok.com/ZSYgr9p6E/", governor: "Velix Wanggai (Pj.)", viceGovernor: "-", songTitle: "Lembah Baliem - Lagu Daerah Papua", songSrc: "", description: `<p>Papua Pegunungan adalah satu-satunya provinsi di Indonesia yang terkurung daratan (landlocked). Beribukota di Jayawijaya, provinsi ini merupakan jantung dari Pegunungan Jayawijaya dan rumah bagi Lembah Baliem yang terkenal. Wilayah ini didominasi oleh masyarakat suku Dani, Lani, dan Yali, yang masih mempertahankan tradisi dan cara hidup mereka yang unik. Festival Budaya Lembah Baliem adalah acara tahunan yang menampilkan kekayaan budaya ini kepada dunia.</p>`, districts: ["Jayawijaya", "Lanny Jaya", "Mamberamo Tengah", "Nduga", "Pegunungan Bintang", "Tolikara", "Yahukimo", "Yalimo"], jumlah_penduduk: 1448400, ibu_kota: "Jayawijaya", hari_jadi: "25 Juli 2022", suku_bangsa: ["Dani", "Lani", "Yali", "Nduga", "Ngalik"], website_resmi: "papuapegununganprov.go.id" },
+        papua_selatan: { name: "Papua Selatan", logo: "https://upload.wikimedia.org/wikipedia/commons/a/aa/Logo_Papua_Selatan.png", tiktokLink: "https://vt.tiktok.com/ZSYgrsK8W/", governor: "Apolo Safanpo (Pj.)", viceGovernor: "-", songTitle: "Sajojo - Lagu Daerah Papua", songSrc: "https://i.top4top.io/m_35103y2u51.mp3", description: `<p>Papua Selatan, dengan ibu kota Merauke, terletak di bagian selatan Pulau Papua yang berbatasan langsung dengan Papua Nugini. Dikenal sebagai lumbung pangan masa depan Indonesia, provinsi ini memiliki dataran rendah yang luas dan subur. Taman Nasional Wasur, yang sering disebut "Serengeti-nya Papua", adalah rumah bagi keanekaragaman satwa liar yang melimpah. Tugu Kembar Sabang-Merauke di kota ini menjadi simbol persatuan Indonesia dari ujung barat hingga timur.</p>`, districts: ["Asmat", "Boven Digoel", "Mappi", "Merauke"], jumlah_penduduk: 534400, ibu_kota: "Merauke", hari_jadi: "25 Juli 2022", suku_bangsa: ["Marind", "Asmat", "Mappi", "Awyu", "Muyu"], website_resmi: "papuaselatanprov.go.id" }
     };
     
     // --- SCRIPT LOGIC ---
@@ -427,9 +458,10 @@ document.addEventListener('DOMContentLoaded', () => {
         slide.appendChild(title);
         destinationSliderWrapper.appendChild(slide);
     });
-    var swiper = new Swiper("#destinations-slider", {
-        effect: "slide", centeredSlides: true, slidesPerView: 3, loop: false, allowTouchMove: false,
+    new Swiper("#destinations-slider", {
+        effect: "slide", centeredSlides: true, slidesPerView: 'auto', loop: false,
         navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+        pagination: { el: '.swiper-pagination', clickable: true },
         breakpoints: { 320: { slidesPerView: 1, spaceBetween: 20 }, 768: { slidesPerView: 3, spaceBetween: 10 }, 1024: { slidesPerView: 5, spaceBetween: 10 } }
     });
 
@@ -441,22 +473,31 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentProvinceId = null;
     let targetUrl = '';
 
+    // Music Player Elements
+    const provinceMusicPlayer = document.getElementById('province-music-player');
+    const playProvinceBtn = document.getElementById('play-province-music-btn');
+    const playProvinceIcon = document.getElementById('play-province-icon');
+    const provinceProgressBar = document.getElementById('province-progress-bar');
+    const provinceSongTitle = document.getElementById('province-song-title');
+    const provinceMusic = document.getElementById('province-music');
+
     // Function to open detail modal
     function openDetailModal(provinceId) {
         currentProvinceId = provinceId;
         const data = provincesData[provinceId];
-        document.getElementById('modal-title').textContent = data.name;
-        document.getElementById('modal-logo').src = data.logo;
-        document.getElementById('modal-description').innerHTML = data.description;
-        document.getElementById('modal-governor').textContent = data.governor || '-';
-        document.getElementById('modal-vice-governor').textContent = data.viceGovernor || '-';
-        document.getElementById('modal-tiktok-link').href = data.tiktokLink;
-        document.getElementById('modal-capital').textContent = data.ibu_kota || '-';
-        document.getElementById('modal-anniversary').textContent = data.hari_jadi || '-';
-        document.getElementById('modal-population').textContent = data.jumlah_penduduk ? data.jumlah_penduduk.toLocaleString('id-ID') : '-';
-        document.getElementById('modal-ethnic-groups').textContent = data.suku_bangsa ? data.suku_bangsa.join(', ') : '-';
-        const websiteContainer = document.getElementById('website-container');
-        const websiteLink = document.getElementById('modal-website');
+        detailModal.querySelector('#modal-title').textContent = data.name;
+        detailModal.querySelector('#modal-logo').src = data.logo;
+        detailModal.querySelector('#modal-description').innerHTML = data.description;
+        detailModal.querySelector('#modal-governor').textContent = data.governor || '-';
+        detailModal.querySelector('#modal-vice-governor').textContent = data.viceGovernor || '-';
+        detailModal.querySelector('#modal-tiktok-link').href = data.tiktokLink;
+        detailModal.querySelector('#modal-capital').textContent = data.ibu_kota || '-';
+        detailModal.querySelector('#modal-anniversary').textContent = data.hari_jadi || '-';
+        detailModal.querySelector('#modal-population').textContent = data.jumlah_penduduk ? data.jumlah_penduduk.toLocaleString('id-ID') : '-';
+        detailModal.querySelector('#modal-ethnic-groups').textContent = data.suku_bangsa ? data.suku_bangsa.join(', ') : '-';
+        
+        const websiteContainer = detailModal.querySelector('#website-container');
+        const websiteLink = detailModal.querySelector('#modal-website');
         if (data.website_resmi) {
             websiteLink.href = `http://${data.website_resmi}`;
             websiteLink.textContent = data.website_resmi;
@@ -464,31 +505,31 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             websiteContainer.style.display = 'none';
         }
-        const districtList = document.getElementById('district-list');
+
+        if (data.songSrc && data.songSrc.trim() !== "") {
+            provinceMusicPlayer.style.display = 'block';
+            provinceSongTitle.textContent = data.songTitle;
+            provinceMusic.src = data.songSrc;
+        } else {
+            provinceMusicPlayer.style.display = 'none';
+            provinceMusic.src = "";
+        }
+
+        const districtList = detailModal.querySelector('#district-list');
         districtList.innerHTML = '';
         data.districts.forEach(districtName => {
             const item = document.createElement('span');
+            item.className = "block w-full text-left bg-white/5 p-2 rounded-md mb-2";
             item.textContent = districtName;
             districtList.appendChild(item);
         });
+        
         pageWrapper.classList.add('blurred');
         document.body.classList.add('modal-open');
         detailModal.classList.add('visible');
     }
 
-    // Province Card Interaction Logic (Click and Long Press)
-    destinationSliderWrapper.addEventListener('click', (e) => {
-        const card = e.target.closest('.destination-card');
-        if (card && !card.dataset.longPressed) {
-            const slide = card.closest('.swiper-slide');
-            if (!slide.classList.contains('swiper-slide-active')) return;
-            openDetailModal(card.dataset.province);
-        }
-        if (card) {
-            setTimeout(() => card.removeAttribute('data-long-pressed'), 10);
-        }
-    });
-
+    // Province Card Interaction Logic
     let pressTimer;
     const startPress = (e) => {
         const card = e.target.closest('.destination-card');
@@ -503,6 +544,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     const cancelPress = () => clearTimeout(pressTimer);
+    destinationSliderWrapper.addEventListener('click', (e) => {
+        const card = e.target.closest('.destination-card');
+        if (card && !card.dataset.longPressed) {
+            const slide = card.closest('.swiper-slide');
+            if (!slide.classList.contains('swiper-slide-active')) return;
+            openDetailModal(card.dataset.province);
+        }
+        if (card) setTimeout(() => card.removeAttribute('data-long-pressed'), 10);
+    });
     destinationSliderWrapper.addEventListener('mousedown', startPress);
     destinationSliderWrapper.addEventListener('mouseup', cancelPress);
     destinationSliderWrapper.addEventListener('mouseleave', cancelPress);
@@ -510,21 +560,40 @@ document.addEventListener('DOMContentLoaded', () => {
     destinationSliderWrapper.addEventListener('touchend', cancelPress);
     destinationSliderWrapper.addEventListener('touchmove', cancelPress);
 
+    // Music Player Logic
+    playProvinceBtn.addEventListener('click', () => {
+        if (provinceMusic.paused) {
+            provinceMusic.play();
+            playProvinceIcon.classList.replace('fa-play', 'fa-pause');
+        } else {
+            provinceMusic.pause();
+            playProvinceIcon.classList.replace('fa-pause', 'fa-play');
+        }
+    });
+    provinceMusic.addEventListener('timeupdate', () => { if (provinceMusic.duration) { provinceProgressBar.style.width = `${(provinceMusic.currentTime / provinceMusic.duration) * 100}%`; } });
+    provinceMusic.addEventListener('ended', () => { playProvinceIcon.classList.replace('fa-pause', 'fa-play'); provinceProgressBar.style.width = '0%'; });
+    
     // Modal Closing Logic
     document.querySelectorAll('.close-modal-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const modal = e.target.closest('.modal-container');
             modal.classList.remove('visible');
-            pageWrapper.classList.remove('blurred');
-            document.body.classList.remove('modal-open');
+            if (!document.querySelector('.modal-container.visible')) {
+                pageWrapper.classList.remove('blurred');
+                document.body.classList.remove('modal-open');
+            }
+            if(modal.id === 'detail-modal') {
+                provinceMusic.pause();
+                provinceMusic.currentTime = 0;
+            }
         });
     });
     
-    // Confirmation & Playlist Warning Modal Logic
-    document.getElementById('modal-website').addEventListener('click', (e) => { e.preventDefault(); targetUrl = e.currentTarget.href; confirmationModal.classList.add('visible'); });
+    // Confirmation & Playlist Warning Modals
+    detailModal.querySelector('#modal-website').addEventListener('click', (e) => { e.preventDefault(); targetUrl = e.currentTarget.href; confirmationModal.classList.add('visible'); });
     document.getElementById('confirm-yes').addEventListener('click', () => { window.open(targetUrl, '_blank'); confirmationModal.classList.remove('visible'); });
     document.getElementById('confirm-no').addEventListener('click', () => confirmationModal.classList.remove('visible'));
-    document.getElementById('modal-tiktok-link').addEventListener('click', (e) => {
+    detailModal.querySelector('#modal-tiktok-link').addEventListener('click', (e) => {
         e.preventDefault();
         const unavailableProvinces = ['bali', 'nusa_tenggara_barat', 'nusa_tenggara_timur', 'papua_barat', 'papua_barat_daya', 'papua', 'papua_tengah', 'papua_pegunungan', 'papua_selatan'];
         if (currentProvinceId && unavailableProvinces.includes(currentProvinceId)) {
@@ -538,7 +607,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Population Counter Animation
     const animateCounter = (element, finalValue) => {
-        let start = 0;
         const duration = 2000;
         const startTime = performance.now();
         const step = (currentTime) => {
@@ -565,6 +633,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const zoomedImage = document.getElementById('zoomed-image');
     const zoomInBtn = document.getElementById('zoom-in-btn');
     const zoomOutBtn = document.getElementById('zoom-out-btn');
+    const downloadBtn = document.getElementById('download-zoom-btn');
 
     let currentZoom = 1;
     let zoomPresses = 0;
@@ -574,6 +643,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const openZoomModal = (imgSrc) => {
         zoomedImage.src = imgSrc;
+        downloadBtn.href = imgSrc;
         resetZoomAndPan();
         pageWrapper.classList.add('blurred');
         document.body.classList.add('modal-open');
@@ -581,70 +651,23 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     const resetZoomAndPan = () => {
-        currentZoom = 1;
-        zoomPresses = 0;
-        translateX = 0;
-        translateY = 0;
-        applyTransform();
-        updateZoomButtons();
+        currentZoom = 1; zoomPresses = 0; translateX = 0; translateY = 0;
+        applyTransform(); updateZoomButtons();
     };
-
-    const applyTransform = () => {
-        zoomedImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
-    };
-    
+    const applyTransform = () => zoomedImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
     const updateZoomButtons = () => {
         zoomInBtn.disabled = zoomPresses >= maxPresses;
         zoomOutBtn.disabled = zoomPresses <= 0;
     };
 
-    document.querySelectorAll('.zoomable-image').forEach(img => {
-        img.addEventListener('click', (e) => openZoomModal(e.target.src));
-    });
+    document.querySelectorAll('.zoomable-image').forEach(img => img.addEventListener('click', (e) => openZoomModal(e.target.src)));
     
-    zoomInBtn.addEventListener('click', () => {
-        if (zoomPresses < maxPresses) {
-            zoomPresses++;
-            currentZoom += 1;
-            applyTransform();
-            updateZoomButtons();
-        }
-    });
+    zoomInBtn.addEventListener('click', () => { if (zoomPresses < maxPresses) { zoomPresses++; currentZoom++; applyTransform(); updateZoomButtons(); } });
+    zoomOutBtn.addEventListener('click', () => { if (zoomPresses > 0) { zoomPresses--; currentZoom--; if (currentZoom === 1) { translateX = 0; translateY = 0; } applyTransform(); updateZoomButtons(); } });
 
-    zoomOutBtn.addEventListener('click', () => {
-        if (zoomPresses > 0) {
-            zoomPresses--;
-            currentZoom -= 1;
-            if (currentZoom === 1) { translateX = 0; translateY = 0; }
-            applyTransform();
-            updateZoomButtons();
-        }
-    });
-
-    const startDrag = (e) => {
-        if (currentZoom > 1) {
-            e.preventDefault();
-            isDragging = true;
-            const point = e.touches ? e.touches[0] : e;
-            startX = point.pageX - translateX;
-            startY = point.pageY - translateY;
-            zoomedImage.classList.add('is-dragging');
-        }
-    };
-
-    const drag = (e) => {
-        if (isDragging) {
-            const point = e.touches ? e.touches[0] : e;
-            translateX = point.pageX - startX;
-            translateY = point.pageY - startY;
-            applyTransform();
-        }
-    };
-
-    const endDrag = () => {
-        isDragging = false;
-        zoomedImage.classList.remove('is-dragging');
-    };
+    const startDrag = (e) => { if (currentZoom > 1) { e.preventDefault(); isDragging = true; const point = e.touches ? e.touches[0] : e; startX = point.pageX - translateX; startY = point.pageY - translateY; zoomedImage.classList.add('is-dragging'); } };
+    const drag = (e) => { if (isDragging) { const point = e.touches ? e.touches[0] : e; translateX = point.pageX - startX; translateY = point.pageY - startY; applyTransform(); } };
+    const endDrag = () => { isDragging = false; zoomedImage.classList.remove('is-dragging'); };
 
     zoomedImage.addEventListener('mousedown', startDrag);
     window.addEventListener('mousemove', drag);
