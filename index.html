@@ -23,15 +23,8 @@
 
 <style>
     body { font-family: 'Poppins', sans-serif; background-color: #0a0a0a; color: #f1f1f1; overflow-x: hidden; -webkit-user-select: none; -ms-user-select: none; user-select: none; }
-    /* Prevent scrolling when modals or intro are active */
-    body.modal-open, body.intro-active { overflow: hidden; }
-
-    #intro-screen { position: fixed; inset: 0; background: #0a0a0a; z-index: 100; display: flex; justify-content: center; align-items: center; text-align: center; transition: opacity 1s ease-in-out, transform 1s ease-in-out, filter 1s ease-in-out; }
-    #intro-screen.hidden { opacity: 0; transform: scale(1.5); filter: blur(20px); pointer-events: none; }
-    #particle-canvas { position: absolute; inset: 0; z-index: -1; }
-    .intro-container { transition: opacity 0.7s ease-out; }
-    .fade-in-text { opacity: 0; animation: fadeIn 2s forwards; }
-    @keyframes fadeIn { to { opacity: 1; } }
+    /* Prevent scrolling when modals are active */
+    body.modal-open { overflow: hidden; }
 
     #page-wrapper { transition: filter 0.4s ease, transform 0.4s ease; }
     #page-wrapper.blurred { filter: blur(8px) brightness(0.7); transform: scale(0.98); pointer-events: none; }
@@ -47,22 +40,21 @@
     #detail-modal .modal-content { max-width: 650px; max-height: 90vh; overflow-y: auto; }
     #district-detail-modal .modal-content { max-width: 550px; max-height: 80vh; overflow-y: auto; z-index: 60; }
     #confirmation-modal .modal-content, #playlist-warning-modal .modal-content { max-width: 400px; z-index: 70; }
-    #map-modal .modal-content { max-width: 90vw; max-height: 90vh; background: transparent; padding: 0; }
     
     /* Image Zoom Modal Styles */
     #image-zoom-modal .modal-content { background: transparent; padding: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-    #image-zoom-container { width: 90%; height: 90%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-    #zoomed-image { max-width: 100%; max-height: 100%; transition: transform 0.2s ease-out; cursor: grab; }
+    #image-zoom-container { width: 90vw; height: 90vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    #zoomed-image { width: 100%; height: 100%; object-fit: contain; transition: transform 0.2s ease-out; cursor: grab; }
+    #zoomed-image.is-dragging { cursor: grabbing; }
     #zoom-controls { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); padding: 0.5rem 1rem; border-radius: 99px; display: flex; gap: 1rem; align-items: center; z-index: 60; }
-    .zoom-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s; }
-    .zoom-btn:hover { transform: scale(1.2); }
-
+    .zoom-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s, opacity 0.2s; }
+    .zoom-btn:hover:not(:disabled) { transform: scale(1.2); }
+    .zoom-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
     .modal-item { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
     #detail-modal.visible .modal-item { opacity: 1; transform: translateY(0); }
     .close-modal-btn { position: absolute; top: 1rem; right: 1rem; width: 2.5rem; height: 2.5rem; background-color: rgba(0,0,0,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; z-index: 70; }
     .close-modal-btn:hover { background-color: rgba(0,0,0,0.7); transform: rotate(90deg); }
-    #map-modal .close-modal-btn { top: -1rem; right: -1rem; }
     
     #district-list { list-style-type: none; padding: 0; columns: 2; gap: 0.75rem; }
     #district-list span { display: block; width: 100%; text-align: left; background: rgba(255,255,255,0.05); padding: 0.5rem 0.75rem; border-radius: 0.5rem; margin-bottom: 0.5rem; opacity: 0.7; }
@@ -75,13 +67,26 @@
     .music-player-button { background-color: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px); }
     .music-progress-bar { transition: width 0.1s linear; }
 
-    /* === SLIDER STYLES === */
+    /* === SLIDER STYLES (UPDATED) === */
     #destinations-slider { width: 100%; height: 350px; position: relative; }
     .swiper-slide { width: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 0.5s ease, filter 0.5s ease; }
-    .destination-card { width: 180px; height: 180px; background-color: #1c1c1c; border: 2px solid #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.5s ease, background-color 0.5s ease, border-color 0.5s ease, filter 0.5s ease; filter: grayscale(100%) brightness(0.7); transform: scale(0.8); }
-    .card-logo { width: 120px; height: 120px; object-fit: contain; }
+    .destination-card { 
+        width: 180px; 
+        height: 180px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        cursor: pointer; 
+        transition: transform 0.5s ease, filter 0.5s ease; 
+        filter: grayscale(100%) brightness(0.7); 
+        transform: scale(0.8); 
+    }
+    .card-logo { width: 120px; height: 120px; object-fit: contain; pointer-events: none; /* Prevent image from capturing events */ }
     .card-title { color: #888; margin-top: 1rem; font-weight: 500; transition: color 0.5s ease, opacity 0.5s ease; text-align: center; opacity: 0; }
-    .swiper-slide-active .destination-card { transform: scale(1.2); filter: grayscale(0%) brightness(1); background-color: #252525; border-color: #a78bfa; }
+    .swiper-slide-active .destination-card { 
+        transform: scale(1.2); 
+        filter: grayscale(0%) brightness(1); 
+    }
     .swiper-slide-active .card-title { color: #f1f1f1; opacity: 1; }
     .swiper-button-next, .swiper-button-prev { color: #fff; background-color: rgba(50, 50, 50, 0.5); width: 50px; height: 50px; border-radius: 50%; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s ease; top: 40%; }
     .swiper-button-next:hover, .swiper-button-prev:hover { background-color: rgba(70, 70, 70, 0.7); }
@@ -133,20 +138,7 @@
 <audio id="background-music" loop><source src="https://g.top4top.io/m_3510b5zbc1.mp3" type="audio/mpeg"></source></audio>
 <audio id="province-music"></audio>
 
-<div id="intro-screen">
-    <canvas id="particle-canvas"></canvas>
-    <div id="welcome-container" class="intro-container z-10">
-        <h1 class="text-4xl md:text-6xl font-bold fade-in-text">Selamat Datang</h1>
-        <button id="kenalan-button" class="mt-8 text-lg font-semibold opacity-0 border-2 border-transparent hover:border-white/50 p-3 rounded-full transition-all duration-300">Kenalan yuk <i class="fas fa-hand-sparkles ml-2"></i></button>
-    </div>
-    <div id="introduction-container" class="intro-container z-10 absolute opacity-0 p-4 pointer-events-none">
-        <p id="introduction-text" class="text-xl md:text-3xl font-light max-w-2xl"></p>
-    </div>
-    <div id="mission-container" class="intro-container z-10 absolute opacity-0 p-4 pointer-events-none">
-        <p id="mission-text-wrapper" class="text-lg md:text-xl font-light max-w-3xl text-center"></p>
-        <button id="continue-button" class="mt-8 text-lg font-semibold opacity-0 border-2 border-white/50 hover:border-white p-3 rounded-full transition-all duration-300">Lanjutkan Petualangan <i class="fas fa-arrow-right ml-2"></i></button>
-    </div>
-</div>
+<!-- Intro Screen Removed -->
 
 <div id="page-wrapper">
     <div id="hero-section" class="min-h-screen flex flex-col justify-center items-center text-center p-4 bg-black overflow-hidden">
@@ -172,11 +164,9 @@
         <div id="map-section" class="py-16 px-4 sm:px-6 lg:px-8" data-aos="fade-up">
             <div class="container mx-auto max-w-4xl text-center">
                  <h2 class="text-3xl font-bold text-center mb-8 text-white">Peta Wilayah Indonesia Timur</h2>
-                 <div id="map-container" class="relative p-2 bg-gray-800/50 border-2 border-gray-700 rounded-lg shadow-lg inline-block cursor-pointer group transition-all duration-300 hover:border-cyan-400 hover:shadow-cyan-400/20">
+                 <!-- UPDATED: Added zoomable-image class to the map -->
+                 <div id="map-container" class="relative p-2 bg-gray-800/50 border-2 border-gray-700 rounded-lg shadow-lg inline-block transition-all duration-300 hover:border-cyan-400 hover:shadow-cyan-400/20">
                      <img src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Map_of_Eastern_Indonesia.png" alt="Peta Indonesia Timur" class="rounded-md max-w-full h-auto zoomable-image">
-                     <div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                         <i class="fas fa-search-plus text-white text-5xl"></i>
-                     </div>
                  </div>
                  <p class="mt-4 text-gray-400 italic">Klik pada peta untuk memperbesar.</p>
             </div>
@@ -427,14 +417,7 @@
     </div>
 </div>
 
-<div id="map-modal" class="modal-container">
-    <div class="modal-content">
-         <button id="close-map-modal-btn" class="close-modal-btn"><i class="fas fa-times text-white"></i></button>
-         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Map_of_Eastern_Indonesia.png" alt="Peta Indonesia Timur" class="w-full h-auto rounded-lg shadow-2xl">
-    </div>
-</div>
-
-<!-- NEW Image Zoom Modal -->
+<!-- Image Zoom Modal -->
 <div id="image-zoom-modal" class="modal-container z-50">
     <button id="close-zoom-modal-btn" class="close-modal-btn"><i class="fas fa-times text-white"></i></button>
     <div class="modal-content">
@@ -452,10 +435,7 @@
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Add class to body to prevent scrolling during intro
-    document.body.classList.add('intro-active');
-
-    // Data KTI and Provinces (shortened for brevity, full data is in the original script)
+    // --- DATA ---
     const ktiData = { "nama": "Indonesia Timur", "nama_lain": ["Kawasan Timur Indonesia", "KTI"], "wilayah": { "provinsi": [ "Bali", "Nusa Tenggara Barat", "Nusa Tenggara Timur", "Sulawesi Utara", "Gorontalo", "Sulawesi Tengah", "Sulawesi Barat", "Sulawesi Selatan", "Sulawesi Tenggara", "Maluku Utara", "Maluku", "Papua Barat", "Papua Barat Daya", "Papua Pegunungan", "Papua Tengah", "Papua Selatan", "Papua" ], "luas_km2": { "total": 3973245, "daratan": 573245, "perairan": 3400000 }, "zona_waktu": ["UTC+08:00", "UTC+09:00"] }, "penduduk": { "estimasi_2025": 29400000, "kepadatan_per_km2": 7.4, "penduduk_asli": "Orang Indonesia Timur" }, "bahasa": { "resmi": "Bahasa Indonesia", "daerah": [ "Bugis", "Makassar", "Bima", "Melayu Manado", "Minahasa", "Melayu Ambon", "Melayu Papua" ] }, "kota": { "terbesar": "Makassar", "besar_lainnya": [ "Denpasar", "Manado", "Kupang", "Mataram", "Jayapura", "Palu", "Ambon", "Kendari", "Sorong", "Bima" ], "10_terbesar_populasi": [ { "nama": "Makassar", "provinsi": "Sulawesi Selatan", "populasi": 1571814 }, { "nama": "Denpasar", "provinsi": "Bali", "populasi": 725314 }, { "nama": "Manado", "provinsi": "Sulawesi Utara", "populasi": 478192 }, { "nama": "Kupang", "provinsi": "Nusa Tenggara Timur", "populasi": 443349 }, { "nama": "Mataram", "provinsi": "Nusa Tenggara Barat", "populasi": 452812 }, { "nama": "Jayapura", "provinsi": "Papua", "populasi": 403859 }, { "nama": "Palu", "provinsi": "Sulawesi Tengah", "populasi": 373218 }, { "nama": "Ambon", "provinsi": "Maluku", "populasi": 348225 }, { "nama": "Kendari", "provinsi": "Sulawesi Tenggara", "populasi": 347381 }, { "nama": "Sorong", "provinsi": "Papua Barat Daya", "populasi": 295809 } ] }, "ekonomi": { "pusat_utama": ["Makassar", "Denpasar", "Manado"], "status_pembangunan": "Relatif tertinggal dibandingkan Indonesia Barat, berkembang dengan otonomi daerah dan prioritas nasional" }, "sejarah": [ { "periode": "1938-1946", "deskripsi": "Wilayah dikenal sebagai Groote Oost atau Timur Raya, terdiri dari keresidenan Bali-Lombok, Sulawesi Selatan, Sulawesi Utara, Maluku (termasuk Irian Barat), dan Timor" }, { "periode": "1945-1946", "deskripsi": "Dibagi menjadi tiga provinsi: Sunda Kecil, Sulawesi, dan Maluku" }, { "periode": "1946-1950", "deskripsi": "Menjadi Negara Indonesia timur dalam struktur RIS dengan ibu kota Makassar, Papua kemudian dipisahkan" } ] };
     const provincesData = {
         bali: { name: "Bali", logo: "https://upload.wikimedia.org/wikipedia/commons/e/ee/Official_seal_of_the_Province_of_Bali.png", tiktokLink: "https://vt.tiktok.com/ZSYgrRR9S/", governor: "Sang Made Mahendra Jaya (Pj.)", viceGovernor: "-", songTitle: "Janger - Lagu Daerah Bali", songSrc: "https://l.top4top.io/m_3510zuxq41.mp3", description: `<p>Bali, yang dikenal sebagai "Pulau Dewata", adalah destinasi wisata kelas dunia yang memadukan keindahan alam, budaya yang kaya, dan spiritualitas yang mendalam. Dari pantai-pantai yang ramai hingga sawah terasering yang tenang, Bali menawarkan pengalaman unik bagi setiap pengunjung. Seni dan budaya, yang tercermin dalam tarian, musik, dan upacara adat, merupakan bagian tak terpisahkan dari kehidupan sehari-hari masyarakatnya.</p>`, districts: ["Badung", "Bangli", "Buleleng", "Gianyar", "Jembrana", "Karangasem", "Klungkung", "Tabanan", "Kota Denpasar"], jumlah_penduduk: 4415100, ibu_kota: "Denpasar", hari_jadi: "14 Agustus 1958", suku_bangsa: ["Bali (Bali Aga, Bali Majapahit)", "Jawa", "Madura", "Sasak"], website_resmi: "baliprov.go.id" },
@@ -516,7 +496,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const detailModal = document.getElementById('detail-modal');
     const confirmationModal = document.getElementById('confirmation-modal');
     const playlistWarningModal = document.getElementById('playlist-warning-modal');
-    const mapModal = document.getElementById('map-modal');
     let currentProvinceId = null;
     let targetUrl = '';
 
@@ -529,54 +508,99 @@ document.addEventListener('DOMContentLoaded', () => {
     const backgroundMusic = document.getElementById('background-music');
     const provinceMusic = document.getElementById('province-music');
     let wasBgMusicPlaying = false;
+    
+    // Function to open detail modal
+    function openDetailModal(provinceId) {
+        currentProvinceId = provinceId;
+        const data = provincesData[provinceId];
+        document.getElementById('modal-title').textContent = data.name;
+        document.getElementById('modal-logo').src = data.logo;
+        document.getElementById('modal-description').innerHTML = data.description;
+        document.getElementById('modal-governor').textContent = data.governor || '-';
+        document.getElementById('modal-vice-governor').textContent = data.viceGovernor || '-';
+        document.getElementById('modal-tiktok-link').href = data.tiktokLink;
+        document.getElementById('modal-capital').textContent = data.ibu_kota || '-';
+        document.getElementById('modal-anniversary').textContent = data.hari_jadi || '-';
+        document.getElementById('modal-population').textContent = data.jumlah_penduduk ? data.jumlah_penduduk.toLocaleString('id-ID') : '-';
+        document.getElementById('modal-ethnic-groups').textContent = data.suku_bangsa ? data.suku_bangsa.join(', ') : '-';
+        const websiteContainer = document.getElementById('website-container');
+        const websiteLink = document.getElementById('modal-website');
+        if (data.website_resmi) {
+            websiteLink.href = `http://${data.website_resmi}`;
+            websiteLink.textContent = data.website_resmi;
+            websiteContainer.style.display = 'block';
+        } else {
+            websiteContainer.style.display = 'none';
+        }
+        if (data.songSrc && data.songSrc.trim() !== "") {
+            provinceMusicPlayer.style.display = 'block';
+            provinceSongTitle.textContent = data.songTitle;
+            provinceMusic.src = data.songSrc;
+        } else {
+            provinceMusicPlayer.style.display = 'none';
+        }
+        const districtList = document.getElementById('district-list');
+        districtList.innerHTML = '';
+        data.districts.forEach(districtName => {
+            const item = document.createElement('span');
+            item.textContent = districtName;
+            districtList.appendChild(item);
+        });
+        pageWrapper.classList.add('blurred');
+        document.body.classList.add('modal-open');
+        detailModal.classList.add('visible');
+    }
 
-    // Province Card Click Event
+    // Province Card Interaction Logic (Click and Long Press)
     destinationSliderWrapper.addEventListener('click', (e) => {
         const card = e.target.closest('.destination-card');
-        if (card) {
+        if (card && !card.dataset.longPressed) {
             const slide = card.closest('.swiper-slide');
             if (!slide.classList.contains('swiper-slide-active')) return;
-            const provinceId = card.dataset.province;
-            currentProvinceId = provinceId;
-            const data = provincesData[provinceId];
-            document.getElementById('modal-title').textContent = data.name;
-            document.getElementById('modal-logo').src = data.logo;
-            document.getElementById('modal-description').innerHTML = data.description;
-            document.getElementById('modal-governor').textContent = data.governor || '-';
-            document.getElementById('modal-vice-governor').textContent = data.viceGovernor || '-';
-            document.getElementById('modal-tiktok-link').href = data.tiktokLink;
-            document.getElementById('modal-capital').textContent = data.ibu_kota || '-';
-            document.getElementById('modal-anniversary').textContent = data.hari_jadi || '-';
-            document.getElementById('modal-population').textContent = data.jumlah_penduduk ? data.jumlah_penduduk.toLocaleString('id-ID') : '-';
-            document.getElementById('modal-ethnic-groups').textContent = data.suku_bangsa ? data.suku_bangsa.join(', ') : '-';
-            const websiteContainer = document.getElementById('website-container');
-            const websiteLink = document.getElementById('modal-website');
-            if (data.website_resmi) {
-                websiteLink.href = `http://${data.website_resmi}`;
-                websiteLink.textContent = data.website_resmi;
-                websiteContainer.style.display = 'block';
-            } else {
-                websiteContainer.style.display = 'none';
-            }
-            if (data.songSrc && data.songSrc.trim() !== "") {
-                provinceMusicPlayer.style.display = 'block';
-                provinceSongTitle.textContent = data.songTitle;
-                provinceMusic.src = data.songSrc;
-            } else {
-                provinceMusicPlayer.style.display = 'none';
-            }
-            const districtList = document.getElementById('district-list');
-            districtList.innerHTML = '';
-            data.districts.forEach(districtName => {
-                const item = document.createElement('span');
-                item.textContent = districtName;
-                districtList.appendChild(item);
-            });
-            pageWrapper.classList.add('blurred');
-            document.body.classList.add('modal-open');
-            detailModal.classList.add('visible');
+            openDetailModal(card.dataset.province);
+        }
+        if (card) {
+             // Reset long-press flag after click is processed
+            setTimeout(() => card.removeAttribute('data-long-pressed'), 10);
         }
     });
+
+    let pressTimer;
+    destinationSliderWrapper.addEventListener('mousedown', (e) => {
+        const card = e.target.closest('.destination-card');
+        if (card) {
+            pressTimer = window.setTimeout(() => {
+                const logoImg = card.querySelector('.card-logo');
+                if (logoImg) {
+                    card.setAttribute('data-long-pressed', 'true');
+                    openZoomModal(logoImg.src);
+                }
+            }, 500); // 500ms for long press
+        }
+    });
+    destinationSliderWrapper.addEventListener('mouseup', () => {
+        clearTimeout(pressTimer);
+    });
+    // Touch events for mobile long press
+    destinationSliderWrapper.addEventListener('touchstart', (e) => {
+        const card = e.target.closest('.destination-card');
+        if (card) {
+            pressTimer = window.setTimeout(() => {
+                const logoImg = card.querySelector('.card-logo');
+                if (logoImg) {
+                    card.setAttribute('data-long-pressed', 'true');
+                    openZoomModal(logoImg.src);
+                }
+            }, 500);
+        }
+    });
+    destinationSliderWrapper.addEventListener('touchend', () => {
+        clearTimeout(pressTimer);
+    });
+    destinationSliderWrapper.addEventListener('touchmove', () => {
+        clearTimeout(pressTimer); // Cancel long press if finger moves
+    });
+
     
     // Music Player Logic
     playProvinceBtn.addEventListener('click', () => {
@@ -623,50 +647,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('close-warning-modal').addEventListener('click', () => playlistWarningModal.classList.remove('visible'));
 
-    // Intro Screen Logic
-    const kenalanButton = document.getElementById('kenalan-button');
-    const continueButton = document.getElementById('continue-button');
-    const introScreen = document.getElementById('intro-screen');
-    const welcomeContainer = document.getElementById('welcome-container');
-    const introductionContainer = document.getElementById('introduction-container');
-    const missionContainer = document.getElementById('mission-container');
-    const missionTextWrapper = document.getElementById('mission-text-wrapper');
-    const missionText = "Melalui lensa kamera dan penceritaan visual, proyek ini lahir dari sebuah visi: untuk menyalakan kembali rasa ingin tahu dan kebanggaan terhadap kekayaan Nusantara. Misi kami adalah menyajikan serpihan surga Indonesia dalam format yang relevan dan mudah diakses oleh generasi muda, mengubah setiap video TikTok menjadi jendela pengetahuan yang menginspirasi.";
-    const introductions = ["Perkenalkan, petualang di balik layar ini adalah BoBeng.", "Salam kenal! Saya BoBeng, siap memandu Anda menjelajahi Nusantara.", "Halo! Nama saya BoBeng, selamat menikmati perjalanan ini."];
-    setTimeout(() => { kenalanButton.style.opacity = '1'; kenalanButton.classList.remove('border-transparent'); }, 1500);
-    kenalanButton.addEventListener('click', () => {
-        backgroundMusic.play().catch(error => console.log("Autoplay music blocked."));
-        welcomeContainer.style.opacity = '0';
-        welcomeContainer.style.pointerEvents = 'none';
-        setTimeout(() => {
-            const randomIndex = Math.floor(Math.random() * introductions.length);
-            document.getElementById('introduction-text').textContent = introductions[randomIndex];
-            introductionContainer.style.opacity = '1';
-        }, 700);
-        setTimeout(() => {
-            introductionContainer.style.opacity = '0';
-            setTimeout(() => {
-                missionContainer.classList.remove('pointer-events-none');
-                missionContainer.style.opacity = '1';
-                missionTextWrapper.textContent = missionText;
-                setTimeout(() => { continueButton.style.opacity = '1'; }, 1000);
-            }, 700);
-        }, 3000);
-    });
-    continueButton.addEventListener('click', () => { document.body.classList.remove('intro-active'); introScreen.classList.add('hidden'); });
-
-    // **UPDATED** Population Counter Animation
+    // Population Counter Animation
     function animateCounter(element, finalValue) {
         let start = 0;
-        const duration = 2000; // 2 seconds
+        const duration = 2000;
         const startTime = performance.now();
-
         function step(currentTime) {
             const elapsedTime = currentTime - startTime;
             const progress = Math.min(elapsedTime / duration, 1);
             const currentNum = Math.floor(progress * finalValue);
             element.textContent = currentNum.toLocaleString('id-ID');
-
             if (progress < 1) {
                 requestAnimationFrame(step);
             } else {
@@ -703,65 +693,138 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // **NEW** Image Zoom Modal Logic
+    // **UPDATED** Image Zoom & Pan Modal Logic
     const zoomModal = document.getElementById('image-zoom-modal');
     const zoomedImage = document.getElementById('zoomed-image');
+    const zoomInBtn = document.getElementById('zoom-in-btn');
+    const zoomOutBtn = document.getElementById('zoom-out-btn');
+
     let currentZoom = 1;
-    const maxZoom = 10;
-    const minZoom = 1;
+    let zoomPresses = 0;
+    const maxPresses = 5; // Max 5x zoom
 
-    document.querySelectorAll('.zoomable-image').forEach(img => {
-        img.addEventListener('click', (e) => {
-            zoomedImage.src = e.target.src;
-            currentZoom = 1;
-            zoomedImage.style.transform = `scale(${currentZoom})`;
-            pageWrapper.classList.add('blurred');
-            document.body.classList.add('modal-open');
-            zoomModal.classList.add('visible');
-        });
-    });
+    let isDragging = false;
+    let startX, startY, translateX, translateY;
 
-    document.getElementById('close-zoom-modal-btn').addEventListener('click', () => {
+    const openZoomModal = (imgSrc) => {
+        zoomedImage.src = imgSrc;
+        resetZoomAndPan();
+        pageWrapper.classList.add('blurred');
+        document.body.classList.add('modal-open');
+        zoomModal.classList.add('visible');
+    };
+
+    const closeZoomModal = () => {
         pageWrapper.classList.remove('blurred');
         document.body.classList.remove('modal-open');
         zoomModal.classList.remove('visible');
+    };
+    
+    const resetZoomAndPan = () => {
+        currentZoom = 1;
+        zoomPresses = 0;
+        translateX = 0;
+        translateY = 0;
+        applyTransform();
+        updateZoomButtons();
+    };
+
+    const applyTransform = () => {
+        zoomedImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
+    };
+    
+    const updateZoomButtons = () => {
+        zoomInBtn.disabled = zoomPresses >= maxPresses;
+        zoomOutBtn.disabled = zoomPresses <= 0;
+    };
+
+    document.querySelectorAll('.zoomable-image').forEach(img => {
+        img.addEventListener('click', (e) => openZoomModal(e.target.src));
     });
 
-    document.getElementById('zoom-in-btn').addEventListener('click', () => {
-        if (currentZoom < maxZoom) {
-            currentZoom += 0.5;
-            zoomedImage.style.transform = `scale(${currentZoom})`;
+    document.getElementById('close-zoom-modal-btn').addEventListener('click', closeZoomModal);
+    
+    zoomInBtn.addEventListener('click', () => {
+        if (zoomPresses < maxPresses) {
+            zoomPresses++;
+            currentZoom += 1; // Increment by 1 for 1x, 2x, 3x, etc.
+            applyTransform();
+            updateZoomButtons();
         }
     });
 
-    document.getElementById('zoom-out-btn').addEventListener('click', () => {
-        if (currentZoom > minZoom) {
-            currentZoom -= 0.5;
-            zoomedImage.style.transform = `scale(${currentZoom})`;
+    zoomOutBtn.addEventListener('click', () => {
+        if (zoomPresses > 0) {
+            zoomPresses--;
+            currentZoom -= 1;
+            if (currentZoom === 1) {
+                 translateX = 0;
+                 translateY = 0;
+            }
+            applyTransform();
+            updateZoomButtons();
         }
     });
 
+    zoomedImage.addEventListener('mousedown', (e) => {
+        if (currentZoom > 1) {
+            e.preventDefault();
+            isDragging = true;
+            startX = e.pageX - translateX;
+            startY = e.pageY - translateY;
+            zoomedImage.classList.add('is-dragging');
+        }
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            translateX = e.pageX - startX;
+            translateY = e.pageY - startY;
+            applyTransform();
+        }
+    });
+
+    window.addEventListener('mouseup', () => {
+        isDragging = false;
+        zoomedImage.classList.remove('is-dragging');
+    });
+    
+    zoomedImage.addEventListener('touchstart', (e) => {
+        if (currentZoom > 1 && e.touches.length === 1) {
+            isDragging = true;
+            const touch = e.touches[0];
+            startX = touch.pageX - translateX;
+            startY = touch.pageY - translateY;
+            zoomedImage.classList.add('is-dragging');
+        }
+    });
+    
+    window.addEventListener('touchmove', (e) => {
+        if (isDragging && e.touches.length === 1) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            translateX = touch.pageX - startX;
+            translateY = touch.pageY - startY;
+            applyTransform();
+        }
+    }, { passive: false });
+    
+    window.addEventListener('touchend', () => {
+        isDragging = false;
+        zoomedImage.classList.remove('is-dragging');
+    });
 
     // Initializations
     AOS.init({ once: true, duration: 800 });
     document.getElementById('year').textContent = new Date().getFullYear();
-    
-    // Particle Animation
-    const canvas = document.getElementById('particle-canvas');
-    if (canvas) {
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        let particlesArray = []; const numberOfParticles = 80;
-        const colors = ['rgba(255, 0, 0, 0.7)', 'rgba(255, 255, 255, 0.7)'];
-        class Particle { constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 5 + 1; this.speedX = Math.random() * 1 - 0.5; this.speedY = Math.random() * 1.5 + 0.5; this.color = colors[Math.floor(Math.random() * colors.length)]; } update() { this.x += this.speedX; this.y += this.speedY; if (this.size > 0.2) this.size -= 0.02; if (this.size <= 0.2) { this.x = Math.random() * canvas.width; this.y = -this.size; this.size = Math.random() * 5 + 1; } if (this.y > canvas.height) { this.y = -this.size; this.x = Math.random() * canvas.width; } } draw() { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); } }
-        function initParticles() { particlesArray = []; for (let i = 0; i < numberOfParticles; i++) { particlesArray.push(new Particle()); } }
-        function animateParticles() { ctx.clearRect(0, 0, canvas.width, canvas.height); for (let i = 0; i < particlesArray.length; i++) { particlesArray[i].update(); particlesArray[i].draw(); } requestAnimationFrame(animateParticles); }
-        initParticles(); animateParticles();
-        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; initParticles(); });
-    }
+    // Start background music on first user interaction
+    document.body.addEventListener('click', () => {
+        if(backgroundMusic.paused) {
+            backgroundMusic.play().catch(e => console.log("Music autoplay failed."));
+        }
+    }, { once: true });
 });
 </script>
 
 </body>
 </html>
-
