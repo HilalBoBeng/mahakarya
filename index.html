@@ -28,6 +28,7 @@
         font-family: 'Poppins', sans-serif; 
         background-color: #0a0a0a; 
         color: #f1f1f1; 
+        /* PERBAIKAN #1: Mencegah bocor ke kanan di mobile */
         overflow-x: hidden; 
     }
     body.modal-open { overflow: hidden; }
@@ -36,9 +37,26 @@
     #page-wrapper { transition: filter 0.4s ease, transform 0.4s ease; }
     #page-wrapper.blurred { filter: blur(8px) brightness(0.7); transform: scale(0.98); pointer-events: none; }
 
+    /* PERBAIKAN #8: Peningkatan Tampilan Hero Section */
+    #hero-section { position: relative; }
+    #hero-section::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        /* Gradient untuk mempergelap bagian bawah dan meningkatkan kontras teks */
+        background: linear-gradient(180deg, rgba(0,0,0,0.0) 40%, rgba(0,0,0,0.7) 85%, #0a0a0a 100%);
+        z-index: 1;
+    }
+    #hero-section .hero-content {
+        position: relative;
+        z-index: 2; /* Memastikan konten berada di atas gradient overlay */
+    }
+
     /* Animations */
     @keyframes kenBurns { 0% { transform: scale(1.1) translate(0, 0); } 100% { transform: scale(1.2) translate(-2%, 2%); } }
     .hero-bg-animation { animation: kenBurns 30s ease-in-out infinite alternate; }
+    
+    /* PERBAIKAN #7: Animasi masuk untuk modal */
     @keyframes fadeInPanel { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     
     /* Logo Animation */
@@ -46,9 +64,7 @@
       0%, 100% { opacity: 0.6; }
       50% { opacity: 1; }
     }
-    #fixed-logo {
-        animation: fade-in-out 2.5s ease-in-out infinite;
-    }
+    #fixed-logo { animation: fade-in-out 2.5s ease-in-out infinite; }
 
     /* Modal Styles */
     .modal-container { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
@@ -56,23 +72,18 @@
     .modal-content { background-color: #181818; border-radius: 1rem; padding: 1.5rem; width: 90%; position: relative; transform: translateY(40px) scale(0.95); opacity: 0; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
     .modal-container.visible .modal-content { transform: translateY(0) scale(1); opacity: 1; }
     #detail-modal .modal-content { max-width: 650px; max-height: 90vh; overflow-y: auto; }
-    #confirmation-modal .modal-content, #playlist-warning-modal .modal-content { max-width: 400px; z-index: 70; }
-    .modal-item { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    #confirmation-modal .modal-content, #info-modal .modal-content { max-width: 400px; z-index: 70; }
+    
+    /* PERBAIKAN #7: Animasi staggered untuk item modal */
+    .modal-item { opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.4s ease; }
     #detail-modal.visible .modal-item { opacity: 1; transform: translateY(0); }
+
     .close-modal-btn { position: absolute; top: 1rem; right: 1rem; width: 2.5rem; height: 2.5rem; background-color: rgba(0,0,0,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; z-index: 120; }
     .close-modal-btn:hover { background-color: rgba(0,0,0,0.7); transform: rotate(90deg); }
     
     /* Image Zoom Modal Styles */
     #image-zoom-modal { z-index: 100; }
-    #image-zoom-modal .modal-content {
-        background: transparent;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+    #image-zoom-modal .modal-content { background: transparent; padding: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
     #image-zoom-container { width: 90vw; height: 90vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
     #zoomed-image { width: 100%; height: 100%; object-fit: contain; transition: transform 0.2s ease-out; cursor: grab; transform-origin: center center; }
     #zoomed-image.is-dragging { cursor: grabbing; }
@@ -84,23 +95,14 @@
     #download-zoom-btn:hover { background-color: rgba(0,0,0,0.7); transform: scale(1.1); }
 
     /* Gradient Text & BG */
-    @keyframes animated-gradient {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-    .info-title { 
-        background: linear-gradient(to right, #FFFFFF, #d90429, #FFFFFF);
-        background-size: 250% auto;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: animated-gradient 4s ease-in-out infinite;
-    }
+    @keyframes animated-gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    .info-title { background: linear-gradient(to right, #FFFFFF, #d90429, #FFFFFF); background-size: 250% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: animated-gradient 4s ease-in-out infinite; }
     .tiktok-gradient-text { background: linear-gradient(to right, #69C9D0, #EE1D52); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .instagram-gradient-text { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .tiktok-gradient-bg { background-image: linear-gradient(to right, #69C9D0, #EE1D52); }
     
     /* Province Slider */
+    #destinations { overflow: hidden; } /* PERBAIKAN #1: Mencegah slider bocor */
     #destinations-slider { width: 100%; height: 350px; position: relative; padding-bottom: 40px; }
     .swiper-slide { width: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 0.5s ease, filter 0.5s ease; }
     .destination-card { width: 180px; height: 180px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.5s ease, filter 0.5s ease; filter: grayscale(100%) brightness(0.7); transform: scale(0.8); }
@@ -141,8 +143,32 @@
     .info-box-item dt { font-weight: 600; color: #a1a1aa; }
     .info-box-item dd { font-weight: 500; color: #e4e4e7; }
     
-    /* RIS Table */
-    .table-container { overflow-x: auto; }
+    /* PERBAIKAN #6: Animasi scroll untuk tabel */
+    .table-container { 
+        overflow-x: auto; 
+        position: relative;
+    }
+    .table-container::before, .table-container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 50px;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        z-index: 2;
+    }
+    .table-container::before {
+        left: 0;
+        background: linear-gradient(to right, #121212, transparent);
+        opacity: var(--scroll-opacity-start, 0);
+    }
+    .table-container::after {
+        right: 0;
+        background: linear-gradient(to left, #121212, transparent);
+        opacity: var(--scroll-opacity-end, 1);
+    }
+
     .table-auto { width: 100%; min-width: 800px; border-collapse: collapse; }
     .table-auto th, .table-auto td { border: 1px solid #27272a; padding: 0.75rem; text-align: left; vertical-align: middle; }
     .table-auto thead { background-color: rgba(255,255,255,0.05); }
@@ -159,7 +185,8 @@
 <div id="page-wrapper">
     <div id="hero-section" class="min-h-screen flex flex-col justify-center items-center text-center p-4 bg-black overflow-hidden">
         <div class="absolute inset-0 bg-cover bg-center opacity-40 hero-bg-animation" style="background-image: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop');"></div>
-        <div class="relative z-10 pt-16">
+        <!-- PERBAIKAN #8: Konten hero dipindahkan ke dalam div terpisah untuk z-index -->
+        <div class="hero-content">
             <h1 class="text-5xl md:text-7xl font-bold text-white drop-shadow-lg" data-aos="fade-down" data-aos-delay="200">Jelajah Indonesia Timur</h1>
             <p class="text-lg md:text-xl text-gray-200 mt-2 drop-shadow-md" data-aos="fade-down" data-aos-delay="300">Sebuah Persembahan Edukasi oleh <a href="https://www.tiktok.com/@benggg111" target="_blank" rel="noopener noreferrer" class="font-semibold text-white hover:text-cyan-300 transition-colors">@benggg111</a></p>
             <p class="mt-6 max-w-lg mx-auto text-gray-300 italic drop-shadow-md" data-aos="fade-up" data-aos-delay="400">"don't stop when you're tired, stop when you're done"</p>
@@ -184,7 +211,7 @@
                  <div class="relative p-2 bg-gray-800/50 border-2 border-gray-700 rounded-lg shadow-lg inline-block transition-all duration-300 hover:border-cyan-400 hover:shadow-cyan-400/20 max-w-full">
                      <img src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Map_of_Eastern_Indonesia.png" alt="Peta Indonesia Timur" class="rounded-md max-w-full h-auto block mx-auto zoomable-image">
                  </div>
-                 <p class="mt-4 text-gray-400 italic">Klik pada peta untuk memperbesar.</p>
+                 <!-- PERBAIKAN #5: Teks "Klik pada peta untuk memperbesar" dihapus untuk tampilan yang lebih bersih -->
             </div>
         </div>
 
@@ -368,11 +395,12 @@
     </div>
 </div>
 
-<div id="playlist-warning-modal" class="modal-container">
+<!-- PERBAIKAN #2: Modal Peringatan Playlist diganti menjadi Modal Info Umum -->
+<div id="info-modal" class="modal-container">
     <div class="modal-content text-center">
-        <h3 class="text-xl font-bold mb-2 text-white">Segera Hadir!</h3>
-        <p class="text-gray-300 mb-6">Playlist untuk provinsi ini sedang dalam tahap pembuatan. Nantikan pembaruannya segera!</p>
-        <button id="close-warning-modal" class="px-6 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 transition-colors">Mengerti</button>
+        <h3 id="info-modal-title" class="text-xl font-bold mb-2 text-white"></h3>
+        <p id="info-modal-message" class="text-gray-300 mb-6"></p>
+        <button id="info-modal-close" class="px-6 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 transition-colors">Mengerti</button>
     </div>
 </div>
 
@@ -407,7 +435,8 @@ document.addEventListener('DOMContentLoaded', () => {
         sulawesi_utara: { name: "Sulawesi Utara", logo: "https://upload.wikimedia.org/wikipedia/commons/6/68/Coat_of_arms_of_North_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttLvCw/", governor: "Yulius Selvanus", viceGovernor: "Victor Mailangkay", songTitle: "O Ina Ni Keke - Lagu Daerah Sulawesi Utara", songSrc: "https://j.top4top.io/m_3511v828b1.mp3", description: `<p>Sulawesi Utara adalah provinsi yang terletak di ujung utara Pulau Sulawesi, Indonesia, dengan ibu kota di Manado. Provinsi ini merupakan surga bagi pecinta kehidupan bawah laut, dengan Taman Nasional Bunaken sebagai ikon utamanya. Masyarakat Minahasa yang ramah dan terbuka mendominasi wilayah yang dijuluki "Kota Seribu Gereja" ini.</p>`, districts: [ "Bolaang Mongondow", "Bolaang Mongondow Selatan", "Bolaang Mongondow Timur", "Bolaang Mongondow Utara", "Kepulauan Sangihe", "Kepulauan Siau Tagulandang Biaro", "Kepulauan Talaud", "Minahasa", "Minahasa Selatan", "Minahasa Tenggara", "Minahasa Utara", "Kota Bitung", "Kota Kotamobagu", "Kota Manado", "Kota Tomohon" ], jumlah_penduduk: 2645291, ibu_kota: "Manado", hari_jadi: "14 Agustus 1959", suku_bangsa: ["Minahasa", "Sangir-Talaud", "Bolaang Mongondow", "Gorontalo", "Tionghoa"], website_resmi: "sulutprov.go.id" },
         gorontalo: { name: "Gorontalo", logo: "https://upload.wikimedia.org/wikipedia/commons/0/01/Coat_of_arms_of_Gorontalo.svg", tiktokLink: "https://vt.tiktok.com/ZSSttBCHy/", governor: "Gusnar Ismail", viceGovernor: "Idah Syahidah Rusli Habibie", songTitle: "Hulonthalo Lipu'u - Lagu Daerah Gorontalo", songSrc: "https://k.top4top.io/m_3511zwp0w2.mp3", description: `<p>Gorontalo adalah sebuah provinsi di Indonesia yang terletak di Semenanjung Gorontalo. Dikenal dengan julukan "Serambi Madinah", Gorontalo memiliki tradisi Islam yang kental. Provinsi ini mengelilingi Teluk Tomini yang tenang, lokasi ideal untuk mengamati hiu paus, dan memiliki peninggalan sejarah seperti Benteng Otanaha.</p>`, districts: [ "Boalemo", "Bone Bolango", "Gorontalo", "Gorontalo Utara", "Pohuwato", "Kota Gorontalo" ], jumlah_penduduk: 1213180, ibu_kota: "Gorontalo", hari_jadi: "5 Desember 2000", suku_bangsa: ["Gorontalo"], website_resmi: "gorontaloprov.go.id" },
         sulawesi_tengah: { name: "Sulawesi Tengah", logo: "https://upload.wikimedia.org/wikipedia/commons/4/46/Coat_of_arms_of_Central_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttU1BB/", governor: "Anwar Hafid", viceGovernor: "Reny Lamadjido", songTitle: "Tondok Kadadingku - Lagu Daerah Sulawesi Tengah", songSrc: "https://l.top4top.io/m_3511n1q9c3.mp3", description: `<p>Sulawesi Tengah adalah sebuah provinsi Indonesia yang terletak di bagian tengah pulau Sulawesi. Ibu kotanya adalah Palu. Provinsi ini menyimpan pesona alam seperti Teluk Palu dan Danau Poso, serta misteri purbakala di Taman Nasional Lore Lindu, yang menjadi rumah bagi flora fauna endemik dan situs-situs megalitikum kuno.</p>`, districts: [ "Banggai", "Banggai Kepulauan", "Banggai Laut", "Buol", "Donggala", "Morowali", "Morowali Utara", "Parigi Moutong", "Poso", "Sigi", "Tojo Una-Una", "Tolitoli", "Kota Palu" ], jumlah_penduduk: 3154499, ibu_kota: "Palu", hari_jadi: "13 April 1964", suku_bangsa: ["Kaili", "Pamona", "Banggai", "Saluan", "Buol", "Mori", "Bungku", "Balantak", "Lore", "Mamasa", "Tolitoli", "Pendau", "Dondo", "Dampal", "Tomini"], website_resmi: "sultengprov.go.id" },
-        sulawesi_barat: { name: "Sulawesi Barat", logo: "https://upload.wikimedia.org/wikipedia/commons/8/89/Coat_of_arms_of_West_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttY2dj/", governor: "Suhardi Duka", viceGovernor: "Salim S. Mengga", songTitle: "Tenggang Tenggang Lopi - Lagu Daerah Sulawesi Barat", songSrc: "https://h.top4top.io/m_3510lsqsl1.mp3", description: `<p>Sulawesi Barat adalah provinsi hasil pemekaran dari Sulawesi Selatan yang dibentuk pada 5 Oktober 2004. Ibu kotanya adalah Mamuju. Provinsi ini memiliki identitas budaya yang kuat dari Suku Mandar, dikenal dengan para pelaut andal dan Sarung Sutra Mandar yang indah, serta memiliki garis pantai menawan dan perkebunan kopi yang subur.</p>`, districts: [ "Majene", "Mamasa", "Mamuju", "Mamuju Tengah", "Pasangkayu", "Polewali Mandar" ], jumlah_penduduk: 1466741, ibu_kota: "Mamuju", hari_jadi: "22 September 2004", suku_bangsa: ["Mandar", "Toraja", "Bugis", "Mamasa", "Kalumpang", "Jawa", "Makassar"], website_resmi: null },
+        // PERBAIKAN #2: songSrc dikosongkan untuk demo
+        sulawesi_barat: { name: "Sulawesi Barat", logo: "https://upload.wikimedia.org/wikipedia/commons/8/89/Coat_of_arms_of_West_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSSttY2dj/", governor: "Suhardi Duka", viceGovernor: "Salim S. Mengga", songTitle: "Tenggang Tenggang Lopi - Lagu Daerah Sulawesi Barat", songSrc: "", description: `<p>Sulawesi Barat adalah provinsi hasil pemekaran dari Sulawesi Selatan yang dibentuk pada 5 Oktober 2004. Ibu kotanya adalah Mamuju. Provinsi ini memiliki identitas budaya yang kuat dari Suku Mandar, dikenal dengan para pelaut andal dan Sarung Sutra Mandar yang indah, serta memiliki garis pantai menawan dan perkebunan kopi yang subur.</p>`, districts: [ "Majene", "Mamasa", "Mamuju", "Mamuju Tengah", "Pasangkayu", "Polewali Mandar" ], jumlah_penduduk: 1466741, ibu_kota: "Mamuju", hari_jadi: "22 September 2004", suku_bangsa: ["Mandar", "Toraja", "Bugis", "Mamasa", "Kalumpang", "Jawa", "Makassar"], website_resmi: null },
         sulawesi_selatan: { name: "Sulawesi Selatan", logo: "https://upload.wikimedia.org/wikipedia/commons/6/67/Coat_of_arms_of_South_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSStt8Ym9/", governor: "Andi Sudirman Sulaiman", viceGovernor: "Fatmawati Rusdi", songTitle: "Anging Mammiri - Lagu Daerah Sulawesi Selatan", songSrc: "https://a.top4top.io/m_3511z4w2o4.mp3", description: `<p>Sulawesi Selatan adalah provinsi di pesisir barat daya Sulawesi, dengan ibu kota di Makassar. Provinsi ini memiliki warisan budaya Bugis-Makassar yang kuat dan merupakan tanah kelahiran Kapal Pinisi, sebuah mahakarya yang diakui sebagai Warisan Budaya Takbenda UNESCO. Keunikan Tana Toraja dengan ritual megah dan arsitektur ikoniknya juga menjadi daya tarik utama.</p>`, districts: [ "Bantaeng", "Barru", "Bone", "Bulukumba", "Enrekang", "Gowa", "Jeneponto", "Kepulauan Selayar", "Luwu", "Luwu Timur", "Luwu Utara", "Maros", "Pangkajene dan Kepulauan", "Pinrang", "Sidenreng Rappang", "Sinjai", "Soppeng", "Takalar", "Tana Toraja", "Toraja Utara", "Wajo", "Kota Makassar", "Kota Palopo", "Kota Parepare" ], jumlah_penduduk: 9460344, ibu_kota: "Makassar", hari_jadi: "13 Desember 1960", suku_bangsa: ["Bugis", "Makassar", "Toraja", "Mandar"], website_resmi: null },
         sulawesi_tenggara: { name: "Sulawesi Tenggara", logo: "https://upload.wikimedia.org/wikipedia/commons/3/31/Coat_of_arms_of_Southeast_Sulawesi.svg", tiktokLink: "https://vt.tiktok.com/ZSStt649m/", governor: "Andi Sumangerukka", viceGovernor: "Hugua", songTitle: "Tana Wolio - Lagu Daerah Sulawesi Tenggara", songSrc: "https://b.top4top.io/m_3510m8pks1.mp3", description: `<p>Sulawesi Tenggara adalah sebuah provinsi di Indonesia yang terletak di bagian tenggara pulau Sulawesi, dengan ibu kota di Kendari. Provinsi ini merupakan rumah bagi Taman Nasional Wakatobi, salah satu surga bawah laut terbaik dunia yang diakui UNESCO, serta dikenal dengan masyarakat Suku Bajo yang hidup harmonis dengan laut.</p>`, districts: [ "Bombana", "Buton", "Buton Selatan", "Buton Tengah", "Buton Utara", "Kolaka", "Kolaka Timur", "Kolaka Utara", "Konawe", "Konawe Kepulauan", "Konawe Selatan", "Konawe Utara", "Muna", "Muna Barat", "Wakatobi", "Kota Baubau", "Kota Kendari" ], jumlah_penduduk: 2755589, ibu_kota: "Kendari", hari_jadi: "27 April 1964", suku_bangsa: ["Tolaki", "Buton", "Muna", "Moronene", "Wawonii"], website_resmi: null },
         maluku_utara: { name: "Maluku Utara", logo: "https://upload.wikimedia.org/wikipedia/commons/7/73/Coat_of_arms_of_North_Maluku.svg", tiktokLink: "https://vt.tiktok.com/ZSStthBan/", governor: "Sherly Tjoanda", viceGovernor: "Sarbin Sehe", songTitle: "Borero - Lagu Daerah Maluku Utara", songSrc: "https://d.top4top.io/m_3510likks1.mp3", description: `<p>Maluku Utara adalah provinsi di Indonesia bagian timur yang beribukota di Sofifi. Wilayah ini resmi menjadi provinsi sendiri pada 4 Oktober 1999. Dikenal dengan sejarah kesultanan Ternate dan Tidore yang legendaris, Maluku Utara merupakan episentrum sejarah rempah-rempah yang menawarkan pemandangan gunung berapi dramatis dan pulau-pulau eksotis.</p>`, districts: [ "Halmahera Barat", "Halmahera Tengah", "Halmahera Utara", "Halmahera Selatan", "Kepulauan Sula", "Halmahera Timur", "Pulau Morotai", "Pulau Taliabu", "Kota Ternate", "Kota Tidore Kepulauan" ], jumlah_penduduk: 1394231, ibu_kota: "Sofifi", hari_jadi: "4 Oktober 1999", suku_bangsa: null, website_resmi: "malutprov.go.id" },
@@ -450,6 +479,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     new Swiper("#destinations-slider", {
         effect: "slide", centeredSlides: true, slidesPerView: 'auto', loop: false,
+        // PERBAIKAN #4: Slider tidak bisa digeser manual, hanya lewat tombol
+        allowTouchMove: false,
         navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
         pagination: { el: '.swiper-pagination', clickable: true },
         breakpoints: { 320: { slidesPerView: 1, spaceBetween: 20 }, 768: { slidesPerView: 3, spaceBetween: 10 }, 1024: { slidesPerView: 5, spaceBetween: 10 } }
@@ -459,7 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pageWrapper = document.getElementById('page-wrapper');
     const detailModal = document.getElementById('detail-modal');
     const confirmationModal = document.getElementById('confirmation-modal');
-    const playlistWarningModal = document.getElementById('playlist-warning-modal');
+    const infoModal = document.getElementById('info-modal'); // Menggunakan modal info baru
     let currentProvinceId = null;
     let targetUrl = '';
 
@@ -470,6 +501,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const provinceProgressBar = document.getElementById('province-progress-bar');
     const provinceSongTitle = document.getElementById('province-song-title');
     const provinceMusic = document.getElementById('province-music');
+
+    // Function to show a generic info modal
+    function showInfoModal(title, message) {
+        infoModal.querySelector('#info-modal-title').textContent = title;
+        infoModal.querySelector('#info-modal-message').textContent = message;
+        infoModal.classList.add('visible');
+    }
 
     // Function to open detail modal
     function openDetailModal(provinceId) {
@@ -496,13 +534,15 @@ document.addEventListener('DOMContentLoaded', () => {
             websiteContainer.style.display = 'none';
         }
 
+        // Tampilkan/sembunyikan pemutar musik berdasarkan ketersediaan lagu
         if (data.songSrc && data.songSrc.trim() !== "") {
             provinceMusicPlayer.style.display = 'block';
             provinceSongTitle.textContent = data.songTitle;
             provinceMusic.src = data.songSrc;
         } else {
-            provinceMusicPlayer.style.display = 'none';
-            provinceMusic.src = "";
+            provinceMusicPlayer.style.display = 'block'; // Tetap tampilkan untuk tombol play
+            provinceSongTitle.textContent = data.songTitle || 'Lagu Daerah';
+            provinceMusic.src = ""; // Kosongkan src
         }
 
         const districtList = detailModal.querySelector('#district-list');
@@ -516,42 +556,36 @@ document.addEventListener('DOMContentLoaded', () => {
         
         pageWrapper.classList.add('blurred');
         document.body.classList.add('modal-open');
+
+        // PERBAIKAN #7: Terapkan delay animasi staggered
+        const modalItems = detailModal.querySelectorAll('.modal-item');
+        modalItems.forEach((item, index) => {
+            item.style.transitionDelay = `${index * 0.07}s`;
+        });
+        
         detailModal.classList.add('visible');
     }
 
-    // Province Card Interaction Logic
-    let pressTimer;
-    const startPress = (e) => {
-        const card = e.target.closest('.destination-card');
-        if (card) {
-            pressTimer = window.setTimeout(() => {
-                const logoImg = card.querySelector('.card-logo');
-                if (logoImg) {
-                    card.setAttribute('data-long-pressed', 'true');
-                    openZoomModal(logoImg.src);
-                }
-            }, 500);
-        }
-    };
-    const cancelPress = () => clearTimeout(pressTimer);
+    // PERBAIKAN #5: Interaksi slider disederhanakan, hapus long-press
     destinationSliderWrapper.addEventListener('click', (e) => {
         const card = e.target.closest('.destination-card');
-        if (card && !card.dataset.longPressed) {
+        if (card) {
             const slide = card.closest('.swiper-slide');
-            if (!slide.classList.contains('swiper-slide-active')) return;
-            openDetailModal(card.dataset.province);
+            // Hanya izinkan klik pada slide yang aktif (di tengah)
+            if (slide && slide.classList.contains('swiper-slide-active')) {
+                openDetailModal(card.dataset.province);
+            }
         }
-        if (card) setTimeout(() => card.removeAttribute('data-long-pressed'), 10);
     });
-    destinationSliderWrapper.addEventListener('mousedown', startPress);
-    destinationSliderWrapper.addEventListener('mouseup', cancelPress);
-    destinationSliderWrapper.addEventListener('mouseleave', cancelPress);
-    destinationSliderWrapper.addEventListener('touchstart', startPress);
-    destinationSliderWrapper.addEventListener('touchend', cancelPress);
-    destinationSliderWrapper.addEventListener('touchmove', cancelPress);
 
     // Music Player Logic
     playProvinceBtn.addEventListener('click', () => {
+        // PERBAIKAN #2: Cek jika musik tidak tersedia
+        if (!provinceMusic.src || provinceMusic.src === window.location.href) {
+            showInfoModal("Informasi", "Lagu daerah untuk provinsi ini belum tersedia.");
+            return;
+        }
+
         if (provinceMusic.paused) {
             provinceMusic.play();
             playProvinceIcon.classList.replace('fa-play', 'fa-pause');
@@ -572,28 +606,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 pageWrapper.classList.remove('blurred');
                 document.body.classList.remove('modal-open');
             }
+            // PERBAIKAN #3: Hentikan musik saat modal ditutup
             if(modal.id === 'detail-modal') {
                 provinceMusic.pause();
                 provinceMusic.currentTime = 0;
+                playProvinceIcon.classList.replace('fa-pause', 'fa-play');
+                provinceProgressBar.style.width = '0%';
             }
         });
     });
     
-    // Confirmation & Playlist Warning Modals
+    // Confirmation & Info Modals
     detailModal.querySelector('#modal-website').addEventListener('click', (e) => { e.preventDefault(); targetUrl = e.currentTarget.href; confirmationModal.classList.add('visible'); });
     document.getElementById('confirm-yes').addEventListener('click', () => { window.open(targetUrl, '_blank'); confirmationModal.classList.remove('visible'); });
     document.getElementById('confirm-no').addEventListener('click', () => confirmationModal.classList.remove('visible'));
     detailModal.querySelector('#modal-tiktok-link').addEventListener('click', (e) => {
         e.preventDefault();
-        const unavailableProvinces = ['bali', 'nusa_tenggara_barat', 'nusa_tenggara_timur', 'papua_barat', 'papua_barat_daya', 'papua', 'papua_tengah', 'papua_pegunungan', 'papua_selatan'];
+        const unavailableProvinces = ['sulawesi_barat']; // Contoh provinsi tanpa playlist
         if (currentProvinceId && unavailableProvinces.includes(currentProvinceId)) {
-            playlistWarningModal.classList.add('visible');
+            showInfoModal("Segera Hadir!", "Playlist untuk provinsi ini sedang dalam tahap pembuatan. Nantikan pembaruannya segera!");
         } else {
              targetUrl = e.currentTarget.href;
              confirmationModal.classList.add('visible');
         }
     });
-    document.getElementById('close-warning-modal').addEventListener('click', () => playlistWarningModal.classList.remove('visible'));
+    document.getElementById('info-modal-close').addEventListener('click', () => infoModal.classList.remove('visible'));
 
     // Population Counter Animation
     const animateCounter = (element, finalValue) => {
@@ -618,7 +655,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cityListObserver.observe(document.getElementById('kti-largest-cities'));
     }
 
-    // --- UPDATED: Image Zoom & Pan Modal Logic ---
+    // Image Zoom & Pan Modal Logic
     const zoomModal = document.getElementById('image-zoom-modal');
     const zoomedImage = document.getElementById('zoomed-image');
     const zoomInBtn = document.getElementById('zoom-in-btn');
@@ -651,11 +688,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const applyTransform = () => {
-        // When zoom is 1, ensure it's perfectly centered.
-        if (currentZoom <= minZoom) {
-            translateX = 0;
-            translateY = 0;
-        }
+        if (currentZoom <= minZoom) { translateX = 0; translateY = 0; }
         zoomedImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
     };
 
@@ -670,60 +703,38 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentZoom < maxZoom) {
             const newZoom = Math.min(maxZoom, currentZoom * zoomFactor);
             const ratio = newZoom / currentZoom;
-
-            // Adjust translation to keep the center point fixed during zoom
-            translateX *= ratio;
-            translateY *= ratio;
-
+            translateX *= ratio; translateY *= ratio;
             currentZoom = newZoom;
-            applyTransform();
-            updateZoomButtons();
+            applyTransform(); updateZoomButtons();
         }
     });
-
     zoomOutBtn.addEventListener('click', () => {
         if (currentZoom > minZoom) {
             const newZoom = Math.max(minZoom, currentZoom / zoomFactor);
             const ratio = newZoom / currentZoom;
-            
-            // Adjust translation
-            translateX *= ratio;
-            translateY *= ratio;
-
+            translateX *= ratio; translateY *= ratio;
             currentZoom = newZoom;
-            
-            applyTransform(); // applyTransform will reset pan if zoom is 1
-            updateZoomButtons();
+            applyTransform(); updateZoomButtons();
         }
     });
 
     const startDrag = (e) => {
         if (currentZoom > 1) {
-            e.preventDefault();
-            isDragging = true;
+            e.preventDefault(); isDragging = true;
             const point = e.touches ? e.touches[0] : e;
-            startX = point.pageX - translateX;
-            startY = point.pageY - translateY;
+            startX = point.pageX - translateX; startY = point.pageY - translateY;
             zoomedImage.classList.add('is-dragging');
         }
     };
-
     const drag = (e) => {
         if (isDragging) {
-            e.preventDefault(); // Prevents page scrolling on touch
+            e.preventDefault();
             const point = e.touches ? e.touches[0] : e;
-            translateX = point.pageX - startX;
-            translateY = point.pageY - startY;
+            translateX = point.pageX - startX; translateY = point.pageY - startY;
             applyTransform();
         }
     };
-
-    const endDrag = () => {
-        if (isDragging) {
-            isDragging = false;
-            zoomedImage.classList.remove('is-dragging');
-        }
-    };
+    const endDrag = () => { if (isDragging) { isDragging = false; zoomedImage.classList.remove('is-dragging'); } };
 
     zoomedImage.addEventListener('mousedown', startDrag);
     window.addEventListener('mousemove', drag);
@@ -732,6 +743,18 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('touchmove', drag, { passive: false });
     window.addEventListener('touchend', endDrag);
 
+    // PERBAIKAN #6: Fungsionalitas untuk shadow scroll tabel
+    document.querySelectorAll('.table-container').forEach(container => {
+        const updateShadows = () => {
+            const { scrollLeft, scrollWidth, clientWidth } = container;
+            const isAtStart = scrollLeft < 10;
+            const isAtEnd = scrollLeft > (scrollWidth - clientWidth - 10);
+            container.style.setProperty('--scroll-opacity-start', isAtStart ? '0' : '1');
+            container.style.setProperty('--scroll-opacity-end', isAtEnd ? '0' : '1');
+        };
+        container.addEventListener('scroll', updateShadows);
+        updateShadows(); // Panggil sekali saat load untuk set state awal
+    });
 
     // Initializations
     AOS.init({ once: true, duration: 800 });
