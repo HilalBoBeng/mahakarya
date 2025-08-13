@@ -1,5 +1,3 @@
-</body>
-</html>
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
@@ -34,36 +32,7 @@
     }
     body.modal-open { overflow: hidden; }
 
-    /* Anti-Screenshot Layer */
-    @media print {
-        body * {
-            display: none !important;
-        }
-        body::before {
-            content: " ";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: #000 !important;
-            z-index: 999999;
-            display: block !important;
-        }
-    }
-    #secure-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 9999;
-        opacity: 0;
-        background: radial-gradient(circle, transparent 50%, #000 51%);
-        background-size: 1px 1px;
-    }
-
+    /* Page Wrapper Blur Effect */
     #page-wrapper { transition: filter 0.4s ease, transform 0.4s ease; }
     #page-wrapper.blurred { filter: blur(8px) brightness(0.7); transform: scale(0.98); pointer-events: none; }
 
@@ -71,6 +40,15 @@
     @keyframes kenBurns { 0% { transform: scale(1.1) translate(0, 0); } 100% { transform: scale(1.2) translate(-2%, 2%); } }
     .hero-bg-animation { animation: kenBurns 30s ease-in-out infinite alternate; }
     @keyframes fadeInPanel { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    /* Logo Animation */
+    @keyframes fade-in-out {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+    #fixed-logo {
+        animation: fade-in-out 2.5s ease-in-out infinite;
+    }
 
     /* Modal Styles */
     .modal-container { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
@@ -86,9 +64,17 @@
     
     /* Image Zoom Modal Styles */
     #image-zoom-modal { z-index: 100; }
-    #image-zoom-modal .modal-content { background: transparent; padding: 0; width: 100%; height: 100%; }
+    #image-zoom-modal .modal-content {
+        background: transparent;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     #image-zoom-container { width: 90vw; height: 90vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-    #zoomed-image { width: 100%; height: 100%; object-fit: contain; transition: transform 0.2s ease-out; cursor: grab; }
+    #zoomed-image { width: 100%; height: 100%; object-fit: contain; transition: transform 0.2s ease-out; cursor: grab; transform-origin: center center; }
     #zoomed-image.is-dragging { cursor: grabbing; }
     #zoom-controls { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); padding: 0.5rem 1rem; border-radius: 99px; display: flex; gap: 1rem; align-items: center; z-index: 110; }
     .zoom-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s, opacity 0.2s; }
@@ -98,7 +84,18 @@
     #download-zoom-btn:hover { background-color: rgba(0,0,0,0.7); transform: scale(1.1); }
 
     /* Gradient Text & BG */
-    .info-title { background: linear-gradient(to right, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    @keyframes animated-gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    .info-title { 
+        background: linear-gradient(to right, #FFFFFF, #d90429, #FFFFFF);
+        background-size: 250% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: animated-gradient 4s ease-in-out infinite;
+    }
     .tiktok-gradient-text { background: linear-gradient(to right, #69C9D0, #EE1D52); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .instagram-gradient-text { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .tiktok-gradient-bg { background-image: linear-gradient(to right, #69C9D0, #EE1D52); }
@@ -135,37 +132,28 @@
     .province-list-item { background: rgba(255,255,255,0.03); padding: 0.5rem 1rem; border-radius: 0.5rem; transition: background-color 0.2s; }
     .province-list-item:hover { background: rgba(255,255,255,0.07); }
     .zoomable-image { cursor: zoom-in; }
-    .nit-info-card { background: rgba(255,255,255,0.05); border-radius: 0.75rem; padding: 1rem; text-align: center; border: 1px solid #37373a; }
-    .nit-info-card img { max-height: 120px; margin: 0 auto 1rem; }
-    .nit-info-box { background: rgba(255,255,255,0.03); border-left: 3px solid #a855f7; padding: 0.75rem 1rem; }
-    .nit-info-box p { color: #a1a1aa; }
-    .nit-info-box h4 { color: #e4e4e7; font-weight: 600; }
-    .image-caption, .nit-image-caption { font-size: 0.875rem; color: #a1a1aa; text-align: center; margin-top: 1rem; font-style: italic; }
+    .image-caption { font-size: 0.875rem; color: #a1a1aa; text-align: center; margin-top: 1rem; font-style: italic; }
     
-    /* Tabs */
-    .tab-button { padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600; color: #a1a1aa; background-color: transparent; border: 2px solid transparent; transition: all 0.3s ease; }
-    .tab-button.active { color: #f1f1f1; border-color: #a855f7; background: linear-gradient(to right, rgba(168, 85, 247, 0.1), rgba(236, 72, 153, 0.1)); }
-    .tab-panel { display: none; animation: fadeInPanel 0.5s ease-in-out; }
-    .tab-panel.active { display: block; }
-    
-    /* Timeline */
-    .event-item { position: relative; padding-left: 2rem; border-left: 2px solid #4a5568; }
-    .event-item::before { content: ''; position: absolute; left: -0.5rem; top: 0.5rem; width: 0.875rem; height: 0.875rem; background-color: #a855f7; border-radius: 50%; border: 3px solid #121212; }
+    /* Improved RIS Info Box */
+    .ris-info-box { display: flex; flex-direction: column; gap: 0.5rem; }
+    .info-box-item { display: grid; grid-template-columns: 140px 1fr; align-items: center; padding: 0.75rem; border-bottom: 1px solid #27272a; }
+    .info-box-item:last-child { border-bottom: none; }
+    .info-box-item dt { font-weight: 600; color: #a1a1aa; }
+    .info-box-item dd { font-weight: 500; color: #e4e4e7; }
     
     /* RIS Table */
     .table-container { overflow-x: auto; }
     .table-auto { width: 100%; min-width: 800px; border-collapse: collapse; }
     .table-auto th, .table-auto td { border: 1px solid #27272a; padding: 0.75rem; text-align: left; vertical-align: middle; }
     .table-auto thead { background-color: rgba(255,255,255,0.05); }
-    .table-auto .flag-img { height: 20px; width: auto; background-color: #333; }
+    .table-auto .flag-img { height: 20px; width: auto; background-color: #333; display: block; margin: 0 auto; }
 </style>
 
 </head>
 <body>
-<div id="secure-overlay"></div>
 
-<div id="fixed-logo" class="fixed top-4 left-4 z-50 mix-blend-screen">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/80_RI_2025.svg" alt="Logo RI 80" class="h-16 w-16 md:h-20 md:w-20">
+<div id="fixed-logo" class="fixed top-4 left-4 z-50">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/80_RI_2025.svg" alt="Logo RI 80" class="h-16 w-16 md:h-20 md:w-20 pointer-events-none">
 </div>
 
 <div id="page-wrapper">
@@ -193,8 +181,8 @@
         <div id="map-section" class="py-16 px-4 sm:px-6 lg:px-8" data-aos="fade-up">
             <div class="container mx-auto max-w-4xl text-center">
                  <h2 class="text-3xl font-bold text-center mb-8 text-white">Peta Wilayah Indonesia Timur</h2>
-                 <div class="relative p-2 bg-gray-800/50 border-2 border-gray-700 rounded-lg shadow-lg inline-block transition-all duration-300 hover:border-cyan-400 hover:shadow-cyan-400/20">
-                     <img src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Map_of_Eastern_Indonesia.png" alt="Peta Indonesia Timur" class="rounded-md max-w-full h-auto zoomable-image">
+                 <div class="relative p-2 bg-gray-800/50 border-2 border-gray-700 rounded-lg shadow-lg inline-block transition-all duration-300 hover:border-cyan-400 hover:shadow-cyan-400/20 max-w-full">
+                     <img src="https://upload.wikimedia.org/wikipedia/commons/c/c4/Map_of_Eastern_Indonesia.png" alt="Peta Indonesia Timur" class="rounded-md max-w-full h-auto block mx-auto zoomable-image">
                  </div>
                  <p class="mt-4 text-gray-400 italic">Klik pada peta untuk memperbesar.</p>
             </div>
@@ -238,10 +226,10 @@
                                          <img src="https://upload.wikimedia.org/wikipedia/commons/9/9f/Flag_of_Indonesia.svg" alt="Bendera RIS" class="h-10 zoomable-image">
                                          <img src="https://upload.wikimedia.org/wikipedia/commons/8/84/Coat_of_arms_of_United_States_of_Indonesia.svg" alt="Lambang RIS" class="h-20 zoomable-image">
                                     </div>
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5b/LocationRIS.svg" alt="Peta RIS" class="w-full rounded-md my-4 zoomable-image">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5b/LocationRIS.svg" alt="Peta RIS" class="w-full rounded-md my-4 block mx-auto zoomable-image">
                                 </div>
                                 <div class="md:col-span-2">
-                                    <dl>
+                                    <dl class="ris-info-box">
                                         <div class="info-box-item"><dt>Ibu kota</dt><dd>Jakarta</dd></div>
                                         <div class="info-box-item"><dt>Bahasa</dt><dd>Indonesia</dd></div>
                                         <div class="info-box-item"><dt>Presiden</dt><dd>Soekarno</dd></div>
@@ -257,16 +245,18 @@
                                 Republik Indonesia Serikat (RIS) adalah sebuah negara federal berumur pendek tempat Belanda secara resmi mengalihkan kedaulatan Hindia Belanda pada 27 Desember 1949. Penyerahan ini mengakhiri konflik empat tahun antara nasionalis Indonesia dan Belanda, namun RIS sendiri hanya bertahan kurang dari satu tahun sebelum digantikan oleh negara kesatuan Republik Indonesia.
                             </p>
                         </div>
-                         <div class="content-card p-4 md:p-8" data-aos="fade-up">
+                         <div class="content-card p-4 md:p-8 text-center" data-aos="fade-up">
                             <h3 class="text-2xl font-bold mb-6">Pembagian Administratif</h3>
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Map_of_the_United_States_of_Indonesia-id.svg" alt="Peta Pembagian Administratif RIS" class="w-full rounded-lg shadow-lg my-4 zoomable-image bg-white p-2">
+                            <div class="bg-white p-2 rounded-lg inline-block">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Map_of_the_United_States_of_Indonesia-id.svg" alt="Peta Pembagian Administratif RIS" class="w-full max-w-3xl mx-auto rounded-lg shadow-lg block zoomable-image">
+                            </div>
                             <p class="image-caption">Peta wilayah negara-negara bagian dan daerah otonom dalam Republik Indonesia Serikat.</p>
                         </div>
                         <div class="content-card p-4 md:p-8" data-aos="fade-up">
-                            <h3 class="text-2xl font-bold mb-6">Negara Bagian</h3>
+                            <h3 class="text-2xl font-bold mb-6 text-center">Negara Bagian</h3>
                             <div class="table-container">
                                 <table class="table-auto">
-                                    <thead><tr><th>Bendera</th><th>Negara Bagian</th><th>Pusat Pemerintahan</th><th>Wali Negara</th><th>Didirikan</th><th>Dibubarkan</th></tr></thead>
+                                    <thead><tr><th class="text-center">Bendera</th><th>Negara Bagian</th><th>Pusat Pemerintahan</th><th>Wali Negara</th><th>Didirikan</th><th>Dibubarkan</th></tr></thead>
                                     <tbody>
                                         <tr><td><img src="https://upload.wikimedia.org/wikipedia/commons/9/9f/Flag_of_Indonesia.svg" alt="Bendera RI" class="flag-img"></td><td>Republik Indonesia</td><td>Yogyakarta</td><td>Assaat</td><td>27 Des 1949</td><td>17 Agu 1950</td></tr>
                                         <tr><td><img src="https://upload.wikimedia.org/wikipedia/commons/2/20/Flag_of_the_State_of_East_Indonesia.svg" alt="Bendera NIT" class="flag-img"></td><td>Negara Indonesia Timur</td><td>Makassar</td><td>Tjokorda Gde Raka Soekawati</td><td>24 Des 1946</td><td>17 Agu 1950</td></tr>
@@ -280,10 +270,10 @@
                             </div>
                         </div>
                         <div class="content-card p-4 md:p-8" data-aos="fade-up">
-                            <h3 class="text-2xl font-bold mb-6">Daerah Otonom</h3>
+                            <h3 class="text-2xl font-bold mb-6 text-center">Daerah Otonom</h3>
                             <div class="table-container">
                                 <table class="table-auto">
-                                    <thead><tr><th>Bendera</th><th>Daerah Otonom</th><th>Pusat Pemerintahan</th><th>Kepala Daerah</th><th>Didirikan</th><th>Dibubarkan</th></tr></thead>
+                                    <thead><tr><th class="text-center">Bendera</th><th>Daerah Otonom</th><th>Pusat Pemerintahan</th><th>Kepala Daerah</th><th>Didirikan</th><th>Dibubarkan</th></tr></thead>
                                     <tbody>
                                         <tr><td><img src="https://upload.wikimedia.org/wikipedia/commons/2/2b/Flag_of_Various_Autonomous_Indonesian_States.svg" alt="Bendera Jawa Tengah" class="flag-img"></td><td>Daerah Jawa Tengah</td><td>Semarang</td><td>Dr. R.V. Sudjito</td><td>2 Mar 1949</td><td>9 Mar 1950</td></tr>
                                         <tr><td><img src="https://upload.wikimedia.org/wikipedia/commons/2/2b/Flag_of_Various_Autonomous_Indonesian_States.svg" alt="Bendera Kalbar" class="flag-img"></td><td>Daerah Istimewa Kalimantan Barat</td><td>Pontianak</td><td>Sultan Hamid II</td><td>12 Mei 1947</td><td>22 Apr 1950</td></tr>
@@ -299,10 +289,10 @@
                             </div>
                         </div>
                         <div class="content-card p-4 md:p-8" data-aos="fade-up">
-                            <h3 class="text-2xl font-bold mb-6">Distrik Federal</h3>
+                            <h3 class="text-2xl font-bold mb-6 text-center">Distrik Federal</h3>
                             <div class="table-container">
                                 <table class="table-auto">
-                                    <thead><tr><th>Bendera</th><th>Distrik Federal</th><th>Pusat Pemerintahan</th><th>Gubernur</th><th>Didirikan</th><th>Dibubarkan</th></tr></thead>
+                                    <thead><tr><th class="text-center">Bendera</th><th>Distrik Federal</th><th>Pusat Pemerintahan</th><th>Gubernur</th><th>Didirikan</th><th>Dibubarkan</th></tr></thead>
                                     <tbody>
                                          <tr><td><img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Flag_of_Pasundan.svg" alt="Bendera Distrik Federal Jakarta" class="flag-img"></td><td>Distrik Federal Jakarta</td><td>-</td><td>Hilman Djajadiningrat</td><td>11 Agu 1948</td><td>30 Mar 1950</td></tr>
                                     </tbody>
@@ -332,7 +322,7 @@
         <button class="close-modal-btn"><i class="fas fa-times text-white"></i></button>
         <div class="text-center mb-6 modal-item">
             <h2 id="modal-title" class="text-4xl font-bold text-white mb-4"></h2>
-            <img id="modal-logo" src="" alt="Logo Provinsi" class="w-48 h-48 mx-auto object-contain">
+            <img id="modal-logo" src="" alt="Logo Provinsi" class="w-48 h-48 mx-auto object-contain pointer-events-none">
         </div>
         <div id="modal-description" class="space-y-4 prose prose-invert max-w-none modal-item text-justify bg-white/5 p-4 rounded-lg"></div>
         <div id="modal-details" class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left my-6 modal-item bg-white/5 p-4 rounded-lg">
@@ -628,7 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cityListObserver.observe(document.getElementById('kti-largest-cities'));
     }
 
-    // Image Zoom & Pan Modal Logic
+    // --- UPDATED: Image Zoom & Pan Modal Logic ---
     const zoomModal = document.getElementById('image-zoom-modal');
     const zoomedImage = document.getElementById('zoomed-image');
     const zoomInBtn = document.getElementById('zoom-in-btn');
@@ -636,10 +626,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadBtn = document.getElementById('download-zoom-btn');
 
     let currentZoom = 1;
-    let zoomPresses = 0;
-    const maxPresses = 5;
+    const maxZoom = 5;
+    const minZoom = 1;
+    const zoomFactor = 1.5;
     let isDragging = false;
-    let startX, startY, translateX, translateY;
+    let startX, startY;
+    let translateX = 0, translateY = 0;
 
     const openZoomModal = (imgSrc) => {
         zoomedImage.src = imgSrc;
@@ -651,23 +643,87 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     const resetZoomAndPan = () => {
-        currentZoom = 1; zoomPresses = 0; translateX = 0; translateY = 0;
-        applyTransform(); updateZoomButtons();
+        currentZoom = 1;
+        translateX = 0;
+        translateY = 0;
+        applyTransform();
+        updateZoomButtons();
     };
-    const applyTransform = () => zoomedImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
+
+    const applyTransform = () => {
+        // When zoom is 1, ensure it's perfectly centered.
+        if (currentZoom <= minZoom) {
+            translateX = 0;
+            translateY = 0;
+        }
+        zoomedImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
+    };
+
     const updateZoomButtons = () => {
-        zoomInBtn.disabled = zoomPresses >= maxPresses;
-        zoomOutBtn.disabled = zoomPresses <= 0;
+        zoomInBtn.disabled = currentZoom >= maxZoom;
+        zoomOutBtn.disabled = currentZoom <= minZoom;
     };
 
     document.querySelectorAll('.zoomable-image').forEach(img => img.addEventListener('click', (e) => openZoomModal(e.target.src)));
     
-    zoomInBtn.addEventListener('click', () => { if (zoomPresses < maxPresses) { zoomPresses++; currentZoom++; applyTransform(); updateZoomButtons(); } });
-    zoomOutBtn.addEventListener('click', () => { if (zoomPresses > 0) { zoomPresses--; currentZoom--; if (currentZoom === 1) { translateX = 0; translateY = 0; } applyTransform(); updateZoomButtons(); } });
+    zoomInBtn.addEventListener('click', () => {
+        if (currentZoom < maxZoom) {
+            const newZoom = Math.min(maxZoom, currentZoom * zoomFactor);
+            const ratio = newZoom / currentZoom;
 
-    const startDrag = (e) => { if (currentZoom > 1) { e.preventDefault(); isDragging = true; const point = e.touches ? e.touches[0] : e; startX = point.pageX - translateX; startY = point.pageY - translateY; zoomedImage.classList.add('is-dragging'); } };
-    const drag = (e) => { if (isDragging) { const point = e.touches ? e.touches[0] : e; translateX = point.pageX - startX; translateY = point.pageY - startY; applyTransform(); } };
-    const endDrag = () => { isDragging = false; zoomedImage.classList.remove('is-dragging'); };
+            // Adjust translation to keep the center point fixed during zoom
+            translateX *= ratio;
+            translateY *= ratio;
+
+            currentZoom = newZoom;
+            applyTransform();
+            updateZoomButtons();
+        }
+    });
+
+    zoomOutBtn.addEventListener('click', () => {
+        if (currentZoom > minZoom) {
+            const newZoom = Math.max(minZoom, currentZoom / zoomFactor);
+            const ratio = newZoom / currentZoom;
+            
+            // Adjust translation
+            translateX *= ratio;
+            translateY *= ratio;
+
+            currentZoom = newZoom;
+            
+            applyTransform(); // applyTransform will reset pan if zoom is 1
+            updateZoomButtons();
+        }
+    });
+
+    const startDrag = (e) => {
+        if (currentZoom > 1) {
+            e.preventDefault();
+            isDragging = true;
+            const point = e.touches ? e.touches[0] : e;
+            startX = point.pageX - translateX;
+            startY = point.pageY - translateY;
+            zoomedImage.classList.add('is-dragging');
+        }
+    };
+
+    const drag = (e) => {
+        if (isDragging) {
+            e.preventDefault(); // Prevents page scrolling on touch
+            const point = e.touches ? e.touches[0] : e;
+            translateX = point.pageX - startX;
+            translateY = point.pageY - startY;
+            applyTransform();
+        }
+    };
+
+    const endDrag = () => {
+        if (isDragging) {
+            isDragging = false;
+            zoomedImage.classList.remove('is-dragging');
+        }
+    };
 
     zoomedImage.addEventListener('mousedown', startDrag);
     window.addEventListener('mousemove', drag);
@@ -675,6 +731,7 @@ document.addEventListener('DOMContentLoaded', () => {
     zoomedImage.addEventListener('touchstart', startDrag, { passive: false });
     window.addEventListener('touchmove', drag, { passive: false });
     window.addEventListener('touchend', endDrag);
+
 
     // Initializations
     AOS.init({ once: true, duration: 800 });
