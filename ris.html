@@ -27,8 +27,25 @@
 
     .info-title { background: linear-gradient(to right, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     
-    /* Back Button */
-    .back-button { position: fixed; top: 1.5rem; left: 1.5rem; z-index: 50; display: flex; align-items: center; padding: 0.5rem 1rem; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 99px; backdrop-filter: blur(8px); color: white; text-decoration: none; transition: all 0.3s ease; transform: translateX(-200%); animation: slideIn 1s 0.5s forwards; }
+    /* Back Button - position:fixed keeps it in place */
+    .back-button { 
+        position: fixed; 
+        top: 1.5rem; 
+        left: 1.5rem; 
+        z-index: 50; 
+        display: flex; 
+        align-items: center; 
+        padding: 0.5rem 1rem; 
+        background-color: rgba(255, 255, 255, 0.1); 
+        border: 1px solid rgba(255, 255, 255, 0.2); 
+        border-radius: 99px; 
+        backdrop-filter: blur(8px); 
+        color: white; 
+        text-decoration: none; 
+        transition: all 0.3s ease; 
+        transform: translateX(-200%); 
+        animation: slideIn 1s 0.5s forwards; 
+    }
     .back-button:hover { background-color: rgba(255, 255, 255, 0.2); box-shadow: 0 0 15px rgba(168, 85, 247, 0.5); transform: scale(1.05); }
     .back-button .icon { transition: transform 0.3s ease; }
     .back-button:hover .icon { transform: translateX(-4px); }
@@ -42,12 +59,6 @@
     .info-box-item dd { font-weight: 500; text-align: right; }
     .image-caption { font-size: 0.875rem; color: #a1a1aa; text-align: center; margin-top: 1rem; font-style: italic; }
     
-    .timeline { position: relative; padding-left: 2.5rem; }
-    .timeline::before { content: ''; position: absolute; left: 0.5rem; top: 0; bottom: 0; width: 2px; background-color: #27272a; }
-    .timeline-item { position: relative; margin-bottom: 2rem; }
-    .timeline-item::before { content: ''; position: absolute; left: -2.2rem; top: 0.25rem; width: 1rem; height: 1rem; background-color: #a855f7; border-radius: 50%; border: 3px solid #0a0a0a; }
-    .timeline-title { font-weight: 600; font-size: 1.125rem; color: white; }
-
     .table-container { overflow-x: auto; }
     .table-auto { width: 100%; min-width: 800px; border-collapse: collapse; }
     .table-auto th, .table-auto td { border: 1px solid #27272a; padding: 0.75rem; text-align: left; vertical-align: middle; }
@@ -56,7 +67,6 @@
 
     .zoomable-image { cursor: zoom-in; transition: transform 0.3s ease; }
     .zoomable-image:hover { transform: scale(1.03); }
-    /* Disable image theft */
     img { -webkit-touch-callout: none; user-select: none; }
 
     /* Image Zoom Modal */
@@ -76,45 +86,6 @@
     .tiktok-gradient-text { background: linear-gradient(to right, #69C9D0, #EE1D52); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .instagram-gradient-text { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     
-    /* Donation Button */
-    .donation-button {
-        display: inline-block;
-        padding: 12px 28px;
-        background: linear-gradient(45deg, #a855f7, #ec4899);
-        color: white;
-        font-weight: 600;
-        border-radius: 99px;
-        text-decoration: none;
-        transition: all 0.4s ease;
-        position: relative;
-        overflow: hidden;
-        z-index: 1;
-        border: none;
-    }
-    .donation-button:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(45deg, #ec4899, #a855f7);
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        z-index: -1;
-    }
-    .donation-button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(168, 85, 247, 0.4);
-    }
-    .donation-button:hover:before {
-        opacity: 1;
-    }
-    .donation-button:active {
-        transform: translateY(-1px);
-        box-shadow: 0 5px 10px rgba(168, 85, 247, 0.4);
-    }
-
 </style>
 </head>
 <body class="antialiased">
@@ -233,11 +204,7 @@
     </main>
     
     <footer class="text-center py-10 mt-16 border-t border-gray-900">
-        <div class="mb-8">
-            <a href="donation.html" class="donation-button">
-                <i class="fas fa-heart mr-2"></i>Donasi
-            </a>
-        </div>
+        <!-- Donation Button Removed -->
         <p>&copy; <span id="year"></span> benggg. All rights reserved.</p>
         <div class="mt-4">
             <a href="https://www.tiktok.com/@benggg111" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:tiktok-gradient-text transition-colors duration-300 text-3xl inline-block"><i class="fab fa-tiktok"></i></a>
@@ -294,11 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const zoomOutBtn = document.getElementById('zoom-out-btn');
 
     let currentZoom = 1;
-    let minZoom = 1;
-    let maxZoom = 5;
-    let zoomStep = 1; 
     let zoomPresses = 0;
-    const maxPresses = 4;
+    const maxPresses = 5; // Max 5x zoom
 
     let isDragging = false;
     let startX, startY, translateX, translateY;
@@ -306,11 +270,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const openZoomModal = (imgSrc) => {
         zoomedImage.src = imgSrc;
         resetZoomAndPan();
+        pageWrapper.classList.add('blurred');
         document.body.classList.add('modal-open');
         zoomModal.classList.add('visible');
     };
 
     const closeZoomModal = () => {
+        pageWrapper.classList.remove('blurred');
         document.body.classList.remove('modal-open');
         zoomModal.classList.remove('visible');
     };
@@ -342,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
     zoomInBtn.addEventListener('click', () => {
         if (zoomPresses < maxPresses) {
             zoomPresses++;
-            currentZoom = 1 + zoomPresses * zoomStep;
+            currentZoom += 1;
             applyTransform();
             updateZoomButtons();
         }
@@ -351,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
     zoomOutBtn.addEventListener('click', () => {
         if (zoomPresses > 0) {
             zoomPresses--;
-            currentZoom = 1 + zoomPresses * zoomStep;
+            currentZoom -= 1;
             if (currentZoom === 1) {
                  translateX = 0;
                  translateY = 0;
@@ -414,4 +380,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
-
